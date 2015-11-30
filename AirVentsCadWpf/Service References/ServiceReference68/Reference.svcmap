@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c9eda3ff-8234-4317-a940-773bd3f00b9e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://192.168.14.11:8080/VentsService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service1.wsdl" MetadataType="Wsdl" ID="c7ef105a-b198-453a-aaa1-0bf8056a2708" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="service2.xsd" MetadataType="Schema" ID="8c7f92fc-b225-4b32-b227-3ec5a5d28c69" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="service21.xsd" MetadataType="Schema" ID="51d3b68b-4b04-488f-b8a8-bbdda6582922" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="ConecctorOneC1.xsd" MetadataType="Schema" ID="f852a1f8-e3a7-4981-a190-a9c1f06014e2" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="HostingWindowsForms1.xsd" MetadataType="Schema" ID="f47492c4-a277-419b-bec7-323e7a62a758" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="Arrays1.xsd" MetadataType="Schema" ID="0da81f7a-e9b2-4e6a-b4b2-2012fad9ffb9" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+    <MetadataFile FileName="HostingWindowsForms.Data1.xsd" MetadataType="Schema" ID="44bd773f-03db-4f45-841d-b3ecb3989611" SourceId="1" SourceUrl="http://192.168.14.11:8080/VentsService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

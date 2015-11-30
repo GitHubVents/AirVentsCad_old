@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="anyType" nillable="true" typeOfFlange="xs:anyType" />
+  <xs:element name="anyURI" nillable="true" typeOfFlange="xs:anyURI" />
+  <xs:element name="base64Binary" nillable="true" typeOfFlange="xs:base64Binary" />
+  <xs:element name="boolean" nillable="true" typeOfFlange="xs:boolean" />
+  <xs:element name="byte" nillable="true" typeOfFlange="xs:byte" />
+  <xs:element name="dateTime" nillable="true" typeOfFlange="xs:dateTime" />
+  <xs:element name="decimal" nillable="true" typeOfFlange="xs:decimal" />
+  <xs:element name="double" nillable="true" typeOfFlange="xs:double" />
+  <xs:element name="float" nillable="true" typeOfFlange="xs:float" />
+  <xs:element name="int" nillable="true" typeOfFlange="xs:int" />
+  <xs:element name="long" nillable="true" typeOfFlange="xs:long" />
+  <xs:element name="QName" nillable="true" typeOfFlange="xs:QName" />
+  <xs:element name="short" nillable="true" typeOfFlange="xs:short" />
+  <xs:element name="string" nillable="true" typeOfFlange="xs:string" />
+  <xs:element name="unsignedByte" nillable="true" typeOfFlange="xs:unsignedByte" />
+  <xs:element name="unsignedInt" nillable="true" typeOfFlange="xs:unsignedInt" />
+  <xs:element name="unsignedLong" nillable="true" typeOfFlange="xs:unsignedLong" />
+  <xs:element name="unsignedShort" nillable="true" typeOfFlange="xs:unsignedShort" />
+  <xs:element name="char" nillable="true" typeOfFlange="tns:char" />
+  <xs:simpleType name="char">
+    <xs:restriction base="xs:int" />
+  </xs:simpleType>
+  <xs:element name="duration" nillable="true" typeOfFlange="tns:duration" />
+  <xs:simpleType name="duration">
+    <xs:restriction base="xs:duration">
+      <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+      <xs:minInclusive value="-P10675199DT2H48M5.4775808S" />
+      <xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="guid" nillable="true" typeOfFlange="tns:guid" />
+  <xs:simpleType name="guid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attribute name="FactoryType" typeOfFlange="xs:QName" />
+  <xs:attribute name="Id" typeOfFlange="xs:ID" />
+  <xs:attribute name="Ref" typeOfFlange="xs:IDREF" />
+</xs:schema>

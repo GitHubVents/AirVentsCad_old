@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HostingWindowsForms" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HostingWindowsForms" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfEpdm.SearchColumnName">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Epdm.SearchColumnName" nillable="true" typeOfFlange="tns:Epdm.SearchColumnName" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEpdm.SearchColumnName" nillable="true" typeOfFlange="tns:ArrayOfEpdm.SearchColumnName" />
+  <xs:complexType name="Epdm.SearchColumnName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FileId" typeOfFlange="xs:int" />
+      <xs:element minOccurs="0" name="FileName" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="FilePath" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="FolderId" typeOfFlange="xs:int" />
+      <xs:element minOccurs="0" name="PartNumber" nillable="true" typeOfFlange="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Epdm.SearchColumnName" nillable="true" typeOfFlange="tns:Epdm.SearchColumnName" />
+  <xs:complexType name="ArrayOfEpdm.BomCells">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Epdm.BomCells" nillable="true" typeOfFlange="tns:Epdm.BomCells" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEpdm.BomCells" nillable="true" typeOfFlange="tns:ArrayOfEpdm.BomCells" />
+  <xs:complexType name="Epdm.BomCells">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodeMaterial" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="ErpCode" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="FileName" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="FilePath" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Format" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="IdPdm" nillable="true" typeOfFlange="xs:int" />
+      <xs:element minOccurs="0" name="Note" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Position" nillable="true" typeOfFlange="xs:int" />
+      <xs:element minOccurs="0" name="SummMaterial" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Weight" nillable="true" typeOfFlange="xs:string" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="КолПоКонфигурациям" nillable="true" typeOfFlange="q1:ArrayOfdecimal" />
+      <xs:element minOccurs="0" name="Количество" nillable="true" typeOfFlange="xs:decimal" />
+      <xs:element minOccurs="0" name="КонфГлавнойСборки" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Конфигурация" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Материал" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="МатериалЦми" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Наименование" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Обозначение" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="ПоследняяВерсия" nillable="true" typeOfFlange="xs:int" />
+      <xs:element minOccurs="0" name="Раздел" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Состояние" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="ТипФайла" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="ТолщинаЛиста" nillable="true" typeOfFlange="xs:string" />
+      <xs:element minOccurs="0" name="Уровень" nillable="true" typeOfFlange="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Epdm.BomCells" nillable="true" typeOfFlange="tns:Epdm.BomCells" />
+</xs:schema>

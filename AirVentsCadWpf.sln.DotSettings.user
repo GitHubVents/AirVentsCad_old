@@ -1,0 +1,16 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	
+	
+	
+	
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\kb81\Documents\Visual Studio 2012\Projects\AirVentsCadWpf\AirVentsCadWpf\obj\Debug\Interop.EdmLib.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\kb81\Documents\Visual Studio 2012\Projects\BomPartList\BomPartList\bin\Debug\BomPartList.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\kb81.VENTS\Documents\Visual Studio 2012\Projects\AirVentsCadWpf\AirVentsCadWpf\VentsMaterials.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\kb81.VENTS\Source\Repos\AirVentsOnline2\AirVentsCadWpf\bin\Debug\BomPartList.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\kb81.VENTS\Source\Repos\AirVentsOnline2\AirVentsCadWpf\VentsMaterials.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark2/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark2/Coords/@EntryValue">(Doc Ln 3223 Col 70)</s:String>
+	<s:String x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark2/FileId/@EntryValue">4A03F4CD-8E2A-4600-B89C-782ADCC67E44/d:AirVentsClasses/f:GenerateUnit50.cs</s:String>
+	<s:String x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark2/Owner/@EntryValue">NumberedBookmarkManager</s:String></wpf:ResourceDictionary>
