@@ -267,7 +267,7 @@
             </Grid.ColumnDefinitions>
             <ComboBox x:Name="SectionTextBox" TabIndex="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="LenghtRoof_KeyDown" MinWidth="40" SelectedIndex="0" MaxDropDownHeight="77" />
             <Label x:Name="HeightLabel2" Content="Секция" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2"/>
-            <TextBox x:Name="OrderTextBox" Text="003021" TabIndex="1" PreviewTextInput="NumberValidationTextBox" MaxLength ="8" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="WidthRoof_KeyDown" MinWidth="40" />
+            <TextBox x:Name="OrderTextBox" Text="00001" TabIndex="1" PreviewTextInput="NumberValidationTextBox" MaxLength ="8" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="WidthRoof_KeyDown" MinWidth="40" />
             <Label x:Name="WidthLabel2" Grid.Column="0"  Content="Заказ" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="0" HorizontalAlignment="Left" Margin="10,5,0,0" Width="Auto" Height="Auto" VerticalAlignment="Top">
@@ -277,7 +277,8 @@
             </Grid.ColumnDefinitions>
             <Label x:Name="TitleUnit" Content="Блок установки" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="42" Width="180"/>
             <ComboBox x:Name="TypeOfPanel" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" SelectedIndex="0" IsReadOnly="True"
-            	Margin="2"  Width="Auto" Height="Auto" Grid.Column="1">
+            	Margin="2"  Width="Auto" Height="Auto" Grid.Column="1" SelectionChanged="TypeOfPanel_SelectionChanged">
+                <ComboBoxItem Content="30-й профиль" ToolTip="28мм"/>
                 <ComboBoxItem Content="50-й профиль" ToolTip="48мм"/>
                 <ComboBoxItem Content="70-й профиль" ToolTip="50мм"/>
                 <!--<ComboBoxItem Content="Съемная" ToolTip="04"/>

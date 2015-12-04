@@ -6,7 +6,7 @@
              mc:Ignorable="d" Background="#FFFFFEFE" >
     <Grid  >
         <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="15"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="15"/>

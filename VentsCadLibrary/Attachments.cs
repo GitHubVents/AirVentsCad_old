@@ -89,17 +89,16 @@ namespace VentsCadLibrary
             string path;
             int fileId;
             int projectId;
-            
 
             if (GetExistingFile(newSpigotName, out path, out fileId, out projectId))
             {
                 newFile = newSpigotPath + ".SLDDRW";
 
-                if (MessageBox.Show("Вибровставка "+ newSpigotName + " уже есть в базе. Открыть?",// + projectId +" - "+ fileId,
+                if (MessageBox.Show("Вибровставка " + newSpigotName + " уже есть в базе. Открыть?",// + projectId +" - "+ fileId,
                     "",
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    System.Diagnostics.Process.Start("conisio://"+ VaultName +"/open?projectid=" + projectId +
+                    System.Diagnostics.Process.Start("conisio://" + VaultName + "/open?projectid=" + projectId +
                                                      "&documentid=" + fileId + "&objecttype=1");
                 }
                 return;
@@ -226,7 +225,7 @@ namespace VentsCadLibrary
                 newPartName = $"12-20-{height}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
 
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-20-001-1@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -254,7 +253,7 @@ namespace VentsCadLibrary
                 swPartDoc = _swApp.IActiveDoc2;
                 newPartName = $"12-20-{width}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-20-002-1@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -279,7 +278,7 @@ namespace VentsCadLibrary
                 swPartDoc = _swApp.IActiveDoc2;
                 newPartName = $"12-03-{width}-{height}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-003-1@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -308,7 +307,7 @@ namespace VentsCadLibrary
                 swPartDoc = _swApp.IActiveDoc2;
                 newPartName = $"12-30-01-{height}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-30-001-1@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -334,7 +333,7 @@ namespace VentsCadLibrary
                 swPartDoc = _swApp.IActiveDoc2;
                 newPartName = $"12-30-02-{width}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-30-002-1@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -360,7 +359,7 @@ namespace VentsCadLibrary
                 swPartDoc = _swApp.IActiveDoc2;
                 newPartName = $"12-03-{width}-{height}.SLDPRT";
                 newPartPath = $@"{destinationFolder}\{SpigotDestinationFolder}\{newPartName}";
-                if (GetExistingFile(newPartName, out path, out fileId, out projectId))
+                if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), out path, out fileId, out projectId))
                 {
                     swDoc = ((ModelDoc2)(_swApp.ActivateDoc2("12-00.SLDASM", true, 0)));
                     swDoc.Extension.SelectByID2("12-003-2@12-00", "COMPONENT", 0, 0, 0, false, 0, null, 0);

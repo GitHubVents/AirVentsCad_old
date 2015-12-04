@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,12 +41,7 @@ namespace AirVentsCadWpf.DataControls
             SizeOfUnit.DisplayMemberPath = "Type";
             SizeOfUnit.SelectedIndex = 0;
 
-            SectionTextBox.ItemsSource = new[]
-                {
-                    "A", "B", "C", "D", "E", "F", "G", "H",
-                    "I","J", "K", "L", "M", "N", "O", "P", 
-                    "R", "S","T", "U", "V","W", "X", "Y", "Z"
-                };
+            SectionTextBox.ItemsSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToList();
 
             #region UNIT50FULL
 
@@ -194,8 +190,18 @@ namespace AirVentsCadWpf.DataControls
                 {
                     return;
                 }
-                WidthU.Text = standartUnitSizes[0];
-                HeightU.Text = standartUnitSizes[1];
+                var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
+                switch (thicknessOfPanel)
+                {
+                    case "30":
+                        WidthU.Text = (Convert.ToInt32(standartUnitSizes[0]) - 40).ToString();
+                        HeightU.Text = (Convert.ToInt32(standartUnitSizes[1]) - 40).ToString();
+                        break;
+                    default:
+                        WidthU.Text = standartUnitSizes[0];
+                        HeightU.Text = standartUnitSizes[1];
+                        break;
+                }
             }
             catch (Exception)
             {
@@ -203,21 +209,6 @@ namespace AirVentsCadWpf.DataControls
                 if (HeightU != null) HeightU.Text = "";
             }
 
-            //if (SizeOfUnit == null)
-            //{
-            //    return;
-            //}
-            //var sqlBaseData = new SqlBaseData();
-            //var standartUnitSizes =
-            //    sqlBaseData.StandartSize(
-            //        SizeOfUnit.SelectedItem.ToString().Replace("System.Windows.Controls.ListBoxItem: ", ""));
-
-            //if (WidthU == null || HeightU == null)
-            //{
-            //    return;
-            //}
-            //WidthU.Text = standartUnitSizes[0];
-            //HeightU.Text = standartUnitSizes[1];
         }
 
         void nonstandard_Checked(object sender, RoutedEventArgs e)
@@ -239,185 +230,350 @@ namespace AirVentsCadWpf.DataControls
         void BUILDING_Click(object sender, RoutedEventArgs e)
         {
             var sw = new ModelSw();
-            var frame = "";
-            try
+            var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
+            switch (thicknessOfPanel)
             {
-                if (MontageFrame50.IsChecked == true )
-                {
-                    if (FrameOffset.Text == "")
-                    {
-                        try
-                        {
-                            FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
-                        }
-                        catch (Exception)
-                        {
-                            FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
-                        }
-                    }
-                    frame =
-                        sw.MontageFrameS(
-                        WidthBaseFrame.Text,
-                        LenghtBaseFrame.Text,
-                        Thikness.Text,
-                        TypeOfFrame.Text,
-                        FrameOffset.Text,
-                        MaterialMontageFrame.SelectedValue.ToString(),
-                        new[]
-                    {
-                    RalFrame1.Text, CoatingTypeFrame1.Text, CoatingClassFrame1.Text,
-                    RalFrame1.SelectedValue?.ToString() ?? ""
-                    }, 
-                        true);
-
-                    FrameOffset.Text = "";
-                }
-
-                var mat1Code = "";
-                var mat2Code = "";
-
-                var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
-                var row1 = viewRowMat1.Row;
-                if (row1 != null)
-                    mat1Code = row1.Field<string>("CodeMaterial");
-                var viewRowMat2 = (DataRowView)MaterialP2.SelectedItem;
-                var row2 = viewRowMat2.Row;
-                if (row2 != null)
-                    mat2Code = row2.Field<string>("CodeMaterial");
-
-                #region Панели
-
-                var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
-                var materialP2 = new[] { MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code };
-
-                string panelWxL = null;
-                string panelHxL = null;
-                string panelHxL04 = null;
-
-                var panelsDelta = TypeOfPanel.SelectedIndex == 0 ? 100 : 140;
-
-
-               // MessageBox.Show(Panel50.IsChecked.ToString());
-               // return;
-
-                if (Panel50.IsChecked == true)
-                {
+                case "30":
+                    var frame = "";
                     try
                     {
-                        //Верх - Низ
-                        try
+                        if (MontageFrame50.IsChecked == true)
                         {
-                            panelWxL =
-                                sw.Panels50BuildStr(
-                                    typeOfPanel:
-                                        new[]
-                                        {
-                                            _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                            _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
-                                            TypeOfPanel.SelectedIndex==0 ? "50":"70"
-                                        },
-                                    width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
-                                    height: Convert.ToString(Convert.ToInt32(WidthU.Text) - panelsDelta),
-                                    materialP1: materialP1,
-                                    materialP2: materialP2,
-                                    покрытие: new[]
+                            if (FrameOffset.Text == "")
+                            {
+                                try
+                                {
+                                    FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
+                                }
+                                catch (Exception)
+                                {
+                                    FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
+                                }
+                            }
+                            frame =
+                                sw.MontageFrameS(
+                                    WidthBaseFrame.Text,
+                                    LenghtBaseFrame.Text,
+                                    Thikness.Text,
+                                    TypeOfFrame.Text,
+                                    FrameOffset.Text,
+                                    MaterialMontageFrame.SelectedValue.ToString(),
+                                    new[]
                                     {
-                                        Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                                        Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                                        Ral1.SelectedValue?.ToString() ?? "",
-                                        Ral2.SelectedValue?.ToString() ?? ""
+                                        RalFrame1.Text, CoatingTypeFrame1.Text, CoatingClassFrame1.Text,
+                                        RalFrame1.SelectedValue?.ToString() ?? ""
                                     },
-                                    onlyPath: true);
-                        }
-                        catch (Exception){}
+                                    true);
 
-                        //Несъемная
-                        try
-                        {
-                            panelHxL =
-                                sw.Panels50BuildStr(
-                                    typeOfPanel:
-                                        new[]
-                                        {
-                                            _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                            _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
-                                            TypeOfPanel.SelectedIndex==0 ? "50":"70"
-                                        },
-                                    width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
-                                    height: Convert.ToString(Convert.ToInt32(HeightU.Text) - panelsDelta),
-                                    materialP1: materialP1,
-                                    materialP2: materialP2,
-                                    покрытие: new[]
-                                    {
-                                        Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                                        Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                                        Ral1.SelectedValue?.ToString() ?? "",
-                                        Ral2.SelectedValue?.ToString() ?? ""
-                                    },
-                                    onlyPath: true);
+                            FrameOffset.Text = "";
                         }
-                        catch (Exception){}
 
-                        //Cъемная
-                        try
+                        var mat1Code = "";
+                        var mat2Code = "";
+
+                        var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
+                        var row1 = viewRowMat1.Row;
+                        if (row1 != null)
+                            mat1Code = row1.Field<string>("CodeMaterial");
+                        var viewRowMat2 = (DataRowView)MaterialP2.SelectedItem;
+                        var row2 = viewRowMat2.Row;
+                        if (row2 != null)
+                            mat2Code = row2.Field<string>("CodeMaterial");
+
+                        #region Панели
+
+                        var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
+                        var materialP2 = new[] { MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code };
+
+                        string panelWxL = null;
+                        string panelHxL = null;
+                        string panelHxL04 = null;
+
+                        if (Panel50.IsChecked == true)
                         {
-                            panelHxL04 =
-                                sw.Panels50BuildStr(
-                                    typeOfPanel: new[]
-                                    {
-                                        TypeOfPanel50.SelectedValue.ToString(),
-                                        TypeOfPanel50.Text,
-                                        TypeOfPanel.SelectedIndex==0 ? "50":"70"
-                                    },
-                                    width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
-                                    height: Convert.ToString(Convert.ToInt32(HeightU.Text) - panelsDelta),
-                                    materialP1: materialP1,
-                                    materialP2: materialP2,
-                                    покрытие: new[]
-                                    {
-                                        Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                                        Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                                        Ral1.SelectedValue?.ToString() ?? "",
-                                        Ral2.SelectedValue?.ToString() ?? ""
-                                    },
-                                    onlyPath: true);
+                            try
+                            {
+                                //Верх - Низ
+                                try
+                                {
+                                     sw.Panels30Build(
+                                            typeOfPanel:
+                                            new[]
+                                            {
+                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                "30"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - 60),
+                                            height: Convert.ToString(Convert.ToInt32(WidthU.Text) - 60),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            path: out panelWxL);
+                                }
+                                catch (Exception)
+                                {
+                                    // ignored
+                                }
+
+                                //Несъемная
+                                try
+                                {
+                                        sw.Panels30Build(
+                                            typeOfPanel:
+                                            new[]
+                                            {
+                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                "30"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - 60),
+                                            height: Convert.ToString(Convert.ToInt32(HeightU.Text) - 60),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            path: out panelHxL);
+                                }
+                                catch (Exception)
+                                {
+                                    // ignored
+                                }
+
+                                //Cъемная
+                                try
+                                {
+                                        sw.Panels30Build(
+                                            typeOfPanel: new[]
+                                            {
+                                                TypeOfPanel50.SelectedValue.ToString(),
+                                                TypeOfPanel50.Text,
+                                                "30"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - 60),
+                                            height: Convert.ToString(Convert.ToInt32(HeightU.Text) - 60),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            path: out panelHxL04);
+                                }
+                                catch (Exception exception)
+                                {
+                                    MessageBox.Show(exception.ToString());
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.ToString());
+                            }
                         }
-                        catch (Exception exception)
-                        {
-                            MessageBox.Show(exception.ToString());
-                        }
+
+                        #endregion
+
+                        var panels = new[] { panelWxL, panelHxL, panelHxL04 };
+
+                        var roofType = TypeOfRoof.Text;
+                        if (RoofOfUnit50.IsChecked != true) { roofType = ""; }
+
+                        sw.UnitAsmbly30(((DataRowView)SizeOfUnit.SelectedItem)["Type"].ToString(), OrderTextBox.Text, SideService.Text,
+                            WidthU.Text, HeightU.Text, Lenght.Text, frame, panels, roofType, "Section " + SectionTextBox.Text);
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show(exception.ToString());
+                        MessageBox.Show(exception.Message);
                     }
-                }
+                    break;
+                default:
+                    frame = "";
+                    try
+                    {
+                        if (MontageFrame50.IsChecked == true)
+                        {
+                            if (FrameOffset.Text == "")
+                            {
+                                try
+                                {
+                                    FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
+                                }
+                                catch (Exception)
+                                {
+                                    FrameOffset.Text = Convert.ToString((Convert.ToDouble(LenghtBaseFrame.Text) / 2));
+                                }
+                            }
+                            frame =
+                                sw.MontageFrameS(
+                                    WidthBaseFrame.Text,
+                                    LenghtBaseFrame.Text,
+                                    Thikness.Text,
+                                    TypeOfFrame.Text,
+                                    FrameOffset.Text,
+                                    MaterialMontageFrame.SelectedValue.ToString(),
+                                    new[]
+                                    {
+                                        RalFrame1.Text, CoatingTypeFrame1.Text, CoatingClassFrame1.Text,
+                                        RalFrame1.SelectedValue?.ToString() ?? ""
+                                    },
+                                    true);
 
-                #endregion
-                //return;
-                var panels = new[]
-                {
-                    panelWxL , panelHxL, panelHxL04
-                };
+                            FrameOffset.Text = "";
+                        }
 
-            //    MessageBox.Show(panels[0]);
+                        var mat1Code = "";
+                        var mat2Code = "";
 
+                        var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
+                        var row1 = viewRowMat1.Row;
+                        if (row1 != null)
+                            mat1Code = row1.Field<string>("CodeMaterial");
+                        var viewRowMat2 = (DataRowView)MaterialP2.SelectedItem;
+                        var row2 = viewRowMat2.Row;
+                        if (row2 != null)
+                            mat2Code = row2.Field<string>("CodeMaterial");
 
-                var roofType = TypeOfRoof.Text;
-                if (RoofOfUnit50.IsChecked != true)
-                {
-                    roofType = "";
-                }
-                
-                sw.UnitAsmbly(((DataRowView)SizeOfUnit.SelectedItem)["Type"].ToString(), OrderTextBox.Text, SideService.Text, 
-                    WidthU.Text, HeightU.Text, Lenght.Text, frame, panels, roofType, "Section " + SectionTextBox.Text,
-                    TypeOfPanel.SelectedIndex==0 ? "150":"170");
-            }
+                        #region Панели
 
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-                //sw.Logger.Log(LogLevel.Error, string.Format("Ошибка во время генерации блока {0}, время - {1}", DateTime.Now), exception);
+                        var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
+                        var materialP2 = new[] { MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code };
+
+                        string panelWxL = null;
+                        string panelHxL = null;
+                        string panelHxL04 = null;
+
+                        var panelsDelta = TypeOfPanel.SelectedIndex == 0 ? 100 : 140;
+
+                        if (Panel50.IsChecked == true)
+                        {
+                            try
+                            {
+                                //Верх - Низ
+                                try
+                                {
+                                    panelWxL =
+                                        sw.Panels50BuildStr(
+                                            typeOfPanel:
+                                            new[]
+                                            {
+                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                TypeOfPanel.SelectedIndex==0 ? "50":"70"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
+                                            height: Convert.ToString(Convert.ToInt32(WidthU.Text) - panelsDelta),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            onlyPath: true);
+                                }
+                                catch (Exception)
+                                {
+                                    // ignored
+                                }
+
+                                //Несъемная
+                                try
+                                {
+                                    panelHxL =
+                                        sw.Panels50BuildStr(
+                                            typeOfPanel:
+                                            new[]
+                                            {
+                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                TypeOfPanel.SelectedIndex==0 ? "50":"70"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
+                                            height: Convert.ToString(Convert.ToInt32(HeightU.Text) - panelsDelta),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            onlyPath: true);
+                                }
+                                catch (Exception)
+                                {
+                                    // ignored
+                                }
+
+                                //Cъемная
+                                try
+                                {
+                                    panelHxL04 =
+                                        sw.Panels50BuildStr(
+                                            typeOfPanel: new[]
+                                            {
+                                                TypeOfPanel50.SelectedValue.ToString(),
+                                                TypeOfPanel50.Text,
+                                                TypeOfPanel.SelectedIndex==0 ? "50":"70"
+                                            },
+                                            width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
+                                            height: Convert.ToString(Convert.ToInt32(HeightU.Text) - panelsDelta),
+                                            materialP1: materialP1,
+                                            materialP2: materialP2,
+                                            покрытие: new[]
+                                            {
+                                                Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                                                Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                                                Ral1.SelectedValue?.ToString() ?? "",
+                                                Ral2.SelectedValue?.ToString() ?? ""
+                                            },
+                                            onlyPath: true);
+                                }
+                                catch (Exception exception)
+                                {
+                                    MessageBox.Show(exception.ToString());
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.ToString());
+                            }
+                        }
+
+                        #endregion
+                        
+                        var panels = new[]{panelWxL , panelHxL, panelHxL04};
+                        
+                        var roofType = TypeOfRoof.Text;
+                        if (RoofOfUnit50.IsChecked != true){roofType = "";}
+
+                        sw.UnitAsmbly(((DataRowView)SizeOfUnit.SelectedItem)["Type"].ToString(), OrderTextBox.Text, SideService.Text,
+                            WidthU.Text, HeightU.Text, Lenght.Text, frame, panels, roofType, "Section " + SectionTextBox.Text,
+                            thicknessOfPanel == "50" ? "150" : "170");
+                    }
+
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                    }
+                    break;
             }
         }
 
@@ -429,18 +585,12 @@ namespace AirVentsCadWpf.DataControls
 
         void HeightU_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                BUILDING_Click(this, new RoutedEventArgs());
-            }
+            if (e.Key == Key.Enter){BUILDING_Click(this, new RoutedEventArgs());}
         }
 
         void WidthU_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                BUILDING_Click(this, new RoutedEventArgs());
-            }
+            if (e.Key == Key.Enter){BUILDING_Click(this, new RoutedEventArgs());}
         }
 
         void TypeOfFrame_Copy_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -641,6 +791,11 @@ namespace AirVentsCadWpf.DataControls
         void Lenght_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (LenghtBaseFrame != null) LenghtBaseFrame.Text = Lenght.Text;
+        }
+
+        private void TypeOfPanel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SizeOfUnit_SelectionChanged(sender, e);
         }
     }
 }

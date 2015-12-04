@@ -434,7 +434,7 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Dumper(System.String,System.String,System.String,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Dumper(System.String,System.String,System.String,System.Boolean,System.String[])">
             <summary>
             Метод по генерации "Регулятора расхода воздуха"
             </summary>
@@ -442,8 +442,9 @@
             <param name="width">ширина заслонки</param>
             <param name="height">высота заслонки</param>
             <param name="isOutDoor"></param>
+            <param name="material"></param>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.DumperS(System.String,System.String,System.String,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.DumperS(System.String,System.String,System.String,System.Boolean,System.String[])">
             <summary>
             Dumpers the s.
             </summary>
@@ -451,6 +452,7 @@
             <param name="width">The width.</param>
             <param name="height">The height.</param>
             <param name="isOutDoor"></param>
+            <param name="material"></param>
             <returns></returns>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Spigot(System.String,System.String,System.String)">
@@ -1394,6 +1396,37 @@
             <param name="roofType">Type of the roof.</param>
             <param name="section">The section.</param>
             <param name="profilOfCascet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.UnitAsmbly30(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String[],System.String,System.String)">
+            <summary>
+            Метод по генерации модели блока усановки на 50-м профиле.
+            </summary>
+            <param name="size">типоразмер</param>
+            <param name="order">The order.</param>
+            <param name="side">сторона обслуживания</param>
+            <param name="widthS">ширина блока</param>
+            <param name="heightS">высота блока</param>
+            <param name="lenghtS">длина блока</param>
+            <param name="frame">The frame.</param>
+            <param name="panels">The panels.</param>
+            <param name="roofType">тип крыши</param>
+            <param name="section">The section.</param>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.UnitAsmbly30Str(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String[],System.String,System.String)">
+            <summary>
+            Units the asmbly string.
+            </summary>
+            <param name="size">The size.</param>
+            <param name="order">The order.</param>
+            <param name="side">The side.</param>
+            <param name="widthS">The width s.</param>
+            <param name="heightS">The lenght s.</param>
+            <param name="lenghtS">The lenght s.</param>
+            <param name="frame"></param>
+            <param name="panels">The panels.</param>
+            <param name="roofType">Type of the roof.</param>
+            <param name="section">The section.</param>
             <returns></returns>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Panels50Build(System.String[],System.String,System.String,System.String[],System.String[],System.String[])">

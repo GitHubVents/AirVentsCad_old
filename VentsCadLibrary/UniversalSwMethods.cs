@@ -38,7 +38,7 @@ namespace VentsCadLibrary
             try
             {
                 LoggerInfo($"Получение последней версии по пути {path}\nБаза - {pdmBase}", "", "GetLastVersionPdm");
-                //MessageBox.Show($"Получение последней версии по пути {path}\nБаза - {pdmBase}", "GetLastVersionPdm");
+                MessageBox.Show($"Получение последней версии по пути {path}\nБаза - {pdmBase}", "GetLastVersionPdm");
                 var vaultSource = new EdmVault5();
                 IEdmFolder5 oFolder;
                 vaultSource.LoginAuto(pdmBase, 0);
@@ -97,9 +97,7 @@ namespace VentsCadLibrary
         {
             if (!_vault5.IsLoggedIn)
             {
-                //MessageBox.Show("Вход в базу - " + pdmBase);
                 _vault5.LoginAuto(pdmBase, 0);
-                //_vault5.LoginAuto("Tets_debag", 0);
             }
 
             BatchAddFiles(filesList);            

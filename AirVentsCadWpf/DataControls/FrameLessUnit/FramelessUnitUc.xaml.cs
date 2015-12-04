@@ -116,7 +116,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
 
             DataGrid1.ItemsSource = images;
 
-
             КришаТипПанели.ItemsSource = new List<ComboBoxItem>
             {
                 new ComboBoxItem {ToolTip = "0", Content = "Стандартная"},
@@ -272,12 +271,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             };
             ТолщинаВннутренней.SelectedIndex = 2;
 
-            SectionTextBox.ItemsSource = new[]
-            {
-                "A", "B", "C", "D", "E", "F", "G", "H",
-                "I", "J", "K", "L", "M", "N", "O", "P",
-                "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-            };
+            SectionTextBox.ItemsSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToList();
 
             MaterialP1.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
             MaterialP1.DisplayMemberPath = "MaterialsName";
@@ -536,20 +530,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             { 
                 var modelSw = new ModelSw();
 
-                //modelSw.FramelessBlock(
-                //  size: ((DataRowView)SizeOfUnit.SelectedItem)["Type"].ToString(),
-                //  order: OrderTextBox.Text,
-                //  side: "левая",
-                //  section: SectionTextBox.Text,
-                //  pDown: null,
-                //  pFixed: null,
-                //  pUp: null,
-                //  съемныеПанели: null,
-                //  промежуточныеСтойки: null,
-                //  dimensions: null,
-                //  троцевыеПанели: null);
-                //return;
-
                 #region PathToBlock
 
                 if (onlySearch.IsChecked != true)
@@ -557,8 +537,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     var framelessBlockNewName = $"{SizeOfUnit.Text} {OrderTextBox.Text}B Section {SectionTextBox.Text}";
 
                     var orderFolder =
-                        $@"{Settings.Default.DestinationFolder}\{ModelSw.UnitFramelessOreders}\{SizeOfUnit.Text}\{
-                            SizeOfUnit.Text} {OrderTextBox.Text}B";
+                        $@"{Settings.Default.DestinationFolder}\{ModelSw.UnitFramelessOreders}\{SizeOfUnit.Text}\{SizeOfUnit.Text} {OrderTextBox.Text}B";
 
                     var framelessBlockNewPath = new FileInfo($@"{orderFolder}\{framelessBlockNewName}.SLDASM").FullName;
 
@@ -813,8 +792,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                         ex.TargetSite.ToString(),
                         "FramelessUnitUc");
                 }
-
-              //  goto m6;
 
                 #region Панель нижняя под монтажные ножки
 
@@ -1198,6 +1175,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     }
                     catch (Exception)
                     {
+                        // ignored
                     }
                     finally
                     {
@@ -1227,7 +1205,10 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                         return;
                     }
                 }
-                catch (Exception){}
+                catch (Exception)
+                {
+                    // ignored
+                }
 
                 #region to delete
 
@@ -1281,10 +1262,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     //PlanelCentrDoor2 = dimO1 + remPanelWidth1 + dimO2 + remPanelWidth2 / 2,
                     //PlanelCentrDoor3 = dimO1 + remPanelWidth1 + dimO2 + remPanelWidth2 + dimO3 + remPanelWidth3 / 2
                     #endregion
-
                 };
-                
-                //dimensions.GetInfo();//return;
 
                 if (PartsGenerationChk.IsChecked == true)
                 {
@@ -1308,9 +1286,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 // m1:
                 //MessageBox.Show("Delete All Parts 2");
 
-
                 modelSw.DeleteAllPartsToDelete();
-
             }
             catch (Exception ex)
             {
@@ -2234,6 +2210,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
         int Visibilyty { get; set; }
 
         readonly DispatcherTimer _dispatcherTimer;
+
         static void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             //Visibilyty = Visibilyty + 1;
@@ -2531,11 +2508,10 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             GoToFileMenuItem.IsEnabled = item?.ExistInSistem != "Нет";
         }
 
-
         
         readonly SolidColorBrush _orangeColorBrush = new SolidColorBrush(Colors.LavenderBlush);
         readonly SolidColorBrush _lightCyanColorBrush = new SolidColorBrush(Colors.LightCyan);
-        private void ExistingParts_LoadingRow(object sender, DataGridRowEventArgs e)
+        void ExistingParts_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             var item = (ModelSw.ExistingAsmsAndParts)e.Row.DataContext;
             e.Row.Background = item?.ExistInSistem == "Нет" ? _lightCyanColorBrush : _orangeColorBrush;
@@ -2551,22 +2527,21 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             PartsGeneration.Visibility = Visibility.Collapsed;
         }
 
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        void checkBox_Checked(object sender, RoutedEventArgs e)
         {
             Quary.Visibility = Visibility.Visible;
         }
 
-        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        void checkBox_Unchecked(object sender, RoutedEventArgs e)
         {
             Quary.Visibility = Visibility.Collapsed;
         }
 
-        private void BuildRb_Checked(object sender, RoutedEventArgs e)
+        void BuildRb_Checked(object sender, RoutedEventArgs e)
         {
             FindParts.IsEnabled = false;
             Build.IsEnabled = true;
         }
     }
-
 }
 

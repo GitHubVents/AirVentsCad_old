@@ -35,7 +35,7 @@ namespace AirVentsCadWpf.DataControls.ForConstructors
             try
             {
                 var sw = new ModelSw();
-                sw.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, false);
+                sw.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, false, null);
             }
             catch (Exception ex)
             {

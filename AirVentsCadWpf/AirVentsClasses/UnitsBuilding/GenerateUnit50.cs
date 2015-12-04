@@ -143,6 +143,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
         #region Fields
 
+        private const string Unit30FolderS = @"\Библиотека проектирования\DriveWorks\01 - Frame 30mm";
         private const string Unit50FolderS = @"\Библиотека проектирования\DriveWorks\01 - Frame 50mm";
         private const string Unit50FolderD = @"\Проекты\Blauberg\01-Frame";
         private const string Unit50Orders = @"\Заказы AirVents";
@@ -154,10 +155,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         private const string Panel30CoilFolder = @"\Библиотека проектирования\DriveWorks\02 - Coil Panel 30mm";
         private const string Panel30DoubleFolder = @"\Библиотека проектирования\DriveWorks\02 - Duble Panel 30mm";
         private const string Panel30RemovableDoubleFolder = @"\Библиотека проектирования\DriveWorks\02 - Removable Panel Duble 30mm";
-        
-
-
-
 
 
         private string _destinationFolder = @"\Проекты\Blauberg\02 - Панели";
@@ -1014,8 +1011,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.SaveAs2($@"{Settings.Default.DestinationFolder}{Unit50FolderD}\{newUnit50Name}.SLDASM", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
             NewComponents.Add(new FileInfo(newUnit50Path));
 
-            _swApp.CloseDoc(new FileInfo(newUnit50Path).Name);
-           // _swApp.ExitApp();
+            _swApp.CloseDoc(new FileInfo(newUnit50Path).Name);// _swApp.ExitApp();
             _swApp = null;
             CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);//.OrderBy(x => x.Length).ToList(), true, Settings.Default.TestPdmBaseName);
             
@@ -1134,75 +1130,16 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             #endregion
 
             #region Start
-
+            
             var modelName = profilOfCascet == "150" ? "01-000-500" : "01-000-700";
 
             var unitAsMmodel = $@"{Settings.Default.SourceFolder}{Unit50FolderS}\{modelName +".SLDASM"}";
             
-            #region UnitName
-
-            //// Каркас 50
-            //var frame50 = string.Format("{0}-{1}", size, lenght);
-            //if (size.EndsWith("N"))
-            //{
-            //    frame50 = string.Format("{0}-{1}-{2}-{3}", size, width, lenght, lenght);
-            //}
-              
-            //var typeUnit = "";
-            //if (type != "Пустой")
-            //{
-            //    typeUnit = string.Format("-{0}", type);
-           //}
-
-            //#region Сторона обслуживания
-
-            //var sideletter = "";
-            //if (side == "левая")// & typeOfPanel != "")
-            //{
-            //    sideletter = "-L";
-            //}
-
-            //#endregion
-
-            #region Обозначение для монтажной рамы
-
-            //var montageFrameType = "";
-            //if (typeOfFrame != "0")
-            //{
-            //    montageFrameType = string.Format("{0}-", typeOfFrame);
-            //}
-
-            //var frameOffsetmf = "";
-            //if (typeOfFrame == "3")
-            //{
-            //    frameOffsetmf = string.Format("-{0}", frameOffset);
-            //}
-
-            //var montFrame = string.Format("_({0}{1}{2})", montageFrameType, thiknessFrame, frameOffsetmf);
-            //if (thiknessFrame == "")
-            //{
-            //    montFrame = "";
-            //}
-
-            #endregion
-
-            //#region  Обозначения для крыши
-
-            //var rooftype = "";
-            //if (roofType != "")
-            //{
-            //    rooftype = "_(" + roofType + ")";
-            //}
-
-            //#endregion
-
-            ////var newUnit50Name = String.Format("{0}{1}{2}{3}{4}{5}", frame50, typeUnit, sideletter, panels, montFrame, rooftype);
-           
-          
-            #endregion
-
             var newUnit50Name = $"{size} {order} {section}";
-            var orderFolder = $@"{Settings.Default.DestinationFolder}\{Unit50Orders}\{size} {order}";
+
+
+            var orderFolder = $@"{Settings.Default.DestinationFolder}\{Unit50Orders}\{size}\{size} {order}";
+
             CreateDistDirectory(orderFolder);
 
             var newUnit50Path = $@"{orderFolder}\{newUnit50Name}.SLDASM";
@@ -1213,24 +1150,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     _swApp.OpenDoc6(newUnit50Path, (int)swDocumentTypes_e.swDocASSEMBLY, (int)swOpenDocOptions_e.swOpenDocOptions_LoadModel, "00", 0, 0);
                 return newUnit50Path;
             }
-
-            #region to delete
-
-            //var pdmFolder = Settings.Default.SourceFolder;
-            //var components = new[]
-            //{
-            //    unitAsMmodel,
-            //    $@"{pdmFolder}{@"Vents-PDM\Проекты\AirVents\AV09\ВНС-901.49.100 Блок вентилятора\"}{"ВНС-901.49.111.SLDPRT"}",
-            //    $@"{pdmFolder}{@"Vents-PDM\Библиотека проектирования\DriveWorks\01 - Frame 50mm\"}{"01-001-50.SLDPRT"}",
-            //    $@"{pdmFolder}{@"Vents-PDM\Библиотека проектирования\DriveWorks\01 - Frame 50mm\"}{"01-002-50.SLDPRT"}",
-            //    $@"{pdmFolder}{@"Vents-PDM\Библиотека проектирования\DriveWorks\01 - Frame 50mm\"}{"01-003-50.SLDPRT"}",
-            //    $@"{pdmFolder}{@"Vents-PDM\Библиотека проектирования\Прочие изделия\Крепежные изделия\Замки и ручки\"}{"M8-Panel block-one side.SLDPRT"}",
-            //    $@"{pdmFolder}{@"Vents-PDM\Библиотека проектирования\Стандартные изделия\"}{"Threaded Rivets с насечкой.SLDPRT"}"
-            //};
-
-            //GetLastVersionPdm(components, Settings.Default.PdmBaseName);
-
-            #endregion
 
             GetLatestVersionAsmPdm(unitAsMmodel, Settings.Default.PdmBaseName);
 
@@ -1248,6 +1167,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 var profilName = profilOfCascet == "150" ? "01-P150-45-" : "01-P170-45-";
                 var deltaForProfil = profilOfCascet == "150" ? 140 : 180;
+
                 //Lenght
                 const double step = 100;
                 double rivetL;
@@ -1651,7 +1571,407 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         }
 
         #endregion
+
+
+        #region Unit 30
+
+        /// <summary>
+        /// Метод по генерации модели блока усановки на 50-м профиле.
+        /// </summary>
+        /// <param name="size">типоразмер</param>
+        /// <param name="order">The order.</param>
+        /// <param name="side">сторона обслуживания</param>
+        /// <param name="widthS">ширина блока</param>
+        /// <param name="heightS">высота блока</param>
+        /// <param name="lenghtS">длина блока</param>
+        /// <param name="frame">The frame.</param>
+        /// <param name="panels">The panels.</param>
+        /// <param name="roofType">тип крыши</param>
+        /// <param name="section">The section.</param>
+        public void UnitAsmbly30(string size, string order, string side, string widthS, string heightS,
+            string lenghtS, string frame,
+            string[] panels, string roofType, string section)
+        {
+            LoggerInfo($"Начало генерации блока {$"{size} {order} {section}"}", "", "UnitAsmbly");
+            try
+            {
+                if (!InitializeSw(true)) return;
+
+                var path = UnitAsmbly30Str(size, order, side, widthS, heightS, lenghtS, frame,
+                        panels, roofType, section);
+
+                if (path == "")
+                {
+                    return;
+                }
+                if (MessageBox.Show(
+                    $"Модель находится по пути:\n {new FileInfo(path).Directory}\n Открыть модель?",
+                    $" {Path.GetFileNameWithoutExtension(new FileInfo(path).FullName)} ", MessageBoxButton.YesNoCancel) ==
+                    MessageBoxResult.Yes)
+                {
+                    UnitAsmbly30Str(size, order, side, widthS, heightS, lenghtS, frame,
+                        panels, roofType, section);
+                }
+            }
+            catch (Exception exception)
+            {
+                LoggerError(
+                    $"Ошибка во время генерации блока {$"{size}-{order}-{section}"}. {exception.Message}", exception.StackTrace, "UnitAsmbly");
+            }
+        }
+
+        /// <summary>
+        /// Units the asmbly string.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="order">The order.</param>
+        /// <param name="side">The side.</param>
+        /// <param name="widthS">The width s.</param>
+        /// <param name="heightS">The lenght s.</param>
+        /// <param name="lenghtS">The lenght s.</param>
+        /// <param name="frame"></param>
+        /// <param name="panels">The panels.</param>
+        /// <param name="roofType">Type of the roof.</param>
+        /// <param name="section">The section.</param>
+        /// <returns></returns>
+        public string UnitAsmbly30Str(string size, string order, string side, string widthS, string heightS, string lenghtS,
+            string frame, string[] panels, string roofType, string section)
+        {
+            string panel1 = null;
+            //foreach (var panel in panels)
+            //{
+            //    panel1 = panel1 +"\n"+ panel;
+            //}
+            //MessageBox.Show(panel1);
+
+            if (!IsConvertToInt(new[] { widthS, heightS, lenghtS })) { return null; }
+
+            #region Basic Parameters
+
+            // Габариты
+            var width = GetInt(widthS);
+            var height = GetInt(heightS);
+            var lenght = GetInt(lenghtS);
+
+            #endregion
+
+            #region Start
+
+            const string modelName = "01 - Frame 30mm";
+
+            var unitAsMmodel = $@"{Settings.Default.SourceFolder}{Unit30FolderS}\{modelName + ".SLDASM"}";
         
+
+            var newUnit30Name = $"{size} {order} {section}";
+            var orderFolder = $@"{Settings.Default.DestinationFolder}\{Unit50Orders}\{size}\{size} {order}";
+            CreateDistDirectory(orderFolder);
+
+            var newUnit30Path = $@"{orderFolder}\{newUnit30Name}.SLDASM";
+
+            if (File.Exists(newUnit30Path))
+            {
+                GetLastVersionPdm(new FileInfo(newUnit30Path).FullName, Settings.Default.TestPdmBaseName);
+                _swApp.OpenDoc6(newUnit30Path, (int)swDocumentTypes_e.swDocASSEMBLY, (int)swOpenDocOptions_e.swOpenDocOptions_LoadModel, "00", 0, 0);
+                return newUnit30Path;
+            }
+
+            GetLatestVersionAsmPdm(unitAsMmodel, Settings.Default.PdmBaseName);
+
+            if (!Warning()) return "";
+            var swDoc = _swApp.OpenDoc6(unitAsMmodel, (int)swDocumentTypes_e.swDocASSEMBLY, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
+            _swApp.Visible = true;
+            var swAsm = (AssemblyDoc)swDoc;
+            swAsm.ResolveAllLightWeightComponents(false);
+
+            #endregion
+
+            #region Frame
+
+            try
+            {
+                const string profilName = "01-S 1300-25-";
+
+                //Lenght
+                const double step = 100;
+
+                const string modelLenghtProfil = "01-S 1300-25-003";
+                const string lenghtProfil = "01-S 1300-25-003-20";
+
+                var newName = profilName + (lenght - 100);
+                var newPartPath = $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}.SLDPRT";
+                if (File.Exists(new FileInfo(newPartPath).FullName))
+                {
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+                    swDoc.Extension.SelectByID2(lenghtProfil + "@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(newPartPath, "", true, true);
+                    _swApp.CloseDoc(modelLenghtProfil + ".SLDPRT");
+                }
+                else if (File.Exists(newPartPath) != true)
+                {
+                    SwPartParamsChangeWithNewName(modelLenghtProfil,
+                        $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}",
+                        new[,]
+                        {
+                            {"D1@Бобышка-Вытянуть1", Convert.ToString(lenght - 100)}
+                        },
+                        false,
+                        null);
+                    _swApp.CloseDoc(newName);
+                }
+                
+                //Width
+                newName = profilName + (width - 100);
+                newPartPath = $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}.SLDPRT";
+
+                const string modelWidthProfil = "01-S 1300-25-002";
+                const string widthProfil = "01-S 1300-25-002-16";
+
+                if (File.Exists(new FileInfo(newPartPath).FullName))
+                {
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+                    swDoc.Extension.SelectByID2(widthProfil + "@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(newPartPath, "", true, true);
+                    _swApp.CloseDoc(modelWidthProfil + ".SLDPRT");
+                }
+                else if (File.Exists(newPartPath) != true)
+                {
+                    SwPartParamsChangeWithNewName(modelWidthProfil,
+                        $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}",
+                        new[,]
+                        {
+                            {"D1@Бобышка-Вытянуть1", Convert.ToString(width - 100)}
+                        },
+                        false,
+                        null);
+                    _swApp.CloseDoc(newName);
+                }
+                
+                //Height
+                newName = profilName + (height - 100);
+                newPartPath = $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}.SLDPRT";
+
+                const string modelHeightProfil = "01-S 1300-25-001";
+                const string heightProfil = "01-S 1300-25-001-16";
+
+                if (File.Exists(new FileInfo(newPartPath).FullName))
+                {
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+                    swDoc.Extension.SelectByID2(heightProfil + "@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(newPartPath, "", true, true);
+                    _swApp.CloseDoc(modelHeightProfil + ".SLDPRT");
+                }
+                else if (File.Exists(newPartPath) != true)
+                {
+                    SwPartParamsChangeWithNewName(modelHeightProfil,
+                        $@"{Settings.Default.DestinationFolder}\{Unit50FolderD}\{newName}",
+                        new[,]
+                        {
+                            {"D1@Бобышка-Вытянуть1", Convert.ToString(height - 100)}
+                        },
+                        false,
+                        null);
+                    _swApp.CloseDoc(newName);
+                }
+                
+                swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+                swDoc.EditRebuild3();
+                swDoc.ForceRebuild3(true);
+                swAsm = (AssemblyDoc)swDoc;
+
+                if (side == "левая")
+                {
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-1@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-6@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-7@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-10@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-4@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-12@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-12@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                else if (side != "левая")
+                {
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-16@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-21@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-22@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-17@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets с насечкой-23@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-18@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("M8-Panel block-one side-18@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Frame");
+            }
+
+            #endregion
+
+            #region Roof
+
+            try
+            {
+                if (!string.IsNullOrEmpty(roofType))
+                {
+                    swAsm = (AssemblyDoc)swDoc;
+                    swAsm.ResolveAllLightWeightComponents(false);
+                    Thread.Sleep(5000);
+                    
+                    var roofUnit50 = RoofStr(roofType, Convert.ToString(width), Convert.ToString(lenght), true);
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+
+                    swDoc.Extension.SelectByID2("15-01-770-1000-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(roofUnit50, "", false, true);
+                    _swApp.CloseDoc(new FileInfo(roofUnit50).Name);
+                }
+                else
+                {
+                    swDoc.Extension.SelectByID2("15-01-770-1000-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Roof");
+            }
+
+            #endregion
+
+            #region Panels
+
+            try
+            {
+                if (panels[0] != null)
+                {
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+
+                    var panelWxL = panels[0];
+                    var panelHxL = panels[1];
+                    var panelHxL04 = panels[2];
+
+                    var sidePanelL = panelHxL;
+                    var sidePanelR = panelHxL04;
+
+                    if (side == "левая")
+                    {
+                        sidePanelL = panelHxL04;
+                        sidePanelR = panelHxL;
+                    }
+
+                    swDoc.Extension.SelectByID2("02-01-400-880-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(panelWxL, "", false, true);
+
+                    swDoc.Extension.SelectByID2("02-01-400-625-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(sidePanelL, "", false, true);
+                    swDoc.Extension.SelectByID2("02-04-400-625-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(sidePanelR, "", false, true);
+                }
+                else
+                {
+                    swDoc.Extension.SelectByID2("02-01-400-880-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("02-01-400-625-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("02-04-400-625-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.ToString(), "Panels");
+            }
+
+            #endregion
+
+            #region Монтажная рама
+
+            try
+            {
+                if (frame != "")
+                {
+                    swAsm = (AssemblyDoc)swDoc;
+                    swAsm.ResolveAllLightWeightComponents(true);
+                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(modelName + ".SLDASM", true, 0)));
+                    swDoc.Extension.SelectByID2("10-2-1300-1150-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swAsm.ReplaceComponents(frame, "", false, true);
+                    _swApp.CloseDoc(new FileInfo(frame).Name);
+                }
+                else
+                {
+                    swDoc.Extension.SelectByID2("10-2-1300-1150-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Монтажная рама");
+            }
+
+            #endregion
+         
+            #region COMPPATTERN
+
+            swDoc.Extension.SelectByID2("DerivedCrvPattern1", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("DerivedCrvPattern2", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("DerivedCrvPattern3", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега вертикальная зеркалка", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега горизонтальная зеркальное", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега горизонтальная зеркальное", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+            swDoc.EditDelete();
+            swDoc.Extension.SelectByID2("Уголок 901.31.209", "FTRFOLDER", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Косынка ВНС-901.31.126", "FTRFOLDER", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега вертикальная", "FTRFOLDER", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега горизонтальная", "FTRFOLDER", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("Омега горизонтальная", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+            swDoc.EditDelete();
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-1@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-2@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-3@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-4@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-5@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-6@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-7@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.209-8@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-1@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-2@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-3@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-4@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-5@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-6@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-7@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.126-8@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("01-004-50-1@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-1@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-2@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-3@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-4@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("01-005-50-3@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-9@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-10@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-13@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-14@" + modelName, "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            swDoc.Extension.SelectByID2("ВНС-901.31.125-14@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+            swDoc.EditDelete();
+
+            #endregion
+        
+
+            #region  Сохранение
+
+            _swApp.IActivateDoc2(modelName + ".SLDASM", false, 0);
+            swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
+            swDoc.ForceRebuild3(true);
+            swDoc.SaveAs2(newUnit30Path, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+            NewComponents.Add(new FileInfo(newUnit30Path));
+            _swApp.CloseDoc(new FileInfo(newUnit30Path).Name);
+            _swApp = null;
+            CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);
+
+            return newUnit30Path;
+
+            #endregion
+        }
+
+        #endregion
+
         #region Panels
 
         /// <summary>
@@ -2691,7 +3011,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     modelName = "02-01";
                     break;
             }
-
             
             var newPanel30Name = modelName + "-" + width + "-" + height + "-" + modelType;
 
@@ -2700,11 +3019,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             LoggerInfo("Построение панели - " + newPanel30Name, "", "Panels30BuildStr");
 
             var newPanel30Path = $@"{Settings.Default.DestinationFolder}{newDestPath}\{newPanel30Name}.SLDASM";
-            
 
             if (File.Exists(new FileInfo(newPanel30Path).FullName))
             {
-                MessageBox.Show(newPanel30Path, "Данная модель уже находится в базе");return;
+                path = new FileInfo(newPanel30Path).FullName; return;
+                //MessageBox.Show(newPanel30Path, "Данная модель уже находится в базе");return;
             }
 
             #region modelPanelAsmbly        
@@ -2728,7 +3047,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             var heightD = Convert.ToDouble(height);
             var halfWidthD = Convert.ToDouble(widthD / 2);
             // Шаг заклепок
-            const double step = 80;
+            const double step = 100;
             var rivetW = (Math.Truncate(widthD / step) + 1) * 1000;
             var rivetWd = (Math.Truncate(halfWidthD / step) + 1) * 1000;
             var rivetH = (Math.Truncate(heightD / step) + 1) * 1000;
@@ -3780,6 +4099,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.EditRebuild3();
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(new FileInfo(newPanel30Path).FullName, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+            path = new FileInfo(newPanel30Path).FullName;
             NewComponents.Add(new FileInfo(newPanel30Path));
             _swApp.CloseDoc(new FileInfo(newPanel30Path).Name);
             _swApp.Visible = true;
@@ -3790,7 +4110,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
               //  PartInfoToXml(newComponent.FullName);
             }
             
-            MessageBox.Show(newPanel30Path, "Модель построена");
+            //MessageBox.Show(newPanel30Path, "Модель построена");
         }
 
         private void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
@@ -3812,11 +4132,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     }
                 }
 
-                if (покрытие[1] != "0" )
+                if (покрытие != null)
                 {
-                    setMaterials.SetColor("00", покрытие[0], покрытие[1], покрытие[2], _swApp);    
+                    if (покрытие[1] != "0")
+                    {
+                        setMaterials.SetColor("00", покрытие[0], покрытие[1], покрытие[2], _swApp);
+                    }
+                    _swApp.IActiveDoc2.Save();
                 }
-                _swApp.IActiveDoc2.Save();
 
                 try
                 {

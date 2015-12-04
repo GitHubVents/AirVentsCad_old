@@ -193,12 +193,7 @@ namespace AirVentsCadWpf.DataControls
                     Ral2.SelectedValue?.ToString() ?? ""
                });
                     break;
-
             }
-            
-
-           
-            
         }
 
         void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -251,16 +246,7 @@ namespace AirVentsCadWpf.DataControls
             mapLoader.EndInit();
             if (PicturePanel != null) PicturePanel.Source = mapLoader;
         }
-
-        private void Ral1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-           
-        }
-
-        private void Ral2_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-           
-        }
+       
 
         private void Ral1_LayoutUpdated(object sender, EventArgs e)
         {

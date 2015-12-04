@@ -1308,11 +1308,13 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
             GabaritsForPaintingCamera(swDoc);
             swDoc.ForceRebuild3(true);
+            swDoc.ForceRebuild3(false);
 
-            //foreach (var keyValuePair in _patternsInAsmToDelete)
-            //{ swDoc.Extension.SelectByID2(keyValuePair.Value + "@" + ModelName.Replace(".SLDASM", ""), "COMPPATTERN", 0, 0, 0, true, 0, null, 0); swAsm.DissolveComponentPattern();}
-
-            swDoc.ForceRebuild3(true);
+            foreach (var keyValuePair in _patternsInAsmToDelete)
+            {
+                swDoc.Extension.SelectByID2(keyValuePair.Value + "@" + ModelName.Replace(".SLDASM", ""), "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+                swAsm.DissolveComponentPattern();
+            }
 
             swDoc.SaveAs2(framelessBlockNewPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
             //NewComponents.Add(new FileInfo(framelessBlockNewPath));

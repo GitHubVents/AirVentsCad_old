@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -53,7 +52,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             var swDoc = _swApp.IActiveDoc2;
             var table = (DesignTable)swDoc.GetDesignTable();
             if (table == null) return;
-            
 
             table.Updatable = true;
             var names = (string[])swDoc.GetConfigurationNames();
@@ -104,9 +102,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="width">ширина заслонки</param>
         /// <param name="height">высота заслонки</param>
         /// <param name="isOutDoor"></param>
-        public void Dumper(string type, string width, string height, bool isOutDoor)
+        /// <param name="material"></param>
+        public void Dumper(string type, string width, string height, bool isOutDoor, string[] material)
         {
-            var path = DumperS(type, width, height, isOutDoor);
+            var path = DumperS(type, width, height, isOutDoor, material);
             #region
             // this.Dispatcher.Invoke((Action)(() => { tb.Text = "новое значение"; }));
             //Parallel.Invoke(() => DumperS(typeOfFlange, width, height),
@@ -133,8 +132,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="isOutDoor"></param>
+        /// <param name="material"></param>
         /// <returns></returns>
-        public string DumperS(string typeOfFlange, string width, string height, bool isOutDoor)
+        public string DumperS(string typeOfFlange, string width, string height, bool isOutDoor, string[] material)
         {
             if (IsConvertToInt(new[] { width, height }) == false){return "";}
 
@@ -161,13 +161,16 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     break;
             }
 
+            var modelType = $"{(material[3] == "AZ" ? "" : "-" + material[3])}{(material[3] == "AZ" ? "" : material[1])}";
+            
             var drawing = "11-20";
             if (modelName == "11-30")
             { drawing = modelName; }
-            var newDamperName = modelName + "-" + width + "-" + height + (isOutDoor ? "-O":"");
+            var newDamperName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O":"");
             var newDamperPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newDamperName}.SLDDRW";
 
             string path; int fileId; int projectId;
+
             if (GetExistingFile(Path.GetFileNameWithoutExtension(newDamperPath), out path, out fileId, out projectId))
             {
                 if (MessageBox.Show("Вибровставка " + Path.GetFileNameWithoutExtension(newDamperPath) + " уже есть в базе. Открыть?",
@@ -209,13 +212,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             var hC = Math.Truncate(7 + 5.02 + (heightD - countL / 10 - 10.04) / 2);
 
             // Коэффициенты и радиусы гибов   
-            const string thiknessStr = "1,0";
-            var sbSqlBaseData = new SqlBaseData();
-            var bendParams = sbSqlBaseData.BendTable(thiknessStr);
-            var bendRadius = Convert.ToDouble(bendParams[0]);
-            var kFactor = Convert.ToDouble(bendParams[1]);
-
-            //var newComponents = new List<FileInfo>();
+            var thiknessStr = material?[1].Replace(".", ",") ?? "0,8";
+            //MessageBox.Show(thiknessStr);
 
             #region typeOfFlange = "20"
 
@@ -251,7 +249,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("Rivet Bralo-126@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
                     // 11-005 
-                    newName = "11-05-" + height;
+                    newName = "11-05-" + height + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
@@ -266,24 +264,24 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D3@Эскиз1", Convert.ToString(heightD)},
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-                            {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
-
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                {"D3@Эскиз1", Convert.ToString(heightD)},
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
-                        //newComponents.Add(new FileInfo(newPartPath));
+
+                        AddMaterial(material, newName);
+
                         NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
 
                     // 11-006 
-                    newName = "11-06-" + height;
+                    newName = "11-06-" + height + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
@@ -298,16 +296,16 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D3@Эскиз1", Convert.ToString(heightD)},
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                {"D3@Эскиз1", Convert.ToString(heightD)},
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
+
+                        AddMaterial(material, newName);
+
                         NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                        //newComponents.Add(new FileInfo(newPartPath));
                     }
                 }
                 else
@@ -338,7 +336,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
 
                 // 11-001 
-                newName = "11-01-" + height + (isOutDoor ? "-O" : "");
+                newName = "11-01-" + height + modelType + (isOutDoor ? "-O" : "");
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
@@ -361,19 +359,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                             {"D1@Кривая2", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл", thiknessStr}
                         },
                         false,
                         null);
 
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                    //newComponents.Add(new FileInfo(newPartPath));
                 }
                 
                 // 11-002 
-                newName = "11-03-" + width;
+                newName = "11-03-" + width + modelType;
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -393,17 +390,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                             {"D1@Кривая3", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл1", thiknessStr},
-                            {"D1@Листовой металл1", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл1", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл1", thiknessStr}
                         },
                         false,
                         null);
+
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 // 11-003 
-                newName = "11-02-" + height + (isOutDoor ? "-O" : "");
+                newName = "11-02-" + height + modelType + (isOutDoor ? "-O" : "");
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -424,19 +422,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                             {"D1@Кривая2", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл", thiknessStr}
                         },
                         false,
                         null);
 
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
-                // 11-004 
-
-                newName = "11-04-" + width + "-" + hC;
+                // 11-004
+                newName = "11-04-" + width + "-" + hC + modelType;
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -447,7 +444,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
                 else
                 {
-                    bendParams = sbSqlBaseData.BendTable("0,8");
                     SwPartParamsChangeWithNewName("11-004",
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                         new[,]
@@ -458,18 +454,17 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                             {"D1@Кривая5", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл1", thiknessStr},
-                            {"D1@Листовой металл1", Convert.ToString(Convert.ToDouble(bendParams[0]))},
-                            {"D2@Листовой металл1", Convert.ToString((Convert.ToDouble(bendParams[1]))*1000)}
+                            {"Толщина@Листовой металл1", thiknessStr}
                         },
                         false,
                         null);
+
+                    AddMaterial(material, newName);
 
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 //11-100 Сборка лопасти
-
                 var newNameAsm = "11-" + width;
                 var newPartPathAsm =
                     $@"{Settings.Default.DestinationFolder}{DamperDestinationFolder}\{newNameAsm}.SLDASM";
@@ -484,7 +479,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     #region  11-101  Профиль лопасти
 
-                    newName = "11-" + (Math.Truncate(widthD - 23)) + "-01";
+                    newName = "11-" + (Math.Truncate(widthD - 23)) + "-01" + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
@@ -498,8 +493,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         _swApp.IActivateDoc2("10-100", false, 0);
                         swDoc = (ModelDoc2)((IModelDoc2)(_swApp.ActiveDoc));
-                        swDoc.Extension.SelectByID2("D1@Вытянуть1@11-101-1@11-100", "DIMENSION", 0, 0, 0, false, 0, null,
-                            0);
+                        swDoc.Extension.SelectByID2("D1@Вытянуть1@11-101-1@11-100", "DIMENSION", 0, 0, 0, false, 0, null, 0);
                         var myDimension = ((Dimension)(swDoc.Parameter("D1@Вытянуть1@11-101.Part")));
                         myDimension.SystemValue = (widthD - 23) / 1000;
                         _swApp.ActivateDoc2("11-101", false, 0);
@@ -560,7 +554,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("Rivet Bralo-319@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
                     // 11-005 
-                    newName = "11-05-" + height;
+                    newName = "11-05-" + height + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
@@ -575,23 +569,23 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D3@Эскиз1", Convert.ToString(heightD)},
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-                            {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
-
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                {"D3@Эскиз1", Convert.ToString(heightD)},
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
+                        AddMaterial(material, newName);
+
                         NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
 
                     // 11-006 
-                    newName = "11-06-" + height;
+                    newName = "11-06-" + height + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
@@ -606,14 +600,13 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D3@Эскиз1", Convert.ToString(heightD)},
-                            {"D1@Кривая1", Convert.ToString(rivetH)},
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                {"D3@Эскиз1", Convert.ToString(heightD)},
+                                {"D1@Кривая1", Convert.ToString(rivetH)},
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
+                        AddMaterial(material, newName);
                         NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
                 }
@@ -722,7 +715,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 #region Детали
 
                 // 11-30-001 
-                newName = "11-30-03-" + width;
+                newName = "11-30-03-" + width + modelType;
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -758,19 +751,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         new[,]
                         {
                             {"D2@Эскиз1", Convert.ToString(widthD/2 - 0.8)},
-                            {"D3@Эскиз18", Convert.ToString(lp2)}, //
+                            {"D3@Эскиз18", Convert.ToString(lp2)}, 
                             {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл", thiknessStr}
                         },
                         false,
                         null);
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 // 11-30-002 
-                newName = "11-30-01-" + height + (isOutDoor ? "-O" : "");
+                newName = "11-30-01-" + height + modelType + (isOutDoor ? "-O" : "");
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -792,17 +785,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             {"D1@Кривая2", Convert.ToString(countL)},
                             {"D1@Кривая3", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл", thiknessStr}
                         },
                         false,
                         null);
+
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 // 11-30-004 
-                newName = "11-30-02-" + height + (isOutDoor ? "-O" : "");
+                newName = "11-30-02-" + height + modelType + (isOutDoor ? "-O" : "");
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -824,18 +818,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                             {"D1@Кривая5", Convert.ToString(rivetH)},
 
-                            {"Толщина@Листовой металл", thiknessStr},
-                            {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл", thiknessStr}
                         },
                         false,
                         null);
+
+                    AddMaterial(material, newName);
+
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
 
                 // 11-30-003 
-                newName = "11-30-04-" + Math.Truncate(lp) + "-" + hC;
+                newName = "11-30-04-" + Math.Truncate(lp) + "-" + hC + modelType;
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
@@ -846,9 +841,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
                 else
                 {
-                    bendParams = sbSqlBaseData.BendTable("0,8");
-                    bendRadius = Convert.ToDouble(bendParams[0]);
-                    kFactor = Convert.ToDouble(bendParams[1]);
                     SwPartParamsChangeWithNewName("11-30-003",
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                         new[,]
@@ -856,12 +848,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             {"D2@Эскиз1", Convert.ToString(lp)},
                             {"D7@Ребро-кромка1", Convert.ToString(hC)},
                             {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
-                            {"Толщина@Листовой металл1", thiknessStr},
-                            {"D1@Листовой металл1", Convert.ToString(bendRadius)},
-                            {"D2@Листовой металл1", Convert.ToString(kFactor*1000)}
+                            {"Толщина@Листовой металл1", thiknessStr}
                         },
                         false,
                         null);
+
+                    AddMaterial(material, newName);
 
                     NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
@@ -991,7 +983,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 #region 11-30-100 Сборка Перемычки
 
-                newNameAsm = "11-30-100-" + height;
+                newNameAsm = "11-30-100-" + height + modelType;
                 newPartPathAsm = $@"{Settings.Default.DestinationFolder}{DamperDestinationFolder}\{newNameAsm}.SLDASM";
 
                 if (isdouble)
@@ -1007,7 +999,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         #region  11-30-101  Профиль перемычки
 
-                        newName = "11-30-101-" + height;
+                        newName = "11-30-101-" + height + modelType;
                         newPartPath =
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                         if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 0))
@@ -1028,12 +1020,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                                     {"D3@Эскиз19", Convert.ToString(countL/10 - 100)},
                                     {"D1@Кривая1", Convert.ToString(countL)},
                                     {"D1@Кривая2", Convert.ToString(rivetH)},
-                                    {"Толщина@Листовой металл", thiknessStr},
-                                    {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                                    {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                    {"Толщина@Листовой металл", thiknessStr}
                                 },
                                 false,
                                 null);
+                            AddMaterial(material, newName);
+
                             _swApp.CloseDoc(newName);
                             NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
                         }
@@ -1046,7 +1038,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         #region  11-30-102  Профиль перемычки
 
-                        newName = "11-30-102-" + height;
+                        newName = "11-30-102-" + height + modelType;
                         newPartPath =
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                         if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 0))
@@ -1067,12 +1059,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                                     {"D2@Эскиз19", Convert.ToString(countL/10 - 100)},
                                     {"D1@Кривая2", Convert.ToString(countL)},
                                     {"D1@Кривая1", Convert.ToString(rivetH)},
-                                    {"Толщина@Листовой металл", thiknessStr},
-                                    {"D1@Листовой металл", Convert.ToString(bendRadius)},
-                                    {"D2@Листовой металл", Convert.ToString(kFactor*1000)}
+                                    {"Толщина@Листовой металл", thiknessStr}
                                 },
                                 false,
                                 null);
+                            try
+                            {
+                                VentsMatdll(material, null, newName);
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.Message);
+                            }
+
                             _swApp.CloseDoc(newName);
                             NewComponentsFull.Add(new VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
                         }
@@ -1125,6 +1124,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             _swApp = null;
             return newDamperPath;
+        }
+
+        private void AddMaterial(string[] material, string newName)
+        {
+            try
+            {
+                VentsMatdll(material, null, newName);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
         }
 
         #endregion

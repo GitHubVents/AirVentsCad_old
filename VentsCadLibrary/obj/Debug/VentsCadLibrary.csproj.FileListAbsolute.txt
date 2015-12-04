@@ -23,3 +23,15 @@ D:\Projects VisualStudio\Source\Repos\AirVentsOnline2\VentsCadLibrary\obj\Debug\
 D:\Projects VisualStudio\Source\Repos\AirVentsOnline2\VentsCadLibrary\obj\Debug\VentsCadLibrary.csproj.ResolveComReference.cache
 D:\Projects VisualStudio\Source\Repos\AirVentsOnline2\VentsCadLibrary\obj\Debug\VentsCadLibrary.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsOnline2\VentsCadLibrary\obj\Debug\VentsCadLibrary.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\VentsCadLibrary.dll.config
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\VentsCadLibrary.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\VentsCadLibrary.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\VentsMaterials.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\MakeDxfUpdatePartData.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\MakeDxfUpdatePartData.xml
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\Interop.EdmLib.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.csprojResolveAssemblyReference.cache
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\Interop.EdmLib.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.csproj.ResolveComReference.cache
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.pdb

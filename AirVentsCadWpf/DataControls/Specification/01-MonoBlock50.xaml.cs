@@ -268,7 +268,7 @@ namespace AirVentsCadWpf.DataControls
                         w = width - 70;
                         h = height - 90 + 17;
                     }
-                    dumper = sw.DumperS(TypeOfDumper.Text, Convert.ToString(w), Convert.ToString(h), false).Replace("DRW", "ASM");
+                    dumper = sw.DumperS(TypeOfDumper.Text, Convert.ToString(w), Convert.ToString(h), false, null).Replace("DRW", "ASM");
                 }
 
                 #endregion
