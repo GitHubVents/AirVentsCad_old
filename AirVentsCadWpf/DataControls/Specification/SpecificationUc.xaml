@@ -79,9 +79,9 @@
                     </Grid>
                     <Button x:Name="ВыгрузитьВXml" Content="Выгрузить в XML" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Background="{x:Null}" Padding="5,2" Click="ВыгрузитьВXml_Click"
                             Grid.Row="0" Grid.Column="1" IsEnabledChanged="ВыгрузитьВXml_IsEnabledChanged" />
-                    <CheckBox x:Name="IncludeAsms" Content="Для всех подсборок" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center"/>
+                    <CheckBox x:Name="IncludeAsms" Content="Для всех подсборок" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" IsChecked="True"/>
                     <CheckBox x:Name="ПолучитьПереченьДеталей"  Content="Получить перечень деталей" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Grid.Row="1"
-                              Grid.Column="0" Click="ПолучитьПереченьДеталей_Click" IsEnabledChanged="ПолучитьПереченьДеталей_IsEnabledChanged" Unchecked="ПолучитьПереченьДеталей_Unchecked" 
+                              Grid.Column="0" Unchecked="ПолучитьПереченьДеталей_Unchecked" 
                               Checked="ПолучитьПереченьДеталей_Checked"/>
                     <Label x:Name="КонфигурацияLbl" Content="Конфигурация" Grid.Column="1" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Top" Grid.Row="1"/>
                     <ComboBox x:Name="Конфигурация" Margin="2" VerticalAlignment="Top" Background="{x:Null}" SelectedIndex="0" MinWidth="35" Padding="5,4" SelectionChanged="Конфигурация_SelectionChanged" IsVisibleChanged="Конфигурация_IsVisibleChanged" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Width="50"/>
@@ -107,7 +107,7 @@
                     <Label Content="Имя сборки" HorizontalAlignment="Center" Margin="3" VerticalAlignment="Center"/>
                     <TextBox x:Name="ИмяСборки1" Grid.Column="1" HorizontalAlignment="Center" Margin="3,5" Text="" VerticalAlignment="Center" MinWidth="100" Padding="5,2" KeyDown="ИмяСборки1_KeyDown" LayoutUpdated="ИмяСборки1_LayoutUpdated"/>
                     <Button x:Name="Поиск" Content="Поиск" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,5" VerticalAlignment="Center" Background="{x:Null}" Padding="5,2" Click="Поиск_Click"/>
-                    <Button x:Name="ВыгрузитьСпецификацию" Content="Получить перечень деталей" Grid.Column="4" HorizontalAlignment="Center" Margin="3" VerticalAlignment="Center" Background="{x:Null}" Click="ВыгрузитьСпецификацию_Click" Padding="5,2"/>
+                    <Button x:Name="ВыгрузитьСпецификацию" Content="Получить перечень деталей" Grid.Column="4" HorizontalAlignment="Center" Margin="3" VerticalAlignment="Center" Background="{x:Null}" Padding="5,2"/>
                     <ComboBox x:Name="Конфигурации" Grid.Column="3" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center" Background="{x:Null}" SelectedIndex="0" LayoutUpdated="Конфигурации_LayoutUpdated" MinWidth="35" Padding="5,4"/>
                 </Grid>
                 <Grid x:Name="AsmComponents" Margin="2" Grid.Row="1" MinHeight="67">
@@ -204,9 +204,9 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
-                                            <ComboBox x:Name="ConfigList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="50" Background="{x:Null}" LayoutUpdated="MaterialsList_LayoutUpdated"/>
+                                            <ComboBox x:Name="ConfigList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="50" Background="{x:Null}" />
                                             <Button x:Name="AcceptConfig" Content="Задать конфигурацию" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Padding="1" Background="{x:Null}"/>
-                                            <Button x:Name="BeginUpdatePartPropConfig" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="BeginUpdatePartProp_Click" Background="{x:Null}"/>
+                                            <Button x:Name="BeginUpdatePartPropConfig" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="{x:Null}"/>
                                         </Grid>
                                         <Grid x:Name="PartProps" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Grid.Column="2">
                                             <Grid.RowDefinitions>
@@ -217,9 +217,9 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <ComboBox x:Name="MaterialsList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="100" Background="{x:Null}" LayoutUpdated="MaterialsList_LayoutUpdated"/>
-                                            <Button x:Name="Accept" Content="Задать материал" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Padding="1" Click="Accept_Click" Background="{x:Null}"/>
-                                            <Button x:Name="BeginUpdatePartProp" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="BeginUpdatePartProp_Click" Background="{x:Null}"/>
+                                            <ComboBox x:Name="MaterialsList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="100" Background="{x:Null}" />
+                                            <Button x:Name="Accept" Content="Задать материал" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Padding="1" Background="{x:Null}"/>
+                                            <Button x:Name="BeginUpdatePartProp" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="{x:Null}"/>
                                         </Grid>
                                         <Grid x:Name="PartPropsCopy" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Grid.Column="3">
                                             <Grid.RowDefinitions>
@@ -230,9 +230,9 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <ComboBox x:Name="ThiknessList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="50" Background="{x:Null}" LayoutUpdated="MaterialsList_LayoutUpdated"/>
-                                            <Button x:Name="AcceptThikness" Content="Задать толщину" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Padding="1" Click="Accept_Click" Background="{x:Null}"/>
-                                            <Button x:Name="BeginUpdatePartPropThikness" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="BeginUpdatePartProp_Click" Background="{x:Null}"/>
+                                            <ComboBox x:Name="ThiknessList" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" SelectedIndex="0" MinWidth="50" Background="{x:Null}"/>
+                                            <Button x:Name="AcceptThikness" Content="Задать толщину" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Padding="1" Background="{x:Null}"/>
+                                            <Button x:Name="BeginUpdatePartPropThikness" Content="Применить" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"  Background="{x:Null}"/>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -267,10 +267,10 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FilterTextBox" HorizontalAlignment="Center" Margin="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" TextChanged="FilterTextBox_OnSelectionChanged" Height="19" Width="100"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FilterTextBox" HorizontalAlignment="Center" Margin="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Height="19" Width="100"/>
                                         <Label Grid.Row="0" Grid.Column="0" Content="Фильтр" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" RenderTransformOrigin="0.579,0.115" Padding="2"/>
                                     </Grid>
-                                    <Label x:Name="AssemblyInfo" Content="Текущая сборка" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Center" LayoutUpdated="AssemblyInfo_LayoutUpdated" MinWidth="100"
+                                    <Label x:Name="AssemblyInfo" Content="Текущая сборка" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Center"  MinWidth="100"
                 						Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Padding="2" />
                                 </Grid>
                                 <DataGrid x:Name="BomTablePrt" ItemsSource="{Binding BomCells}"  Margin="3" Grid.Row="1" IsReadOnly="True
@@ -279,7 +279,7 @@
                 					MaxHeight="300"  MinHeight="2"
                 					SelectionMode="Single" ToolTip="Двойной щелчек для для добавления в список выбранной детали"
                 					LoadingRow="Table_LoadingRow" 
-                					MouseDoubleClick="TablePrt_MouseDoubleClick" SelectionChanged="TablePrt_SelectionChanged">
+                					MouseDoubleClick="TablePrt_MouseDoubleClick" >
                                     <!-- SelectionChanged="BomTablePrt_SelectionChanged"                  
                   LoadingRow="BomTable_LoadingRow" >-->
                                     <DataGrid.Columns>
@@ -335,7 +335,7 @@
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Button x:Name="BeginUpdate1" Content="Применить изменения" Margin="3" Background="{x:Null}" Click="BeginUpdate1_Click" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="2" Padding="3"/>
+                                <Button x:Name="BeginUpdate1" Content="Применить изменения" Margin="3" Background="{x:Null}"  VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="2" Padding="3"/>
                             </Grid>
                         </GroupBox>
                     </Grid>
@@ -346,7 +346,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <DataGrid x:Name="BomTableSelectedPrt" Margin="5" Grid.Row="1" IsReadOnly="True" CanUserResizeRows="False" AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" VerticalAlignment="Top" LoadingRow="Table_LoadingRow" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="True" SelectionUnit="FullRow"  MaxHeight="250"  MinHeight="2" SelectionMode="Single" HorizontalAlignment="Left" LayoutUpdated="BomTableSelectedPrt_LayoutUpdated" SelectionChanged="BomTableSelectedPrt_SelectionChanged"  >
+                            <DataGrid x:Name="BomTableSelectedPrt" Margin="5" Grid.Row="1" IsReadOnly="True" CanUserResizeRows="False" AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" VerticalAlignment="Top" LoadingRow="Table_LoadingRow" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="True" SelectionUnit="FullRow"  MaxHeight="250"  MinHeight="2" SelectionMode="Single" HorizontalAlignment="Left"  >
                                 <DataGrid.Columns>
                                     <!--  <DataGridTextColumn Header="Раздел" Width="Auto" MinWidth="70" Binding="{Binding Path=Раздел}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Путь" Width="Auto" MaxWidth="120" Binding="{Binding Path=Путь}"></DataGridTextColumn>
@@ -367,13 +367,13 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="BeginUpdate" Content="Применить действия" Margin="2,2,2,3" VerticalAlignment="Center" Background="{x:Null}" Grid.Row="3" Height="30" Grid.ColumnSpan="3" Click="BeginUpdate_Click"/>
+                                <Button x:Name="BeginUpdate" Content="Применить действия" Margin="2,2,2,3" VerticalAlignment="Center" Background="{x:Null}" Grid.Row="3" Height="30" Grid.ColumnSpan="3"/>
                                 <Button x:Name="УдалитьВыбранную" Content="Удалить выбранную" Margin="2" VerticalAlignment="Center" Background="{x:Null}"
-                					Grid.Row="0" Grid.Column="0" Height="25" Click="УдалитьВыбранную_Click"/>
-                                <Button x:Name="ClearList" Content="Очистить список" Margin="2" VerticalAlignment="Center" Width="Auto"  Background="{x:Null}" Height="25" Click="ClearList_Click"
+                					Grid.Row="0" Grid.Column="0" Height="25" />
+                                <Button x:Name="ClearList" Content="Очистить список" Margin="2" VerticalAlignment="Center" Width="Auto"  Background="{x:Null}" Height="25" 
                 					Grid.Row="0" Grid.Column="2"/>
                                 <CheckBox x:Name="UpdateCutList" Content="Выгрузить CutList'ы" Margin="5" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="3"
-                					Grid.Column="0" HorizontalAlignment="Left" Click="UpdateCutList_Click"/>
+                					Grid.Column="0" HorizontalAlignment="Left" />
                                 <CheckBox x:Name="MakeDxf" Content="Создать развертки DXF" Margin="5" Grid.Row="2"
                 					Grid.Column="0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
                             </Grid>
@@ -443,7 +443,8 @@
                 <DataGrid x:Name="PartsList" VirtualizingStackPanel.VirtualizationMode="Recycling" 
                           ItemsSource="{Binding PartsListXml}" Grid.Column="0" HorizontalAlignment="Left" Margin="2,4,0,0" IsReadOnly="True"
         			Grid.Row="0"  SelectionMode="Single" CanUserResizeRows="False" RowDetailsVisibilityMode="Visible" 
-        			AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" MaxHeight="250" LoadingRow="PartsList_LoadingRow" SelectionChanged="PartsList_SelectionChanged" LayoutUpdated="PartsList_LayoutUpdated">
+        			AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" MaxHeight="250" LoadingRow="PartsList_LoadingRow" 
+                          SelectionChanged="PartsList_SelectionChanged" LayoutUpdated="PartsList_LayoutUpdated">
                     <DataGrid.ContextMenu>
                         <ContextMenu >
                             <MenuItem Header="Путь к файлу" Click="MenuItem_Click"  />
@@ -499,13 +500,12 @@
                         <DataGridTextColumn Header="Наименование" IsReadOnly="True" Width="Auto" MinWidth="130" Binding="{Binding Наименование}"/>
                         <DataGridTextColumn Header="Конфигурация" Width="Auto" MinWidth="50" Binding="{Binding Конфигурация}"/>
                         <DataGridCheckBoxColumn Header="Xml" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding Xml}"/>
-
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button x:Name="XmlParts1" Content="Выгрузить в XML" HorizontalAlignment="Left" Height="25" Margin="2,2,0,0" Grid.Row="1" VerticalAlignment="Top" Width="108"
         			Grid.Column="0" Background="{x:Null}" Click="XmlParts1_Click" />
                 <Button x:Name="DxfParts1" Content="Выгрузить DXF" HorizontalAlignment="Left" Height="25" Margin="0,2,0,0" Grid.Row="1" VerticalAlignment="Top" Width="108"
-        			Grid.Column="1" Background="{x:Null}" Click="DxfParts1_Click"   />
+        			Grid.Column="1" Background="{x:Null}" Click="DxfParts1_Click" />
                 <Grid Height="Auto" Margin="2,0" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -541,9 +541,7 @@
                 <DataGridCheckBoxColumn Header="Покараска Z" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding ПокараскаZ}"/>-->
 
                         <DataGridTextColumn Header="Площадь покрытия" IsReadOnly="False" Width="120" MaxWidth="200" Binding="{Binding ПлощадьПокрытия}"/>
-
                         <DataGridTextColumn Header="Площадь (2хШхВ) " IsReadOnly="False" Width="120" MaxWidth="200" Binding="{Binding ПлощадьS}"/>
-
                         <DataGridTextColumn Header="Масса " IsReadOnly="False" Width="50" MaxWidth="200" Binding="{Binding МассаS}"/>
 
                     </DataGrid.Columns>
@@ -567,8 +565,6 @@
         <Button Grid.Row="0" x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="945,89,0,0" VerticalAlignment="Top" Width="75" Click="button_Click_4"/>-->
         <!--ItemsSource="{Binding AsmsNames}" SelectedItem="{Binding SelectedName, Mode=TwoWay}" -->
     </Grid>
-
-
 
 </UserControl>
 
