@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using HostingWindowsForms.Host;
 
-namespace HostingWindowsForms
+namespace HostingWindowsForms.EPDM
 {
     public class MyProcess
     {
-        private ManualResetEvent _doneEvent;
+        private readonly ManualResetEvent _doneEvent;
 
         public MyProcess(ManualResetEvent doneEvent)
         {
             _doneEvent = doneEvent;
         }
 
-        public void MyProcessThreadPoolCallback(Object threadContext)
+        public void MyProcessThreadPoolCallback(object threadContext)
         {
             int threadIndex = (int)threadContext;
 
@@ -29,7 +27,7 @@ namespace HostingWindowsForms
 
         public void StartProcess()
         {
-            ClassOfTasks c = new ClassOfTasks();
+            var c = new ClassOfTasks();
 
             c.Taskes();
         }

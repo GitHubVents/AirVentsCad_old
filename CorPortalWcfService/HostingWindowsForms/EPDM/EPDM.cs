@@ -117,7 +117,7 @@ namespace HostingWindowsForms.EPDM
                     _edmVault5 = new EdmVault5();
                 }
 
-                _edmVault7 = (IEdmVault7)_edmVault5;
+                _edmVault7 = _edmVault5;
 
                 var ok = _edmVault5.IsLoggedIn;
 
@@ -126,7 +126,10 @@ namespace HostingWindowsForms.EPDM
                     _edmVault5.LoginAuto("Vents-PDM", 0);
                 }
             }
-            catch (Exception){}
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         public List<SearchColumnName> SearchDoc(string name)

@@ -58,7 +58,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWin
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.csprojResolveAssemblyReference.cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\Interop.EdmLib.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.csproj.ResolveComReference.cache
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.HostingForm.resources
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.Properties.Resources.resources
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.csproj.GenerateResource.Cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.TrustInfo.xml
@@ -66,3 +65,4 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWin
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.application
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.exe
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\HostingWindowsForms\obj\Debug\HostingWindowsForms.Host.HostingForm.resources

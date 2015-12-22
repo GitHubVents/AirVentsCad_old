@@ -149,7 +149,7 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                 int? lastVerOfAsm = null;
                 //string partPath = null;
-                string name = null;
+                //string name = null;
                 try
                 {
                     var bomClassGetLastVersion = new Epdm
@@ -172,11 +172,11 @@ namespace AirVentsCadWpf.DataControls.Specification
                    // MessageBox.Show($"{lastVerOfAsm}\n{path[0].FilePath}\n{ExistLastXml(path[0].FilePath, (int)lastVerOfAsm)}\n{name}");
                 }
 
-                bool exist = false;
+                var exist = false;
 
                 try
                 {
-                    exist = ExistLastXml(path[0].FilePath, (int) lastVerOfAsm);
+                    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int) lastVerOfAsm);
                 }
                 catch (Exception exception)
                 {

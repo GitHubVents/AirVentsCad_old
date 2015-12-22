@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using HostingWindowsForms.Host;
 
-namespace HostingWindowsForms
+namespace HostingWindowsForms.Host
 {
     static class Program
     {
@@ -18,9 +17,6 @@ namespace HostingWindowsForms
 
         }
 
-
         static public HostingForm HostForm { get; set; }
-        
-
     }
 }
