@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirVentsCadWpf", "AirVentsC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VentsCadLibrary", "VentsCadLibrary\VentsCadLibrary.csproj", "{23A1FCD6-6048-4043-BEA8-6B08A296029F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostingWindowsForms", "..\..\CorPortalWcfService\HostingWindowsForms\HostingWindowsForms.csproj", "{F634D017-B7E4-4A08-AF7D-1BDBEA2F8AF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostingWindowsForms", "CorPortalWcfService\HostingWindowsForms\HostingWindowsForms.csproj", "{F634D017-B7E4-4A08-AF7D-1BDBEA2F8AF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorOneC", "..\..\CorPortalWcfService\ConnectorOneC\ConnectorOneC.csproj", "{BB520393-884D-4C9E-9DD2-12D11AE850D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorOneC", "CorPortalWcfService\ConnectorOneC\ConnectorOneC.csproj", "{BB520393-884D-4C9E-9DD2-12D11AE850D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

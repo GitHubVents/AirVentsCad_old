@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>79</ApplicationRevision>
+    <ApplicationRevision>82</ApplicationRevision>
     <ApplicationVersion>2.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -528,11 +528,7 @@
     <Content Include="Libraries\VentsPDM-dll.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CorPortalWcfService\ConnectorOneC\ConnectorOneC.csproj">
-      <Project>{bb520393-884d-4c9e-9dd2-12d11ae850d0}</Project>
-      <Name>ConnectorOneC</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\CorPortalWcfService\HostingWindowsForms\HostingWindowsForms.csproj">
+    <ProjectReference Include="..\CorPortalWcfService\HostingWindowsForms\HostingWindowsForms.csproj">
       <Project>{f634d017-b7e4-4a08-af7d-1bdbea2f8af2}</Project>
       <Name>HostingWindowsForms</Name>
     </ProjectReference>
