@@ -72,6 +72,7 @@
     <Compile Include="PdmBatch.cs" />
     <Compile Include="PdmSystemClass.cs" />
     <Compile Include="SqlData.cs" />
+    <Compile Include="SwEpdm.cs" />
     <Compile Include="UniversalSwMethods.cs" />
     <Compile Include="Attachments.cs" />
   </ItemGroup>
