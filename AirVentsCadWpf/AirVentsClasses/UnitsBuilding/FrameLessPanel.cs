@@ -9,6 +9,7 @@ using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using VentsCadLibrary;
 
 
 // TODO Добавить при длине от 1200 мм в варианте с ножками третьи ножки посредине
@@ -21,7 +22,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <summary>
         /// 
         /// </summary>
-        public List<VentsCadFiles> NewComponentsFull = new List<VentsCadFiles>();
+        public List<VaultSystem.VentsCadFiles> NewComponentsFull = new List<VaultSystem.VentsCadFiles>();
 
         #region PanelsFrameless
 
@@ -96,7 +97,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 try
                 {
-                    // MessageBox.Show(part.Key +"\n"+ part.Value);
                     DeletePartFromAssembly(part.Key, part.Value);
                 }
                 catch (Exception exception){MessageBox.Show(exception.ToString());}
@@ -144,7 +144,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             // todo Удаление цельной детали в панели
 
-            BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName });
+            VaultSystem.BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName }, Settings.Default.TestPdmBaseName);
         }
 
 
@@ -1189,7 +1189,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             BackProfils.Flange30, профильТорцевойРамкиГоризонтальный.NewName)
                     };
                 }
-                catch (Exception){}
+                catch (Exception)
+                {
+                    //
+                }
             }
 
             switch (typeOfPanel[0])
@@ -1218,8 +1221,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 return newFramelessPanelPath;
             }
                         
-            var modelPanelsPath = FrameLessFolder;
-            var sourceFolder = Settings.Default.SourceFolder;
+            const string modelPanelsPath = FrameLessFolder;
+            var sourceFolder = Settings.Default.SourceFolder;//@"D:\Vents-PDM";  
             var nameAsm = "02-11-40-1";
 
             var nameUpPanel = "02-11-01-40-";
@@ -1263,6 +1266,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             GetLatestVersionAsmPdm(modelPanelAsmbly, Settings.Default.PdmBaseName);
 
+            //MessageBox.Show(modelPanelAsmbly);
+            
             var swDoc = _swApp.OpenDoc6(modelPanelAsmbly, (int)swDocumentTypes_e.swDocASSEMBLY,
                (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
             _swApp.Visible = true;
@@ -3512,7 +3517,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(newFramelessPanelPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                                    
-            NewComponentsFull.Add(new VentsCadFiles
+            NewComponentsFull.Add(new VaultSystem.VentsCadFiles
             {
                 LocalPartFileInfo = new FileInfo(newFramelessPanelPath).FullName,
                 PartIdSql = idAsm
@@ -3524,8 +3529,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             catch (Exception){}
 
-            List<VentsCadFiles> outList;
-            CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
+            List<VaultSystem.VentsCadFiles> outList;
+            VaultSystem.CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
 
             var mess = outList.Aggregate("", (current, item) => current + "\n PartIdPdm - " + item.PartIdPdm + "\n PartIdSql - " + item.PartIdSql + "\n LocalPartFileInfo - " + item.LocalPartFileInfo + "\n PartName - " + item.PartName);
             //MessageBox.Show(mess);

@@ -141,6 +141,14 @@
             Класс реализующий работу с базой данных
             </summary>
         </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.SqlBaseData.StandartSize2(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="sizeId"></param>
+            <param name="profilId"></param>
+            <returns></returns>
+        </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.SqlBaseData.AirVents_SetPDMID(System.Int32,System.Int32,System.Int32)">
             <summary>
             
@@ -1724,7 +1732,7 @@
             Получение последней версии файла в базе PDM.
             </summary>
             <param name="path">Путь к файлу.</param>
-            <param name="pdmBase">Имя базы PDM.</param>
+            <param name="vaultName">Имя базы PDM.</param>
             
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetLastVersionPdm(System.String,System.String)">
@@ -1732,7 +1740,7 @@
             Gets the last version PDM.
             </summary>
             <param name="path">The path.</param>
-            <param name="pdmBase">The PDM base.</param>
+            <param name="vaultName">The PDM base.</param>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CheckInOutPdm(System.Collections.Generic.List{System.IO.FileInfo},System.Boolean,System.String)">
             <summary>
@@ -1740,7 +1748,7 @@
             </summary>
             <param name="filesList">The files list.</param>
             <param name="registration">if set to <c>true</c> [registration].</param>
-            <param name="pdmBase">The PDM base.</param>
+            <param name="vaultName">The PDM base.</param>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CheckInOutPdm(System.String,System.Boolean,System.String)">
             <summary>
@@ -1748,13 +1756,14 @@
             </summary>
             <param name="filePath">The file path.</param>
             <param name="registration">if set to <c>true</c> [registration].</param>
-            <param name="pdmBase">The PDM base.</param>
+            <param name="vaultName">The PDM base.</param>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CreateDistDirectory(System.String)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CreateDistDirectory(System.String,System.String)">
             <summary>
             Создает директорию для сохранения компонентов новой сборки.
             </summary>
             <param name="path">Путь к папке</param>
+            <param name="vaultName"></param>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.IsSheetMetalPart(System.String,System.String)">
             <summary>
@@ -1782,68 +1791,6 @@
             
             </summary>
             <param name="filePath"></param>
-        </member>
-        <member name="T:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles.PartIdSql">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles.PartName">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles.PartWithoutExtension">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles.PartIdPdm">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles.LocalPartFileInfo">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VaultB">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CheckInOutPdmNew(System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles},System.Boolean,System.String,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles}@)">
-            <summary>
-            
-            </summary>
-            <param name="filesList"></param>
-            <param name="registration"></param>
-            <param name="pdmBase"></param>
-            <param name="newFilesList"></param>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BatchAddFiles(System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles})">
-            <summary>
-            
-            </summary>
-            <param name="filesList"></param>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BatchUnLock(System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.VentsCadFiles})">
-            <summary>
-            
-            </summary>
-            <param name="filesList"></param>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BatchUnLock1(System.Collections.Generic.List{System.String})">
-            <summary>
-            
-            </summary>
-            <param name="filesPathesList"></param>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CreateEprt(System.String,System.Boolean)">
             <summary>
@@ -2342,6 +2289,11 @@
             </summary>
             <summary>
             App
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.App.VaultSystemType">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:AirVentsCadWpf.App.SqlTestConnectionString">

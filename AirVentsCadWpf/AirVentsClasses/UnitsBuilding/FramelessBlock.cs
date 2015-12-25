@@ -211,13 +211,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 return;
             }
 
-            #region
-            //if (MessageBox.Show(
-            //    $"Модель находится по пути:\n {new FileInfo(path).Directory}\n Открыть модель?",
-            //    $" {Path.GetFileNameWithoutExtension(new FileInfo(path).FullName)} ",
-            //    MessageBoxButton.YesNoCancel) != MessageBoxResult.Yes) return;
-            #endregion
-
             try
             {
                 CloseSldAsm(pDown);
@@ -240,10 +233,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     MessageBox.Show(exception.Message);
                 }               
             }
-            
-            //_swApp.ExitApp();
-            //MessageBox.Show(PartsToDeleteList.Count.ToString(), "degf");
-            //DeleteAllPartsToDelete();
 
             FramelessBlockStr(size, order, side, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
 
@@ -297,7 +286,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             var orderFolder = $@"{Settings.Default.DestinationFolder}\{UnitFramelessOreders}\{size}\{size} {order}B";
 
-            CreateDistDirectory(orderFolder);
+            CreateDistDirectory(orderFolder, Settings.Default.PdmBaseName);
 
             var framelessBlockNewPath =  new FileInfo($@"{orderFolder}\{framelessBlockNewName}.SLDASM").FullName;
 

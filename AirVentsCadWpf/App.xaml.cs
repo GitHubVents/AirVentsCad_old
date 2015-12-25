@@ -29,6 +29,25 @@ namespace AirVentsCadWpf
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public static int VaultSystemType { get; set; }
+
+        enum VaultTypes : int
+        {
+            None,
+            SwEpdm,
+            Intermech
+        }
+
+        public static int VaultType
+        {
+            get { return (int)VaultTypes.Intermech; }
+        }
+
+
+
+        /// <summary>
         /// Gets the SQL connection string.
         /// </summary>
         /// <value>

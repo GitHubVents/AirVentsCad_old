@@ -14,7 +14,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Button x:Name="SaveSettings" Content="Сохранить" HorizontalAlignment="Right" Height="24" Margin="3" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Grid.Row="7" Background="{x:Null}"/>
+            <Button x:Name="SaveSettings" Content="Сохранить" HorizontalAlignment="Right" Height="24" Margin="3" VerticalAlignment="Top" Width="75" Click="SaveSettingsClick" Grid.Row="7" Background="{x:Null}"/>
             <Label x:Name="Developer" Content="Developer" HorizontalAlignment="Left" Margin="2,2,0,0" VerticalAlignment="Top" Grid.Row="6"/>
             <Label x:Name="TestPdmBaseName" Content="TestPdmBaseName" HorizontalAlignment="Left" Margin="2,2,0,0" VerticalAlignment="Top" Grid.Row="5"/>
             <Label x:Name="PdmBaseName" Content="PdmBaseName" HorizontalAlignment="Left" Margin="2,2,0,0" VerticalAlignment="Top" Grid.Row="4"/>
@@ -33,7 +33,8 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="VaultsComboBox" Margin="2" SelectedIndex="0" Grid.Column="1" MaxDropDownHeight="60" MinWidth="80" Initialized="VaultsComboBox_Initialized" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{x:Null}" SelectionChanged="VaultsComboBox_SelectionChanged" LayoutUpdated="VaultsComboBox_LayoutUpdated"/>
+                <ComboBox x:Name="VaultsComboBox" Margin="2" SelectedIndex="0" Grid.Column="1" MaxDropDownHeight="60" MinWidth="80" Initialized="VaultsComboBox_Initialized" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                 Background="{x:Null}" LayoutUpdated="VaultsComboBox_LayoutUpdated"/>
                 <Label Grid.Column="0" Content="Рабочее хранилище" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top"/>
             </Grid>
             <Button x:Name="ФайлЛоггера" Content="Лог файл" HorizontalAlignment="Left" Height="24" Margin="3" VerticalAlignment="Center" Width="75" Grid.Row="7" Background="{x:Null}" Click="ФайлЛоггера_Click"/>

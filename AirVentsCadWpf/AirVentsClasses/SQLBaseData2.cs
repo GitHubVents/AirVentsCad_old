@@ -9,6 +9,12 @@ namespace AirVentsCadWpf.AirVentsClasses
     /// </summary>
     public partial class SqlBaseData
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sizeId"></param>
+        /// <param name="profilId"></param>
+        /// <returns></returns>
         public string[] StandartSize2(int sizeId, int profilId)
         {
             string width = null;

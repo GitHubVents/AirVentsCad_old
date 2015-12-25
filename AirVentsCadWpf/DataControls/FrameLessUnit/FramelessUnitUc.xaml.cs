@@ -15,7 +15,7 @@ using System.Windows.Threading;
 using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
-using EdmLib;
+using VentsCadLibrary;
 using VentsMaterials;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
 
@@ -2441,14 +2441,21 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             {
                 if (string.IsNullOrEmpty(item?.PartPath)) return;
                 
-                var vault5 = new EdmVault5();
-                if (!vault5.IsLoggedIn)
-                    vault5.LoginAuto(Settings.Default.TestPdmBaseName, 0);
-                
-                IEdmFolder5 edmFolder5;
-                var edmFile5 = vault5.GetFileFromPath(item.PartPath, out edmFolder5);
-                edmFile5.GetFileCopy(0, "");
-                
+                VaultSystem.GetLastVersionOfFile(item.PartPath, Settings.Default.TestPdmBaseName);
+
+                #region to delete
+
+                //var vault5 = new EdmVault5();
+                //if (!vault5.IsLoggedIn)
+                //    vault5.LoginAuto(Settings.Default.TestPdmBaseName, 0);
+
+                //IEdmFolder5 edmFolder5;
+                //var edmFile5 = vault5.GetFileFromPath(item.PartPath, out edmFolder5);
+                //edmFile5.GetFileCopy(0, "");
+
+                #endregion
+
+
                 Process.Start(@item.PartPath);
             }
             catch (Exception exc)
@@ -2462,10 +2469,12 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             var item = PartsPdmTable.SelectedItem as ModelSw.ExistingAsmsAndParts;
             try
             {
-                IEdmVault8 edmVault8 = new EdmVault5Class();
-                edmVault8.LoginAuto(Settings.Default.TestPdmBaseName, 0);
-                if (@item == null) return;
-                edmVault8.OpenContainingFolder(@item.PartPath);
+                VaultSystem.GoToFile(@item?.PartPath, Settings.Default.TestPdmBaseName);
+
+                //IEdmVault8 edmVault8 = new EdmVault5Class();
+                //edmVault8.LoginAuto(Settings.Default.TestPdmBaseName, 0);
+                //if (@item == null) return;
+                //edmVault8.OpenContainingFolder(@item.PartPath);
             }
             catch (Exception exc)
             {

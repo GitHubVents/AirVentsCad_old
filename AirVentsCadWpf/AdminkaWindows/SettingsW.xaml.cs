@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Windows;
 using AirVentsCadWpf.Properties;
-using EdmLib;
 using LoggerUc = AirVentsCadWpf.DataControls.Loggers.LoggerUc;
 using AirVentsCadWpf.Логирование;
+using VentsCadLibrary;
 
 namespace AirVentsCadWpf.AdminkaWindows
 {
@@ -19,11 +19,8 @@ namespace AirVentsCadWpf.AdminkaWindows
         public SettingsW()
         {
             InitializeComponent();
-            //DestBase.Visibility = Visibility.Collapsed;
             ResizeMode = ResizeMode.NoResize;
             SizeToContent = SizeToContent.WidthAndHeight;
-
-          //  SQLBase.ItemsSource = new[] {"Рабочая","Тестовая"};
         }
         
         void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
@@ -41,27 +38,21 @@ namespace AirVentsCadWpf.AdminkaWindows
             Developer.Content = " Developer - " + Settings.Default.Developer;
         }
       
-        void Button_Click_1(object sender, RoutedEventArgs e)
+        void SaveSettingsClick(object sender, RoutedEventArgs e)
         {
             Логгер.Информация("Сохранение настроек программы", "", "Сохранение настроек программы", "SettingsW");
 
-            var edmTestVault = new EdmVault5();
-            edmTestVault.LoginAuto("Tets_debag", 0);
+            if (string.IsNullOrEmpty(SwEpdm.GetSwEpdRootFolderPath("Tets_debag"))) return;
 
-            var edmVentsVault = new EdmVault5();
-            edmVentsVault.LoginAuto("Vents-PDM", 0);
-
-            var edmVault5 = new EdmVault5();
-            edmVault5.LoginAuto(VaultsComboBox.Text, 0);
-
-            if (edmVault5.RootFolderPath == "") return;
+            var testVaultSwEpdmRootPath = SwEpdm.GetSwEpdRootFolderPath("Tets_debag");
+            var pdmRootPath = SwEpdm.GetSwEpdRootFolderPath(VaultsComboBox.Text);
 
             switch (VaultsComboBox.Text)
             {
                 case "Tets_debag":
-                    Settings.Default.SourceFolder = edmVentsVault.RootFolderPath;
-                    MessageBox.Show(edmTestVault.RootFolderPath);
-                    Settings.Default.DestinationFolder = edmTestVault.RootFolderPath + "\\Vents-PDM";//Path.Combine(edmTestVault.RootFolderPath,"Vents-PDM");
+                    Settings.Default.SourceFolder = testVaultSwEpdmRootPath;
+                    MessageBox.Show(testVaultSwEpdmRootPath);
+                    Settings.Default.DestinationFolder = testVaultSwEpdmRootPath + "\\Vents-PDM";
                     Settings.Default.Save();
                     MessageBox.Show(Settings.Default.DestinationFolder);
 
@@ -71,30 +62,33 @@ namespace AirVentsCadWpf.AdminkaWindows
                 case "Vents-PDM":
                     Settings.Default.PdmBaseName = VaultsComboBox.Text;
                     Settings.Default.TestPdmBaseName = VaultsComboBox.Text;
-                    Settings.Default.SourceFolder = edmVault5.RootFolderPath; 
-                    Settings.Default.DestinationFolder = edmVault5.RootFolderPath;
+                    Settings.Default.SourceFolder = pdmRootPath; 
+                    Settings.Default.DestinationFolder = pdmRootPath;
                     break;
 
                 default:
                     Settings.Default.PdmBaseName = VaultsComboBox.Text;
                     Settings.Default.TestPdmBaseName = VaultsComboBox.Text;
-                    Settings.Default.SourceFolder = edmVault5.RootFolderPath; 
-                    Settings.Default.DestinationFolder = edmVault5.RootFolderPath;
+                    Settings.Default.SourceFolder = pdmRootPath;
+                    Settings.Default.DestinationFolder = pdmRootPath;
                     break;
             }
 
             switch (SQLBase.Text)
             {
                 case "Тестовая":
-                    Settings.Default.ConnectionToSQL = App.SqlTestConnectionString;// Settings.Default.TestSqlConnection;
+                    Settings.Default.ConnectionToSQL = App.SqlTestConnectionString;
                     break;
                 default:
-                    Settings.Default.ConnectionToSQL = App.SqlConnectionString;// Settings.Default.WorkingSqlConnection;
+                    Settings.Default.ConnectionToSQL = App.SqlConnectionString;
                     break;   
             }
-            
-            Settings.Default.Save();
 
+            var selectedItem = (KeyValuePair<string, int>) VaultsComboBox.SelectedItem;
+            Settings.Default.VaultSystemType = selectedItem.Value;
+
+            Settings.Default.Save();
+            
             PdmBaseName.Content = " PdmBaseName - " + Settings.Default.PdmBaseName;
             TestPdmBaseName.Content = " TestPdmBaseName - " + Settings.Default.TestPdmBaseName;
             SourceFolder.Content = " SourceFolder - " + Settings.Default.SourceFolder;
@@ -109,76 +103,42 @@ namespace AirVentsCadWpf.AdminkaWindows
 
         void VaultsComboBox_Initialized(object sender, EventArgs e)
         {
-            try
-            {
-                var v = new EdmVault5();
-                var vault = v as IEdmVault8;
-                Array views;
-                Debug.Assert(vault != null, "vault != null");
-                vault.GetVaultViews(out views, false);
-                VaultsComboBox.Items.Clear();
+            VaultsComboBox.Items.Clear();
+            VaultsComboBox.ItemsSource = SwEpdm.GetSwEpdmVaults();
+            VaultsComboBox.SelectedValuePath = "Key";
+            VaultsComboBox.DisplayMemberPath = "Key";
 
-                foreach (EdmViewInfo view in views)
-                {
-                    VaultsComboBox.Items.Add(view.mbsVaultName);
-                }
-
-                if (VaultsComboBox.Items.Count > 0)
-                {
-                    VaultsComboBox.Text = VaultsComboBox.Items[0].ToString();
-                }
-                VaultsComboBox.SelectedValue = Settings.Default.PdmBaseName;
-
-                v.LoginAuto(Settings.Default.PdmBaseName, 0);
-
-                if (PdmBaseName == null) return;
-                PdmBaseName.Content = "Текущая корневая папка " + v.RootFolderPath;
-            }
-            catch (Exception)
-            {
-                VaultsComboBox.Items.Clear();
-                VaultsComboBox.Items.Add("Не найдено доступных хранилищ");
-            }
+            VaultsComboBox.SelectedItem = 0;
+            
+            VaultsComboBox.SelectedValue = Settings.Default.PdmBaseName;
+            if (PdmBaseName != null) 
+                PdmBaseName.Content = "Текущая корневая папка " + SwEpdm.GetSwEpdRootFolderPath(Settings.Default.PdmBaseName);
         }
 
         void ФайлЛоггера_Click(object sender, RoutedEventArgs e)
         {
-            //var logClass = new LogerParse();
             try
             {
                 var newWindow = new Window
                 {
-                    // Width = 500,
-                    // Height = 300,
                     SizeToContent = SizeToContent.WidthAndHeight,
-                    // ResizeMode = ResizeMode.NoResize,
                     Title = "Логгер событий",
                     WindowStartupLocation = WindowStartupLocation.CenterScreen,
                     Content = new LoggerUc()
                 };
                 newWindow.ShowDialog();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                // MessageBox.Show(exception);
             }
-
-            
-
             Visibility = Visibility.Collapsed;
         }
-
-        private void VaultsComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            //if (VaultsComboBox == null) return;
-            //SQLBase.Text = VaultsComboBox.Text == "Vents-PDM" ? "Рабочая" : "Тестовая";
-        }
-
+        
         private void VaultsComboBox_LayoutUpdated(object sender, EventArgs e)
         {
-           // MessageBox.Show(VaultsComboBox.SelectedValue)
             if (VaultsComboBox == null) return;
-            SQLBase.Text = VaultsComboBox.SelectedValue.ToString() == "Vents-PDM" ? "Рабочая" : "Тестовая";
+            SQLBase.Text = VaultsComboBox.SelectedValue?.ToString() == "Vents-PDM" ? "Рабочая" : "Тестовая";
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using EdmLib;
 
 namespace AirVentsCadWpf.AirVentsClasses

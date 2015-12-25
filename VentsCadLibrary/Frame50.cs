@@ -829,15 +829,15 @@ namespace VentsCadLibrary
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(new FileInfo(newPanel50Path).FullName, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
             NewComponents.Add(
-                new VentsCadFiles
+                new VaultSystem.VentsCadFiles
                 {
                     LocalPartFileInfo = newPanel50Path
                 });
             _swApp.CloseDoc(new FileInfo(newPanel50Path).Name);
             _swApp.Visible = true;
 
-            List<VentsCadFiles> newFilesList;
-            CheckInOutPdm(NewComponents, DestVaultName, out newFilesList);
+            List<VaultSystem.VentsCadFiles> newFilesList;
+            VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out newFilesList);
 
             foreach (var newComponent in NewComponents)
             {
