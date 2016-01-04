@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,8 +11,6 @@ using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 using AirVentsCadWpf.Properties;
 using VentsMaterials;
-
-//using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -154,7 +151,7 @@ namespace AirVentsCadWpf.DataControls
             //    onlyPath: false);
 
             #endregion
-
+            
             var sw = new ModelSw();
 
             switch (thicknessOfPanel)

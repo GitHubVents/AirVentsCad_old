@@ -186,7 +186,7 @@ namespace AirVentsCadWpf.DataControls
             HeightU.IsReadOnly = true;
         }
          
-         void BUILDING_Click(object sender, RoutedEventArgs e)
+         void BUILDING_Click(object sender, RoutedEventArgs args)
         {
             var sw = new ModelSw();
 
@@ -356,10 +356,10 @@ namespace AirVentsCadWpf.DataControls
                     cooler: cooler, 
                     ventil: ventil);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
-                //  sw.Logger.Log(LogLevel.Error, string.Format("Ошибка во время генерации блока {0}, время - {1}", DateTime.Now), exception);
+                MessageBox.Show(e.Message);
+                //  sw.Logger.Log(LogLevel.Error, string.Format("Ошибка во время генерации блока {0}, время - {1}", DateTime.Now), args);
             }
         }
 

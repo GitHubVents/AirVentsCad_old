@@ -478,7 +478,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
         }
 
 
-        void BUILDING_Click(object sender, RoutedEventArgs e)
+        void BUILDING_Click(object sender, RoutedEventArgs args)
         {
 
             PartsPdmTable.ItemsSource = null;
@@ -545,7 +545,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     int fileId;
                     int projectId;
                     var asmName = Path.GetFileNameWithoutExtension(framelessBlockNewPath);
-                    if (ModelSw.GetExistingFile(asmName, out asmPath, out fileId, out projectId))
+                    if (ModelSw.GetExistingFile(asmName, out asmPath, out fileId, out projectId, Settings.Default.PdmBaseName))
                     {
                         if (MessageBox.Show("Установка " + asmName + " уже есть в базе. Открыть?",
                             "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -1013,9 +1013,9 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 existingAsmsAndParts2.AddRange(existingAsmsAndParts);
                             }
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.ToString());
+                            MessageBox.Show(e.ToString());
                         }
                     }
 
@@ -1196,7 +1196,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                         {
                             if (existingAsmsAndPartse == null) return;
 
-                            existingAsmsAndPartse.PartPath = asmsAndParts.GetPath(existingAsmsAndPartse?.PartName);
+                            existingAsmsAndPartse.PartPath = asmsAndParts.GetPath(existingAsmsAndPartse?.PartName, Settings.Default.PdmBaseName);
                             existingAsmsAndPartse.ExistInSistem = string.IsNullOrEmpty(existingAsmsAndPartse?.PartPath)
                                 ? "Нет"
                                 : "Есть";

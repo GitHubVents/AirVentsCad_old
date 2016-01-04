@@ -291,7 +291,7 @@
             </Grid>
         </GroupBox>
         <Button Grid.Row="0" Content="Button" HorizontalAlignment="Left" Height="34" Margin="637,20,0,0" VerticalAlignment="Top" Width="94" Click="Button_Click_2"/>
-        <Button Grid.Row="0" Content="SOAP" HorizontalAlignment="Left" Height="32" Margin="658,83,0,0" VerticalAlignment="Top" Width="124" Click="Button_Click_3"/>
+        <Button Grid.Row="0" Content="SOAP" HorizontalAlignment="Left" Height="32" Margin="658,83,0,0" VerticalAlignment="Top" Width="124" />
 
     </Grid>
 

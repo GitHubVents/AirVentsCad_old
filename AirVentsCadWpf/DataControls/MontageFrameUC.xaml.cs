@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
@@ -63,17 +62,7 @@ namespace AirVentsCadWpf.DataControls
         void BUILDING_Click(object sender, RoutedEventArgs e)
         {
             if (LenghtBaseFrame.Text == "") return;
-
-            #region
-            //var typeOfFrameCopyValue =
-            //   TypeOfFrame.SelectedItem.ToString().Replace("System.Windows.Controls.ComboBoxItem: ", "");
-
-            //if (typeOfFrameCopyValue != "3")
-            //{
-            //    FrameOffset.Text = "";
-            //}
-            #endregion
-
+            
             if (FrameOffset.Text == "")
             {
                 try

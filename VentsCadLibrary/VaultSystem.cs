@@ -8,6 +8,19 @@ namespace VentsCadLibrary
     /// </summary>
     public class VaultSystem
     {
+        public static void AddToPdmByPath(string path, string vaultName)
+        {
+            SwEpdm.AddToPdmByPath(path, vaultName);
+        }
+
+        public class SearchInVault : SwEpdm.EpdmSearch
+        {
+            public new static void SearchDoc(string fileName, SwDocType swDocType, out List<FindedDocuments> fileList, string vaultName)
+            {
+                SwEpdm.EpdmSearch.SearchDoc(fileName, swDocType, out fileList, vaultName);
+            }
+        }
+
         public class VentsCadFiles
         {
             public int PartIdSql { get; set; }

@@ -26,9 +26,9 @@ namespace VentsCadLibrary
 
                     sqlCommand.ExecuteNonQuery();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                 }
                 finally
                 {
@@ -101,9 +101,9 @@ namespace VentsCadLibrary
 
                     sqlCommand.ExecuteNonQuery();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                     return false;
                 }
                 finally
@@ -347,9 +347,9 @@ namespace VentsCadLibrary
                     partId = Convert.ToInt32(sqlCommand.Parameters["@PARTID"].Value.ToString());
 
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                     return partId;
                 }
                 finally
@@ -743,9 +743,9 @@ namespace VentsCadLibrary
                     #endregion
 
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                 }
                 finally
                 {
@@ -782,9 +782,9 @@ namespace VentsCadLibrary
                     partId = Convert.ToInt32(returnParameter.Value);
                     //MessageBox.Show(returnParameter.Value.ToString());
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                     return false;
                 }
                 finally
@@ -1047,9 +1047,9 @@ namespace VentsCadLibrary
 
                     sqlCommand.ExecuteNonQuery();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message + "\n" + exception);
+                    MessageBox.Show(e.Message + "\n" + e);
                     return false;
                 }
                 finally
@@ -1281,9 +1281,9 @@ Order BY PanelTypeCode";
                     sqlDataAdapter.Fill(standartSizeTable);
                     sqlDataAdapter.Dispose();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message, "Ошибка выгрузки данных из базы");
+                    MessageBox.Show(e.Message, "Ошибка выгрузки данных из базы");
                 }
                 finally
                 {

@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AirVentsCadWpf.Properties;
 using BomPartList;
-using EdmLib;
 using MakeDxfUpdatePartData;
-
 using VentsMaterials;
 using VentsPDM_dll;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
@@ -84,38 +81,38 @@ namespace AirVentsCadWpf.DataControls
 
         bool LoginAndFileDialog()
         {
-            ToSQL.Conn = Settings.Default.ConnectionToSQL;
+            //ToSQL.Conn = Settings.Default.ConnectionToSQL;
 
-            IEdmVault10 mVault = new EdmVault5Class();
-            try
-            {
-                if (mVault.IsLoggedIn) goto m1;
-                try
-                {
-                    mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
-                }
-                catch (Exception)
-                {
-                    mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
-                    return false;
-                }
-                mVault.CreateSearch();
-            }
-            catch (COMException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return false;
-            }
-            m1:
-            var fileDialog = new Microsoft.Win32.OpenFileDialog
-            {
-                InitialDirectory = mVault.RootFolderPath,
-                Filter = "SolidWorks Assemblies|*.sldasm"
-            };
-            if (fileDialog.ShowDialog() != true) return false;
+            //IEdmVault10 mVault = new EdmVault5Class();
+            //try
+            //{
+            //    if (mVault.IsLoggedIn) goto m1;
+            //    try
+            //    {
+            //        mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
+            //        return false;
+            //    }
+            //    mVault.CreateSearch();
+            //}
+            //catch (COMException ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    return false;
+            //}
+            //m1:
+            //var fileDialog = new Microsoft.Win32.OpenFileDialog
+            //{
+            //    InitialDirectory = mVault.RootFolderPath,
+            //    Filter = "SolidWorks Assemblies|*.sldasm"
+            //};
+            //if (fileDialog.ShowDialog() != true) return false;
 
-            _assemblyPath = fileDialog.FileName;
-            _asmConfiguration = "";
+            //_assemblyPath = fileDialog.FileName;
+            //_asmConfiguration = "";
 
             return true;
         }
@@ -126,26 +123,26 @@ namespace AirVentsCadWpf.DataControls
             
             _assemblyPath = "";
 
-            IEdmVault10 mVault = new EdmVault5Class();
-            try
-            {
-                if (mVault.IsLoggedIn) goto m1;
-                try
-                {
-                    mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
-                }
-                catch (Exception)
-                {
-                    mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
-                    return false;
-                }
-                mVault.CreateSearch();
-            }
-            catch (COMException ex)
-            {
-               MessageBox.Show(ex.Message);
-                return false;
-            }
+            //IEdmVault10 mVault = new EdmVault5Class();
+            //try
+            //{
+            //    if (mVault.IsLoggedIn) goto m1;
+            //    try
+            //    {
+            //        mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
+            //        return false;
+            //    }
+            //    mVault.CreateSearch();
+            //}
+            //catch (COMException ex)
+            //{
+            //   MessageBox.Show(ex.Message);
+            //    return false;
+            //}
             m1:
             try
             {
@@ -155,9 +152,9 @@ namespace AirVentsCadWpf.DataControls
 
                 return new FileInfo(_assemblyPath).Exists;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-               // LoggerError(string.Format("При попытке выгрузки в XML установки c именем {0} возникла ошибка {1}", ИмяСборки.Text, exception.StackTrace));
+               // LoggerError(string.Format("При попытке выгрузки в XML установки c именем {0} возникла ошибка {1}", ИмяСборки.Text, e.StackTrace));
                 MessageBox.Show("В базе отсутствует сборка с указаным именем");
                 return false;
             }
@@ -167,30 +164,30 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
-                var vault1 = new EdmVault5();
-                vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
-                IEdmFolder5 oFolder;
-                var edmFile5 = vault1.GetFileFromPath(new FileInfo(_assemblyPath).FullName, out oFolder);
-                var configs = edmFile5.GetConfigurations("");
+                //var vault1 = new EdmVault5();
+                //vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
+                //IEdmFolder5 oFolder;
+                //var edmFile5 = vault1.GetFileFromPath(new FileInfo(_assemblyPath).FullName, out oFolder);
+                //var configs = edmFile5.GetConfigurations("");
 
-                var headPosition = configs.GetHeadPosition();
+                //var headPosition = configs.GetHeadPosition();
 
-                var configsList = new List<string>();
+                //var configsList = new List<string>();
 
-                while (!headPosition.IsNull)
-                {
-                    var configName = configs.GetNext(headPosition);
-                    if (configName != "@")
-                    {
-                        configsList.Add(configName);
-                    }
-                }
-                Конфигурации.ItemsSource = configsList;
-                _asmConfigurations = configsList.ToArray();
+                //while (!headPosition.IsNull)
+                //{
+                //    var configName = configs.GetNext(headPosition);
+                //    if (configName != "@")
+                //    {
+                //        configsList.Add(configName);
+                //    }
+                //}
+                //Конфигурации.ItemsSource = configsList;
+                //_asmConfigurations = configsList.ToArray();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
         
@@ -471,27 +468,27 @@ namespace AirVentsCadWpf.DataControls
                     return;
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время определения листовой детали" + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время определения листовой детали" + e.Message, partPath);
             }
 
             try
             {
                 _modelSwClass.CheckInOutPdm(partPath, false, pdmBase);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время разрегистрации " + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время разрегистрации " + e.Message, partPath);
             }
 
             try
             {
                 _swMaterials.ApplyMaterial(partPath, partConfig, materialId, null);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время применения материала " + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время применения материала " + e.Message, partPath);
             }
 
             finally
@@ -500,9 +497,9 @@ namespace AirVentsCadWpf.DataControls
                 {
                     _modelSwClass.CheckInOutPdm(partPath, true, pdmBase);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка во время регистрации " + exception.Message, partPath);
+                    MessageBox.Show("Ошибка во время регистрации " + e.Message, partPath);
                 }
             }
         }
@@ -634,15 +631,14 @@ namespace AirVentsCadWpf.DataControls
                 {
                     ExportDataToXml1C(Path.GetFileNameWithoutExtension(_assemblyPath), _asmConfigurations);  
                 }
-
-               // LoggerInfo(string.Format("Выгрузка в XML установки {0}{1} завершена", ИмяСборки.Text, isAllParts));
+                
+                //LoggerInfo(string.Format("Выгрузка в XML установки {0}{1} завершена", ИмяСборки.Text, isAllParts));
                 MessageBox.Show("SpecificationUc для сборки "+ Path.GetFileNameWithoutExtension(_assemblyPath) + " успешно выгружена");
             }
 
             catch (Exception exception)
             {
-               // LoggerError(string.Format("Ошибка что выгрузка в XML установки {0}  {1}", ИмяСборки.Text, exception.StackTrace));
-
+               // LoggerError(string.Format("Ошибка что выгрузка в XML установки {0}  {1}", ИмяСборки.Text, e.StackTrace));
                 MessageBox.Show(exception.Message);
             }
         }
@@ -653,7 +649,7 @@ namespace AirVentsCadWpf.DataControls
 
         void ExportDataToXml1C(string asmName, IEnumerable<string> configsList)
         {
-          //  LoggerInfo(string.Format("Формирование XML для установки {0}", asmName));
+            //LoggerInfo(string.Format("Формирование XML для установки {0}", asmName));
 
             try
             {
@@ -664,9 +660,9 @@ namespace AirVentsCadWpf.DataControls
                 //{
                 //    Directory.CreateDirectory(xmlPath);
                 //}
-                //catch (Exception exception)
+                //catch (Exception e)
                 //{
-                //    MessageBox.Show(exception.Message);
+                //    MessageBox.Show(e.Message);
                 //}
 
                 var myXml = new System.Xml.XmlTextWriter(xmlPath + asmName + ".xml", System.Text.Encoding.UTF8);
@@ -901,10 +897,10 @@ namespace AirVentsCadWpf.DataControls
                 myXml.Close();
 
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-             //  LoggerError(string.Format("При формировании XML для установки возникла ошибка {0}", exception.StackTrace));
-               MessageBox.Show(exception.Message);
+             //  LoggerError(string.Format("При формировании XML для установки возникла ошибка {0}", e.StackTrace));
+               MessageBox.Show(e.Message);
             }
             
            // LoggerInfo(string.Format("Завершено формирование XML для установки {0}", asmName));
@@ -1168,35 +1164,35 @@ namespace AirVentsCadWpf.DataControls
                 myXml.Close();
 
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
         
         string GetAsmByName(string asmName)
         {
-            IEdmVault10 mVault = new EdmVault5Class();
-            try
-            {
-                if (mVault.IsLoggedIn) goto m1;
-                try
-                {
-                    mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
-                }
-                catch (Exception)
-                {
-                    mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
-                    return "";
-                }
-                mVault.CreateSearch();
-            }
-            catch (COMException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return "";
-            }
-            m1:
+            //IEdmVault10 mVault = new EdmVault5Class();
+            //try
+            //{
+            //    if (mVault.IsLoggedIn) goto m1;
+            //    try
+            //    {
+            //        mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
+            //        return "";
+            //    }
+            //    mVault.CreateSearch();
+            //}
+            //catch (COMException ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    return "";
+            //}
+            //m1:
             try
             {
                 var pdmDll = new PDM { vaultname = Settings.Default.PdmBaseName };
@@ -1215,30 +1211,31 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
-                var vault1 = new EdmVault5();
-                vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
-                IEdmFolder5 oFolder;
-                var edmFile5 = vault1.GetFileFromPath(new FileInfo(assemblyPath).FullName, out oFolder);
-                var configs = edmFile5.GetConfigurations("");
+                //var vault1 = new EdmVault5();
+                //vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
+                //IEdmFolder5 oFolder;
+                //var edmFile5 = vault1.GetFileFromPath(new FileInfo(assemblyPath).FullName, out oFolder);
+                //var configs = edmFile5.GetConfigurations("");
 
-                var headPosition = configs.GetHeadPosition();
+                //var headPosition = configs.GetHeadPosition();
 
-                var configsList = new List<string>();
+                //var configsList = new List<string>();
 
-                while (!headPosition.IsNull)
-                {
-                    var configName = configs.GetNext(headPosition);
-                    if (configName != "@")
-                    {
-                        configsList.Add(configName);
-                    }
-                }
-                return configsList;
+                //while (!headPosition.IsNull)
+                //{
+                //    var configName = configs.GetNext(headPosition);
+                //    if (configName != "@")
+                //    {
+                //        configsList.Add(configName);
+                //    }
+                //}
+                //return configsList;
             }
             catch (Exception)
             {
                 return null;
             }
+            return null;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

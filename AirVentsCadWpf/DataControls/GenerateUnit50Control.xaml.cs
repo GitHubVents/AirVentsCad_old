@@ -80,8 +80,8 @@ namespace AirVentsCadWpf.DataControls
         void BUILDING_Click(object sender, RoutedEventArgs e)
         {
             _bw.RunWorkerAsync();
+            #region to delete
 
-            
             //Dispatcher.Thread.SetApartmentState(new ApartmentState());
             //Dispatcher.InvokeAsync(() =>
             //{
@@ -145,6 +145,8 @@ namespace AirVentsCadWpf.DataControls
             //                                MessageBox.Show(ex.Message);
             //                            }
             //});
+
+            #endregion
         }
 
         #region Unit50Full
@@ -362,7 +364,6 @@ namespace AirVentsCadWpf.DataControls
         {
             _bw.DoWork += ((o, args) =>
             {
-
                 Dispatcher.Invoke(DispatcherPriority.Background, EmptyDelegate);
                // Dispatcher.Thread.SetApartmentState(new ApartmentState());
                 Dispatcher.InvokeAsync( ()=>
@@ -510,10 +511,6 @@ namespace AirVentsCadWpf.DataControls
             {
                 BUILDING_Click(this, new RoutedEventArgs());
             }
-           // WidthBaseFrame.Text = WidthBaseFrame.Text.Replace(".", Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-          //  WidthBaseFrame.Text = WidthBaseFrame.Text.Replace(",", Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-           // WidthBaseFrame.LineRight();
-          //  e.Handled = true;
         }
 
         void NumberValidationTextBox(object sender, TextCompositionEventArgs e)

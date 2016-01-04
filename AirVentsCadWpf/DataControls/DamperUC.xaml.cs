@@ -53,6 +53,16 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
+                //#region
+
+                //var mat1Code = "";
+                //var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
+                //var row1 = viewRowMat1.Row;
+                //if (row1 != null)
+                //    mat1Code = row1.Field<string>("CodeMaterial");
+                //var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
+
+                //#endregion
 
                 //var vcad = new VentsCadLibrary.VentsCad
                 //{
@@ -62,7 +72,12 @@ namespace AirVentsCadWpf.DataControls
                 //};
 
                 //string unit;
-                //vcad.DumperS(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), out unit, false);
+                //vcad.DumperS(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), materialP1, out unit, false);
+
+                //MessageBox.Show("Finish");
+
+
+                //  return;
 
                 var mat1Code = "";
                 var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
@@ -70,7 +85,6 @@ namespace AirVentsCadWpf.DataControls
                 if (row1 != null)
                     mat1Code = row1.Field<string>("CodeMaterial");
                 var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
-
 
                 var sw = new ModelSw();
                 sw.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), materialP1);

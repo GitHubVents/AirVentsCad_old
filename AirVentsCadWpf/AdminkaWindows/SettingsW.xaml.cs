@@ -130,7 +130,7 @@ namespace AirVentsCadWpf.AdminkaWindows
             }
             catch (Exception)
             {
-               // MessageBox.Show(exception);
+               // MessageBox.Show(e);
             }
             Visibility = Visibility.Collapsed;
         }

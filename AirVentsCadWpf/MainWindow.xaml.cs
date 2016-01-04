@@ -29,9 +29,9 @@ namespace AirVentsCadWpf
 
                 CurrentState.Content = State;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -112,7 +112,7 @@ namespace AirVentsCadWpf
             {
                 if (!ApplicationDeployment.IsNetworkDeployed) return  "Not Published";
                 var ver = ApplicationDeployment.CurrentDeployment.CurrentVersion;
-                return string.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
+                return $"{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
             }
         }
 
@@ -138,16 +138,6 @@ namespace AirVentsCadWpf
             CurrentState.Content = State;
         }
 
-        static string State
-        {
-            get
-            {
-                return String.Format("Хранилище: {0}     База данных: {1}",
-                    Settings.Default.TestPdmBaseName,
-                    Settings.Default.ConnectionToSQL.Split(';')[1].Split('=')[1]);
-            }
-        }
-
-        
+        static string State => $"Хранилище: {Settings.Default.TestPdmBaseName}     База данных: {Settings.Default.ConnectionToSQL.Split(';')[1].Split('=')[1]}";
     }
 }

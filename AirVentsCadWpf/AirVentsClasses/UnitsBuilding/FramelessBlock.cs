@@ -200,7 +200,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             int fileId;
             int projectId;
             var asmName = Path.GetFileNameWithoutExtension(path);
-            if (GetExistingFile(asmName, out asmPath, out fileId, out projectId))
+            if (GetExistingFile(asmName, out asmPath, out fileId, out projectId, Settings.Default.PdmBaseName))
             {
                 if (MessageBox.Show("Установка " + asmName + " уже есть в базе. Открыть?", // + "\n" + asmPath + "\n" + fileId + "\n" + projectId,
                     "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -217,9 +217,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 CloseSldAsm(pFixed);
                 CloseSldAsm(pUp);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             
             foreach (var панель in съемныеПанели)
@@ -228,9 +228,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     CloseSldAsm(панель);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }               
             }
 
@@ -663,21 +663,21 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.Extension.SelectByID2("02-11-40-1-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
             swAsm.ReplaceComponents(панельНижняя, "", false, true);
             try{CloseSldAsm(панельНижняя);}
-            catch (Exception exception){MessageBox.Show(exception.Message);}
+            catch (Exception e){MessageBox.Show(e.Message);}
 
             swDoc.Extension.SelectByID2("02-11-40-1-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
             swAsm.ReplaceComponents(панельВерхняя, "", false, true);
             try { CloseSldAsm(панельВерхняя); }
-            catch (Exception exception) { MessageBox.Show(exception.Message); }
+            catch (Exception e) { MessageBox.Show(e.Message); }
 
             swDoc.Extension.SelectByID2("02-11-40-1-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
             swAsm.ReplaceComponents(panelLeft1, "", false, true);
             try { CloseSldAsm(panelLeft1); }
-            catch (Exception exception) { MessageBox.Show(exception.Message); }
+            catch (Exception e) { MessageBox.Show(e.Message); }
             swDoc.Extension.SelectByID2("02-11-40-1-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
             swAsm.ReplaceComponents(panelRight1, "", false, true);
             try { CloseSldAsm(panelRight1); }
-            catch (Exception exception) { MessageBox.Show(exception.Message); }
+            catch (Exception e) { MessageBox.Show(e.Message); }
 
             if (side == "правая")
             {
@@ -704,7 +704,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(panelLeft2, null, false, true);
                     try { CloseSldAsm(panelLeft2); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
 
@@ -715,7 +715,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(panelRight2, null, false, true);
                     try { CloseSldAsm(panelRight2); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -736,7 +736,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(panelLeft3, null, false, true);
                     try { CloseSldAsm(panelLeft3); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
                 
@@ -745,7 +745,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(panelRight3, null, false, true);
                     try { CloseSldAsm(panelRight3); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -770,7 +770,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
                     try { CloseSldAsm(промежуточныеСтойки[0]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
 
@@ -779,7 +779,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
                     try { CloseSldAsm(промежуточныеСтойки[0]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -806,7 +806,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[1]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
 
@@ -815,7 +815,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[1]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -846,7 +846,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[2]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
 
@@ -855,7 +855,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[2]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -886,7 +886,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[3]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
 
@@ -895,7 +895,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
                     try { CloseSldAsm(промежуточныеСтойки[3]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
             }
@@ -937,7 +937,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
                     try { CloseSldAsm(панелиСъемные[4]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ9", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                     swDoc.Extension.SelectByID2("ПУ9", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -975,7 +975,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
                     try { CloseSldAsm(панелиСъемные[4]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                     swDoc.Extension.SelectByID2("ПУ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1050,7 +1050,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
                     try { CloseSldAsm(панелиСъемные[5]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ10", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                     swDoc.Extension.SelectByID2("ПУ10", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1088,7 +1088,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
                     try { CloseSldAsm(панелиСъемные[5]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ12", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                     swDoc.Extension.SelectByID2("ПУ12", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1206,7 +1206,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(троцевыеПанели[0], "", false, true);
                     try { CloseSldAsm(троцевыеПанели[0]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
 
                 if (string.IsNullOrEmpty(троцевыеПанели[0]))
@@ -1220,7 +1220,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     swAsm.ReplaceComponents(троцевыеПанели[1], "", false, true);
                     try { CloseSldAsm(троцевыеПанели[1]); }
-                    catch (Exception exception) { MessageBox.Show(exception.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
                 }
 
                 if (string.IsNullOrEmpty(троцевыеПанели[1]))
@@ -1263,19 +1263,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("D1@Plane1@" + ModelName.Replace(".SLDASM", ""), "DIMENSION", 0, 0, 0, true, 0, null, 0);
                     ((Dimension)(swDoc.Parameter("D1@Plane1"))).SystemValue = (dimensions.PlanelCentrDoor1) / 1000;
                 }
-                catch (Exception exception){MessageBox.Show(exception.ToString());}
+                catch (Exception e){MessageBox.Show(e.ToString());}
                 try
                 {
                     swDoc.Extension.SelectByID2("D1@Plane2@" + ModelName.Replace(".SLDASM", ""), "DIMENSION", 0, 0, 0, true, 0, null, 0);
                     ((Dimension)(swDoc.Parameter("D1@Plane2"))).SystemValue = (dimensions.PlanelCentrDoor2) / 1000;
                 }
-                catch (Exception exception){MessageBox.Show(exception.ToString());}
+                catch (Exception e){MessageBox.Show(e.ToString());}
                 try
                 {
                     swDoc.Extension.SelectByID2("D1@Plane3@" + ModelName.Replace(".SLDASM", ""), "DIMENSION", 0, 0, 0, true, 0, null, 0);
                     ((Dimension)(swDoc.Parameter("D1@Plane3"))).SystemValue = (dimensions.PlanelCentrDoor3) / 1000;
                 }
-                catch (Exception exception){MessageBox.Show(exception.ToString());}
+                catch (Exception e){MessageBox.Show(e.ToString());}
 
                 #region
 
@@ -1284,15 +1284,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 //    swDoc.Extension.SelectByID2("D1@RemProfilPlane1@" + ModelName.Replace(".SLDASM", ""), "DIMENSION", 0, 0, 0, true, 0, null, 0);
                 //    ((Dimension)(swDoc.Parameter("D1@RemProfilPlane1"))).SystemValue = (dimensions.PlanelCentrDoor3) / 1000;
                 //}
-                //catch (Exception exception)
+                //catch (Exception e)
                 //{
-                //    MessageBox.Show(exception.ToString());
+                //    MessageBox.Show(e.ToString());
                 //}
 
                 #endregion
 
             }
-            catch (Exception exception){MessageBox.Show(exception.ToString());}
+            catch (Exception e){MessageBox.Show(e.ToString());}
 
             swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
             GabaritsForPaintingCamera(swDoc);

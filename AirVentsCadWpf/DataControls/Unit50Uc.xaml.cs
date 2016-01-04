@@ -227,7 +227,7 @@ namespace AirVentsCadWpf.DataControls
             HeightU.IsReadOnly = true;
         }
 
-        void BUILDING_Click(object sender, RoutedEventArgs e)
+        void BUILDING_Click(object sender, RoutedEventArgs args)
         {
             var sw = new ModelSw();
             var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
@@ -374,14 +374,14 @@ namespace AirVentsCadWpf.DataControls
                                             },
                                             path: out panelHxL04);
                                 }
-                                catch (Exception exception)
+                                catch (Exception e)
                                 {
-                                    MessageBox.Show(exception.ToString());
+                                    MessageBox.Show(e.ToString());
                                 }
                             }
-                            catch (Exception exception)
+                            catch (Exception e)
                             {
-                                MessageBox.Show(exception.ToString());
+                                MessageBox.Show(e.ToString());
                             }
                         }
 
@@ -395,9 +395,9 @@ namespace AirVentsCadWpf.DataControls
                         sw.UnitAsmbly30(((DataRowView)SizeOfUnit.SelectedItem)["Type"].ToString(), OrderTextBox.Text, SideService.Text,
                             WidthU.Text, HeightU.Text, Lenght.Text, frame, panels, roofType, "Section " + SectionTextBox.Text);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
                     break;
                 default:
@@ -489,7 +489,7 @@ namespace AirVentsCadWpf.DataControls
                                 }
                                 catch (Exception)
                                 {
-                                    // ignored
+                                    // 
                                 }
 
                                 //Несъемная
@@ -519,7 +519,7 @@ namespace AirVentsCadWpf.DataControls
                                 }
                                 catch (Exception)
                                 {
-                                    // ignored
+                                    // 
                                 }
 
                                 //Cъемная
@@ -546,14 +546,14 @@ namespace AirVentsCadWpf.DataControls
                                             },
                                             onlyPath: true);
                                 }
-                                catch (Exception exception)
+                                catch (Exception e)
                                 {
-                                    MessageBox.Show(exception.ToString());
+                                    MessageBox.Show(e.ToString());
                                 }
                             }
-                            catch (Exception exception)
+                            catch (Exception e)
                             {
-                                MessageBox.Show(exception.ToString());
+                                MessageBox.Show(e.ToString());
                             }
                         }
 
@@ -569,9 +569,9 @@ namespace AirVentsCadWpf.DataControls
                             thicknessOfPanel == "50" ? "150" : "170");
                     }
 
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
                     break;
             }

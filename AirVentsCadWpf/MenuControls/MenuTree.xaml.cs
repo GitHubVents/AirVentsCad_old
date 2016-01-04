@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using AirVentsCadWpf.DataControls;
 using AirVentsCadWpf.DataControls.Specification;
-//using DamperUc = AirVentsCadWpf.DataControls.Конструкторам.DamperUc;
 using AirVentsCadWpf.DataControls.ForConstructors;
 using FramelessUnitUc = AirVentsCadWpf.DataControls.FrameLessUnit.FramelessUnitUc;
 
@@ -101,8 +100,6 @@ namespace AirVentsCadWpf.MenuControls
                     Switcher.SwitchData(new RoofUc());
                     break;
                 case  "5": break;
-                default:// Switcher.SwitchData( new Units50Uc());
-                break;
             }
         }
 

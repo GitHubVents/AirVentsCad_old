@@ -48,14 +48,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirVentsCad.exe" size="1775544">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirVentsCad.exe" size="1765304">
       <assemblyIdentity name="AirVentsCad" version="1.0.1.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>TQKPzMBqn/E8DcxNOOVWXBOA4nQGYUfgEhuAJ/R4quo=</dsig:DigestValue>
+        <dsig:DigestValue>dNG5THQftGJw/xa0aGcmtH0LpNWjZwsQzk493WC9F3s=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -144,14 +144,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VentsCadLibrary.dll" size="107008">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VentsCadLibrary.dll" size="129536">
       <assemblyIdentity name="VentsCadLibrary" version="0.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>v2ycsyJBzwunpwwrIOCM6w+VAHihfr0WZ/kvXr0s/JU=</dsig:DigestValue>
+        <dsig:DigestValue>LIxOL7CfjQ2H/u8fGNuzwLL70o5+MCBVrruzCFb8cO0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -230,13 +230,13 @@
       <dsig:DigestValue>NyeJ9Czn0nGMZuwdCyHzj73TPZ6LHlTE+voSsJZrMR4=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="NLog.config" size="3308">
+  <file name="NLog.config" size="3284">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>pxaNbdXFLRruHmalvwxIEBfgrjg9GWgEK/DO2TdYTtg=</dsig:DigestValue>
+      <dsig:DigestValue>0mQBOoopJOlyiJtB6+KLFhDDMsc9SJt534AVx/Fw9lk=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

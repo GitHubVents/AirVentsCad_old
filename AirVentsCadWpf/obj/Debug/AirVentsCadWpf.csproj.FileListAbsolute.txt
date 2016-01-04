@@ -428,8 +428,6 @@ C:\Users\kb81.VENTS\Desktop\AirVentsOnline13112015 - pdb\AirVentsCadWpf\obj\Debu
 C:\Users\kb81.VENTS\Desktop\AirVentsOnline13112015 - pdb\AirVentsCadWpf\obj\Debug\AirVentsCad.pdb
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\AirVentsCad.exe.config
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\AirVentsCad.XML
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\Interop.EdmLib.dll
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCadWpf.csproj.ResolveComReference.cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad.exe
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad.pdb
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\NLog.config

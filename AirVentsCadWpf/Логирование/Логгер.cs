@@ -55,29 +55,17 @@ namespace AirVentsCadWpf.Логирование
 
             public static void Debug(string message, string код, string функция, string className)
             {
-                //using (var streamWriter = new StreamWriter("C:\\log.txt", true))
-                //{
-                //    streamWriter.WriteLine("{0,-20}  {2,-7} {3,-20} {1}", DateTime.Now + ":", message, "Error", className);
-                //}
                 WriteToBase(message, "Debug", код, className, функция);
             }
 
 
             public static void Error(string message, string код, string функция, string className)
             {
-                //using (var streamWriter = new StreamWriter("C:\\log.txt", true))
-                //{
-                //    streamWriter.WriteLine("{0,-20}  {2,-7} {3,-20} {1}", DateTime.Now + ":", message, "Error", className);
-                //}
                 WriteToBase(message, "Error", код, className, функция);
             }
 
             public static void Info(string message, string код, string функция, string className)
             {
-                //using (var streamWriter = new StreamWriter("C:\\log.txt", true))
-                //{
-                //    streamWriter.WriteLine("{0,-20}  {2,-7} {3,-20} {1}", DateTime.Now + ":", message, "Info", className);
-                //}
                 WriteToBase(message, "Info", код, className, функция);
             }
 
@@ -99,25 +87,12 @@ namespace AirVentsCadWpf.Логирование
                         sqlParameter.AddWithValue("@ErrorTime", DateTime.Now);
                         sqlParameter.AddWithValue("@ErrorState", тип);
                         sqlParameter.AddWithValue("@ErrorFunction", функция);
-                        
-                        //var returnParameter = sqlCommand.Parameters.Add("@ProjectNumber", SqlDbType.Int);
-                        //returnParameter.Direction = ParameterDirection.ReturnValue;
 
                         sqlCommand.ExecuteNonQuery();
-
-                        //var result = Convert.ToInt32(returnParameter.Value);
-
-                        //switch (result)
-                        //{
-                        //    case 0:
-                        //        MessageBox.Show("Подбор №" + Номерподбора.Text + " уже существует!");
-                        //        break;
-                        //}
-
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("Введите корректные данные! " + exception.Message);
+                        MessageBox.Show("Введите корректные данные! " + e.Message);
                     }
                     finally
                     {

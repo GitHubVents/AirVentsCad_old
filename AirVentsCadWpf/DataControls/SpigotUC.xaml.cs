@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 using AirVentsCadWpf.Properties;
 
 namespace AirVentsCadWpf.DataControls
@@ -24,7 +23,6 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
-
                 var vcad = new VentsCadLibrary.VentsCad
                 {
                     ConnectionToSql = Settings.Default.ConnectionToSQL,
@@ -34,12 +32,6 @@ namespace AirVentsCadWpf.DataControls
 
                 string unit;
                 vcad.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out unit);
-
-                //MessageBox.Show(unit);
-
-                // var sw = new ModelSw();
-                // sw.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);
-
             }
             catch (Exception ex)
             {

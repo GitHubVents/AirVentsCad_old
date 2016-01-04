@@ -50,45 +50,6 @@
             InitializeComponent
             </summary>
         </member>
-        <member name="T:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType">
-            <summary>
-            Тип документа для поиска. 
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType.SwDocNone">
-            <summary>
-            Точное имя файла для поиска
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType.SwDocPart">
-            <summary>
-            Имя файла с расширением .sldprt
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType.SwDocAssembly">
-            <summary>
-            Имя файла с расширением .sldasm
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType.SwDocDrawing">
-            <summary>
-            Имя файла с расширением .slddrw
-            </summary>
-        </member>
-        <member name="F:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType.SwDocLike">
-            <summary>
-            По схожести
-            </summary>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.EpdmSearch.SearchDoc(System.String,AirVentsCadWpf.AirVentsClasses.EpdmSearch.SwDocType,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.EpdmSearch.FindedDocuments}@)">
-            <summary>
-            Searches the document.
-            </summary>
-            <param name="fileName">The file path.</param>
-            <param name="swDocType">Type of the sw document.</param>
-            <param name="fileList">The file list.</param>
-            <returns></returns>
-        </member>
         <member name="T:AirVentsCadWpf.AirVentsClasses.PartProperty">
             <summary>
             
@@ -695,11 +656,6 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts.IdAsm">
             <summary>
             
@@ -725,11 +681,12 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts.GetPath(System.String)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts.GetPath(System.String,System.String)">
             <summary>
             
             </summary>
             <param name="partName"></param>
+            <param name="vaultName"></param>
             <returns></returns>
         </member>
         <member name="P:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts.ExistInSistem">
@@ -737,7 +694,7 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetExistingFile(System.String,System.String@,System.Int32@,System.Int32@)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetExistingFile(System.String,System.String@,System.Int32@,System.Int32@,System.String)">
             <summary>
             
             </summary>
@@ -745,6 +702,7 @@
             <param name="path"></param>
             <param name="fileId"></param>
             <param name="projectId"></param>
+            <param name="vaultName"></param>
             <returns></returns>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFramelessStr(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String,System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
@@ -2062,6 +2020,11 @@
             HostingWpfUserControlInWf
             </summary>
         </member>
+        <member name="M:AirVentsCadWpf.DataControls.HostingWpfUserControlInWf.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:AirVentsCadWpf.DataControls.HostingWpfUserControlInWf.InitializeComponent">
             <summary>
             InitializeComponent
@@ -2201,6 +2164,16 @@
             UnitElement
             </summary>
         </member>
+        <member name="M:AirVentsCadWpf.DataControls.UnitElement.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AirVentsCadWpf.DataControls.UnitElement.SizeOfUnitIndex">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:AirVentsCadWpf.DataControls.UnitElement.InitializeComponent">
             <summary>
             InitializeComponent
@@ -2213,6 +2186,17 @@
             <summary>
             Units50Uc
             </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Units50Uc.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Units50Uc.NavigateData(System.Windows.Controls.UserControl)">
+            <summary>
+            
+            </summary>
+            <param name="nextPage"></param>
         </member>
         <member name="M:AirVentsCadWpf.DataControls.Units50Uc.InitializeComponent">
             <summary>
@@ -2292,6 +2276,11 @@
             </summary>
         </member>
         <member name="P:AirVentsCadWpf.App.VaultSystemType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.App.VaultType">
             <summary>
             
             </summary>

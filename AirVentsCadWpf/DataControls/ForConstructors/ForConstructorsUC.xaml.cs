@@ -223,9 +223,9 @@ namespace AirVentsCadWpf.DataControls.ForConstructors
 
                     MessageBox.Show(dispData.GetTitle());
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }
             }
         }
@@ -300,7 +300,7 @@ namespace AirVentsCadWpf.DataControls.ForConstructors
                 var swApp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
                 var swModel = (IModelDoc2)swApp.IActiveDoc;
 
-                var info = String.Format(" swModel.GetPathName - {0} swModel.GetTitle - {1} ", swModel.GetPathName(), swModel.GetTitle());
+                var info = $" swModel.GetPathName - {swModel.GetPathName()} swModel.GetTitle - {swModel.GetTitle()} ";
                 MessageBox.Show(info);
             }
             catch (Exception exception)
@@ -526,15 +526,15 @@ namespace AirVentsCadWpf.DataControls.ForConstructors
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs args)
         {
             try
             {
                 var sw = new ModelSw();sw.Lono();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             
         }

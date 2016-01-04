@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using AirVentsCadWpf.AirVentsClasses;
-using EdmLib;
+//using EdmLib;
 using SolidWorks.Interop.sldworks;
 
 namespace AirVentsCadWpf.DataControls
@@ -563,18 +563,18 @@ namespace AirVentsCadWpf.DataControls
                 SldWorks swapp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
                 ModelDoc2 swmodel = swapp.ActiveDoc;
 
-                IEdmVault5 vault1 = new EdmVault5();
+                //IEdmVault5 vault1 = new EdmVault5();
 
-                IEdmFolder5 folder;
+                //IEdmFolder5 folder;
 
-                vault1.LoginAuto(Properties.Settings.Default.PdmBaseName, 0);
-                //vault1.LoginAuto("Tets_debag", 0);
+                //vault1.LoginAuto(Properties.Settings.Default.PdmBaseName, 0);
+                ////vault1.LoginAuto("Tets_debag", 0);
 
-                string vaultname = vault1.RootFolderPath;
+                //string vaultname = vault1.RootFolderPath;
 
-                //MessageBox.Show(vaultName);
+                ////MessageBox.Show(vaultName);
 
-                vault1.GetFileFromPath(vaultname, out folder);
+                //vault1.GetFileFromPath(vaultname, out folder);
 
                 string nameunit = ZoneText.Text + ".sldasm";
 
@@ -586,9 +586,9 @@ namespace AirVentsCadWpf.DataControls
 
                 //string filename16 = vaultName + @"\" + nameunit;
 
-                string filename16 = vaultname + foldername16 + nameunit;
-                string filename17 = vaultname + foldername17 + nameunit;
-                string filename18 = vaultname + foldername18 + nameunit;
+                string filename16 = null;// = vaultname + foldername16 + nameunit;
+                string filename17 = null;// = vaultname + foldername17 + nameunit;
+                string filename18 = null;// = vaultname + foldername18 + nameunit;
 
                 //MessageBox.Show(filename16);
 

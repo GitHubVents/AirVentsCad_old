@@ -10,6 +10,9 @@ using AirVentsCadWpf.Логирование;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
+//using VentsCadLibrary;
+using static VentsCadLibrary.VaultSystem;
+using static VentsCadLibrary.VaultSystem.SearchInVault;
 
 
 // TODO Добавить при длине от 1200 мм в варианте с ножками третьи ножки посредине
@@ -22,7 +25,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <summary>
         /// 
         /// </summary>
-        public List<VaultSystem.VentsCadFiles> NewComponentsFull = new List<VaultSystem.VentsCadFiles>();
+        public List<VentsCadFiles> NewComponentsFull = new List<VentsCadFiles>();
 
         #region PanelsFrameless
 
@@ -99,7 +102,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     DeletePartFromAssembly(part.Key, part.Value);
                 }
-                catch (Exception exception){MessageBox.Show(exception.ToString());}
+                catch (Exception e){MessageBox.Show(e.ToString());}
             }
         }
 
@@ -144,7 +147,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             // todo Удаление цельной детали в панели
 
-            VaultSystem.BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName }, Settings.Default.TestPdmBaseName);
+            BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName }, Settings.Default.TestPdmBaseName);
         }
 
 
@@ -156,10 +159,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             /// <summary>
             /// 
             /// </summary>
-            public ExistingAsmsAndParts()
-            {
-                _epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-            }
+            //public ExistingAsmsAndParts()
+            //{
+            //    _epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            //}
 
             /// <summary>
             /// 
@@ -186,31 +189,42 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             /// </summary>
             public string PartPath { get; set; }
 
-            private readonly EpdmSearch _epdmSearch;
+            //private readonly VaultSystem.EpdmSearch _epdmSearch;
 
             string GetPath()
             {
-                var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-                List<EpdmSearch.FindedDocuments> найденныеФайлы;
-                epdmSearch.SearchDoc(PartName, EpdmSearch.SwDocType.SwDocAssembly,
-                    out найденныеФайлы);
-                if (найденныеФайлы != null) return найденныеФайлы[0].Path;
-                epdmSearch.SearchDoc(PartName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
-                return найденныеФайлы?[0].Path;
+                //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+                //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+                //epdmSearch.SearchDoc(PartName, EpdmSearch.SwDocType.SwDocAssembly,
+                //    out найденныеФайлы);
+                //if (найденныеФайлы != null) return найденныеФайлы[0].Path;
+                //epdmSearch.SearchDoc(PartName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+                //return найденныеФайлы?[0].Path;
+                return null;
             }
 
             /// <summary>
             /// 
             /// </summary>
             /// <param name="partName"></param>
+            /// <param name="vaultName"></param>
             /// <returns></returns>
-            public string GetPath(string partName)
+            public string GetPath(string partName, string vaultName)
             {
-                List<EpdmSearch.FindedDocuments> найденныеФайлы;
-                _epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+                List<VaultSystem.SearchInVault.FindedDocuments> найденныеФайлы;
+
+                VaultSystem.SearchInVault.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, vaultName);
+
+
+                //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+                //_epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+
+
                 if (найденныеФайлы != null) return найденныеФайлы[0].Path;
-                _epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+                VaultSystem.SearchInVault.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы, vaultName);
+                //_epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
                 return найденныеФайлы?[0].Path;
+
             }
 
             /// <summary>
@@ -226,19 +240,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="path"></param>
         /// <param name="fileId"></param>
         /// <param name="projectId"></param>
+        /// <param name="vaultName"></param>
         /// <returns></returns>
-        public static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId)
+        public static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId, string vaultName)
         {
             fileId = 0;projectId = 0;path = null;
 
-            var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-            List<EpdmSearch.FindedDocuments> найденныеФайлы;
-
-            epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
-
+            List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
+            SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, vaultName);
+            
             if (найденныеФайлы?.Count > 0) goto m1;
 
-            epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+            SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы, vaultName);
             if (найденныеФайлы?.Count > 0) goto m1;
 
             return false;
@@ -250,29 +263,76 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 projectId = найденныеФайлы[0].ProjectId;
                 return true;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
                 return false;
             }
+
+
+
+            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+
+            //epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+
+            //if (найденныеФайлы?.Count > 0) goto m1;
+
+            //epdmSearch.SearchDoc(partName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+            //if (найденныеФайлы?.Count > 0) goto m1;
+
+            //return false;
+            //m1:
+            //try
+            //{
+            //    GetLastVersionAsmPdm(найденныеФайлы[0].Path, Settings.Default.PdmBaseName);
+            //    fileId = найденныеФайлы[0].FileId;
+            //    projectId = найденныеФайлы[0].ProjectId;
+            //    return true;
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show(e.ToString());
+            //    return false;
+            //}
         }
 
 
         bool GetExistingFile(string fileName, int type)
         {
-            var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-            List<EpdmSearch.FindedDocuments> найденныеФайлы;
+            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            List<VaultSystem.SearchInVault.FindedDocuments> найденныеФайлы;
             switch (type)
+
             {
                 case 0:
-                    epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+                    VaultSystem.SearchInVault.SearchDoc(fileName, VaultSystem.SearchInVault.SwDocType.SwDocAssembly, out найденныеФайлы, Settings.Default.PdmBaseName);
+
+                    //epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
                     if (найденныеФайлы?.Count > 0) goto m1;
                     break;
                 case 1:
-                    epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+                    VaultSystem.SearchInVault.SearchDoc(fileName, VaultSystem.SearchInVault.SwDocType.SwDocPart, out найденныеФайлы, Settings.Default.PdmBaseName);
+                    //epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.VaultSystem.SearchInVault.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, Settings.Default.PdmBaseName);, out найденныеФайлы);
                     if (найденныеФайлы?.Count > 0) goto m1;
                     break;
             }
+            
+            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+            //switch (type)
+
+            //{
+            //    case 0:
+            //        epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+            //        if (найденныеФайлы?.Count > 0) goto m1;
+            //        break;
+            //    case 1:
+            //        epdmSearch.SearchDoc(fileName, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+            //        if (найденныеФайлы?.Count > 0) goto m1;
+            //        break;
+            //}
+
             goto m2;
             m1:
             try
@@ -281,9 +341,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(найденныеФайлы[0].Path);
                 return fileNameWithoutExtension != null && string.Equals(fileNameWithoutExtension, fileName, StringComparison.CurrentCultureIgnoreCase);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());return false;
+                MessageBox.Show(e.ToString());return false;
             }
             m2:
             return false;
@@ -2722,9 +2782,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         _swApp.CloseDoc(newNameP);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString());
+                    MessageBox.Show(e.ToString());
                 }              
             }
 
@@ -3517,7 +3577,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(newFramelessPanelPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                                    
-            NewComponentsFull.Add(new VaultSystem.VentsCadFiles
+            NewComponentsFull.Add(new VentsCadFiles
             {
                 LocalPartFileInfo = new FileInfo(newFramelessPanelPath).FullName,
                 PartIdSql = idAsm
@@ -3529,8 +3589,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             catch (Exception){}
 
-            List<VaultSystem.VentsCadFiles> outList;
-            VaultSystem.CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
+            List<VentsCadFiles> outList;
+            CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
 
             var mess = outList.Aggregate("", (current, item) => current + "\n PartIdPdm - " + item.PartIdPdm + "\n PartIdSql - " + item.PartIdSql + "\n LocalPartFileInfo - " + item.LocalPartFileInfo + "\n PartName - " + item.PartName);
             //MessageBox.Show(mess);
@@ -3550,9 +3610,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         sqlBaseData.AirVents_SetPDMID(typeFile, item.PartIdPdm, item.PartIdSql);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString(), "AirVents_SetPDMID");
+                    MessageBox.Show(e.ToString(), "AirVents_SetPDMID");
                 }
             }
 
@@ -3719,7 +3779,6 @@ TypeOfUnremPanel - {TypeOfUnremPanel},
 ScrewsByWidth - {ScrewsByWidth},
 ScrewsByHeight - {ScrewsByHeight},
 ScrewsByLenght - {ScrewsByLenght}");
-
         }
 
 
@@ -3817,9 +3876,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                 {
                     swDoc.DeleteConfiguration2(s);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString());
+                    MessageBox.Show(e.ToString());
                 }
             }
 
@@ -3925,9 +3984,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                 {
                     swDoc.DeleteConfiguration2(s);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString(), "FrameProfil");
+                    MessageBox.Show(e.ToString(), "FrameProfil");
                 }
             }
             swDoc.ConfigurationManager.ActiveConfiguration.Name = "00";
@@ -3991,9 +4050,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                     id = AirVents_AddPartOfPanel();
                     Логгер.Отладка("Добавление панели прошло успешно!", "", "AddPart", "AddingPanel");
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    Логгер.Ошибка("Ошибка во время добавления панели:" + exception.Message, exception.StackTrace, "Add", "AddingPanel");
+                    Логгер.Ошибка("Ошибка во время добавления панели:" + e.Message, e.StackTrace, "Add", "AddingPanel");
                 }
                 return id;
             }
@@ -4010,9 +4069,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                     id = AirVents_AddPanel();
                     Логгер.Отладка("Добавление панели прошло успешно!", "", "Add", "AddingPanel");
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    Логгер.Ошибка("Ошибка во время добавления панели:" + exception.Message, exception.StackTrace, "Add", "AddingPanel");
+                    Логгер.Ошибка("Ошибка во время добавления панели:" + e.Message, e.StackTrace, "Add", "AddingPanel");
                 }
                 return id;
             }
@@ -4028,9 +4087,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                     AirVents_AddPanelAsm();
                     Логгер.Отладка("Добавление панели прошло успешно!", "", "Add", "AddingPanel");
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    Логгер.Ошибка("Ошибка во время добавления панели:" + exception.Message, exception.StackTrace, "Add", "AddingPanel");
+                    Логгер.Ошибка("Ошибка во время добавления панели:" + e.Message, e.StackTrace, "Add", "AddingPanel");
                 }
             }
         }
@@ -4326,9 +4385,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                     var sqlBaseData = new SqlBaseData();
                     sqlBaseData.AirVents_AddPanelFull(ConvertToDataTable(PartsParamsList));
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
             }
 
@@ -4377,12 +4436,14 @@ ScrewsByLenght - {ScrewsByLenght}");
                         panelMatThickIn : PanelMatThickIn,
 
                         #region Покраска
+
                         //ralOut : RalOut,
                         //ralIn : RalIn,
                         //coatingTypeOut : CoatingTypeOut,
                         //coatingTypeIn : CoatingTypeIn,
                         //coatingClassOut : CoatingClassOut,
                         //coatingClassIn : CoatingClassIn
+
                         #endregion
 
                         mirror: Mirror.HasValue ? Mirror : false,
@@ -4396,9 +4457,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                         
                         panelNumber :PanelNumber);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
                 return id;
             }
@@ -4434,9 +4495,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                         airHole: AirHole
                         );
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
                 return id;
             }
@@ -4455,9 +4516,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                         out partId);
                     PartId = partId;
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
             }
         }
@@ -4548,9 +4609,9 @@ ScrewsByLenght - {ScrewsByLenght}");
                     if (val[5] == "") return;
                     B3 = Convert.ToDouble(val[5]);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show("StringValue " + exception.Message, "InValPanels.StringValue");
+                    MessageBox.Show("StringValue " + e.Message, "InValPanels.StringValue");
                 }
                 finally
                 {
@@ -4669,8 +4730,8 @@ ScrewsByLenght - {ScrewsByLenght}");
             static public double Wp3;
             static public double Wp4;
 
-            private static double PsSize1;
-            private static double PsSize2;
+            private static double _psSize1;
+            private static double _psSize2;
 
             //Типы промежуточных профилей
             static public string Tp1;
@@ -4707,11 +4768,11 @@ ScrewsByLenght - {ScrewsByLenght}");
 
                     var ps1 = val[4].Split('_');
                     PsTy1 = ps1[0];
-                    double.TryParse(ps1[1], out PsSize1);
+                    double.TryParse(ps1[1], out _psSize1);
 
                     var ps2 = val[5].Split('_');
                     PsTy2 = ps2[0];
-                    double.TryParse(ps2[1], out PsSize2);
+                    double.TryParse(ps2[1], out _psSize2);
 
                     //MessageBox.Show("Tp1 - " + Tp1 + " Wp1 - " + Wp1 +
                     //                "\nTp2 - " + Tp2 + " Wp2 - " + Wp2 + 
@@ -4720,16 +4781,16 @@ ScrewsByLenght - {ScrewsByLenght}");
 
                     //MessageBox.Show(p1[0] + p1[1] + p2[0] + p2[1] + p3[0] + p3[1]);
                 }
-                catch (Exception)// exception)
+                catch (Exception)// e)
                 {
-                  //  MessageBox.Show("StringValue \n" + exception, "ValProfils.StringValue");
+                  //  MessageBox.Show("StringValue \n" + e, "ValProfils.StringValue");
                 }
             }
             
             public string InValUpDown()
             {
                 return
-                    $"П1 - {Tp1 + "-" + Wp1}\n П2 - {Tp2 + "-" + Wp2}\n П3 - {Tp3 + "-" + Wp3}\n П4 - {Tp4 + "-" + Wp4}\n П5 - {PsTy1 + "-" + PsSize1}\n П6 - {PsTy2 + "-" + PsSize2}";
+                    $"П1 - {Tp1 + "-" + Wp1}\n П2 - {Tp2 + "-" + Wp2}\n П3 - {Tp3 + "-" + Wp3}\n П4 - {Tp4 + "-" + Wp4}\n П5 - {PsTy1 + "-" + _psSize1}\n П6 - {PsTy2 + "-" + _psSize2}";
             }
         }
 
@@ -4753,7 +4814,7 @@ ScrewsByLenght - {ScrewsByLenght}");
                     var val = values.Split(';');
 
                     var p1 = val[0].Split('_');
-                    
+
                     double.TryParse(p1[0], out Width);
                     double.TryParse(p1[1], out Height);
                     double.TryParse(p1[2], out ByWidth);
@@ -4761,9 +4822,12 @@ ScrewsByLenght - {ScrewsByLenght}");
                     bool.TryParse(p1[4], out Flange30);
                     double.TryParse(p1[5], out _typeOfPanel);
 
-                   // MessageBox.Show(p1[0] + "\n" + p1[1] + "\n" + p1[2] + "\n" + p1[3] + "\n" + p1[4] + " - " + Flange30 + "\n" + TypeOfPanel);
+                    // MessageBox.Show(p1[0] + "\n" + p1[1] + "\n" + p1[2] + "\n" + p1[3] + "\n" + p1[4] + " - " + Flange30 + "\n" + TypeOfPanel);
                 }
-                catch (Exception){}
+                catch (Exception)
+                {
+                    //
+                }
             }
         }
 

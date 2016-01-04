@@ -29,8 +29,8 @@ namespace AirVentsCadWpf.DataControls
         const string PdmBaseName = "Vents-PDM";
         const string User = "kb81";
         const string Password = "1";
-        readonly IEdmVault10 _mVault = new EdmVault5Class();
-        IEdmFile7 _edmFile7;
+      //  readonly IEdmVault10 _mVault = new EdmVault5Class();
+      //  IEdmFile7 _edmFile7;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bom"/> class.
@@ -42,9 +42,9 @@ namespace AirVentsCadWpf.DataControls
             {
                 Login();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Ошибка");
+                MessageBox.Show(e.Message, "Ошибка");
             }
             
             BomTableAsm.ItemsSource = BomListAsm;
@@ -57,25 +57,25 @@ namespace AirVentsCadWpf.DataControls
 
         void Login()
         {
-            if (_mVault == null) return;
+           // if (_mVault == null) return;
             try
             {
-                try
-                {
-                    _mVault.LoginAuto(PdmBaseName, 0);
-                }
-                catch (Exception)
-                {
-                    _mVault.Login(User, Password, PdmBaseName);
-                }
+                //try
+                //{
+                //    _mVault.LoginAuto(PdmBaseName, 0);
+                //}
+                //catch (Exception)
+                //{
+                //    _mVault.Login(User, Password, PdmBaseName);
+                //}
 
 
                 
-                _mVault.CreateSearch();
-                if (_mVault.IsLoggedIn)
-                {
-                    ConnectToVault.Content = "Logged in " + PdmBaseName;
-                }
+                //_mVault.CreateSearch();
+                //if (_mVault.IsLoggedIn)
+                //{
+                //    ConnectToVault.Content = "Logged in " + PdmBaseName;
+                //}
             }
             catch (COMException ex)
             {
@@ -87,77 +87,79 @@ namespace AirVentsCadWpf.DataControls
         {
             var fileDialog = new Microsoft.Win32.OpenFileDialog
             {
-                InitialDirectory = _mVault.RootFolderPath,
+           //     InitialDirectory = _mVault.RootFolderPath,
                 Filter = "SolidWorks Assemblies|*.sldasm"
             };
             if (fileDialog.ShowDialog() != true) return false;
             var filename = fileDialog.FileName;
            // MessageBox.Show(filename);
-            IEdmFolder5 folder;
-            _edmFile7 = (IEdmFile7) _mVault.GetFileFromPath(filename, out folder);
+          //  IEdmFolder5 folder;
+        //    _edmFile7 = (IEdmFile7) _mVault.GetFileFromPath(filename, out folder);
             return true;
         }
 
         void Getbom()
         {
-            if (_edmFile7 == null) return;
+            //if (_edmFile7 == null) return;
 
-            var bomView = _edmFile7.GetComputedBOM(Convert.ToInt32(8), Convert.ToInt32(-1), "",
-                (int) EdmBomFlag.EdmBf_ShowSelected);
+            //var bomView = _edmFile7.GetComputedBOM(Convert.ToInt32(8), Convert.ToInt32(-1), "",
+            //    (int) EdmBomFlag.EdmBf_ShowSelected);
 
-            if (bomView == null) return;
-            Array bomRows;
-            Array bomColumns;
-            bomView.GetRows(out bomRows);
-            bomView.GetColumns(out bomColumns);
+            //if (bomView == null) return;
+            //Array bomRows;
+            //Array bomColumns;
+            //bomView.GetRows(out bomRows);
+            //bomView.GetColumns(out bomColumns);
 
-            var bomTable = new DataTable();
+            //var bomTable = new DataTable();
 
-            foreach (EdmBomColumn bomColumn in bomColumns)
-            {
-                bomTable.Columns.Add(new DataColumn {ColumnName = bomColumn.mbsCaption});
-            }
+            //foreach (EdmBomColumn bomColumn in bomColumns)
+            //{
+            //    bomTable.Columns.Add(new DataColumn {ColumnName = bomColumn.mbsCaption});
+            //}
 
-            bomTable.Columns.Add(new DataColumn{ ColumnName = "Путь" });
-            bomTable.Columns.Add(new DataColumn{ ColumnName = "Уровень" });
-            //bomTable.Columns.Add(new DataColumn { ColumnName = "Errors" });
+            //bomTable.Columns.Add(new DataColumn{ ColumnName = "Путь" });
+            //bomTable.Columns.Add(new DataColumn{ ColumnName = "Уровень" });
+            ////bomTable.Columns.Add(new DataColumn { ColumnName = "Errors" });
 
-            for (var i = 0; i < bomRows.Length; i++)
-            {
-                var cell = (IEdmBomCell) bomRows.GetValue(i);
+            //for (var i = 0; i < bomRows.Length; i++)
+            //{
+            //    var cell = (IEdmBomCell) bomRows.GetValue(i);
 
-                bomTable.Rows.Add();
-                for (var j = 0; j < bomColumns.Length; j++)
-                {
-                    var column = (EdmBomColumn) bomColumns.GetValue(j);
-                    object value;
-                    object computedValue;
-                    String config;
-                    bool readOnly;
-                    cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config,
-                        out readOnly);
-                    if (value != null)
-                    {
-                        bomTable.Rows[i][j] = value;
-                    }
-                    bomTable.Rows[i][j + 1] = cell.GetPathName();
-                    bomTable.Rows[i][j + 2] = cell.GetTreeLevel();
-                }
-            }
+            //    bomTable.Rows.Add();
+            //    for (var j = 0; j < bomColumns.Length; j++)
+            //    {
+            //        var column = (EdmBomColumn) bomColumns.GetValue(j);
+            //        object value;
+            //        object computedValue;
+            //        String config;
+            //        bool readOnly;
+            //        cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config,
+            //            out readOnly);
+            //        if (value != null)
+            //        {
+            //            bomTable.Rows[i][j] = value;
+            //        }
+            //        bomTable.Rows[i][j + 1] = cell.GetPathName();
+            //        bomTable.Rows[i][j + 2] = cell.GetTreeLevel();
+            //    }
+            //}
 
-            BomList = BomTableToBomList(bomTable);
-            BomTable.ItemsSource = bomTable.DefaultView;
-            BomListAsm = _bomListAsm = BomList.Where(x => x.ТипФайла == "sldasm" & x.Уровень != "0" & x.Раздел == "Сборочные единицы").OrderBy(x => x.Обозначение).ToList();
-            BomListPrt = BomList.Where(x => x.ТипФайла == "sldprt" & x.Раздел == "" || x.Раздел == "Детали").OrderBy(x => x.Обозначение).ToList();
+            //BomList = BomTableToBomList(bomTable);
+            //BomTable.ItemsSource = bomTable.DefaultView;
+            //BomListAsm = _bomListAsm = BomList.Where(x => x.ТипФайла == "sldasm" & x.Уровень != "0" & x.Раздел == "Сборочные единицы").OrderBy(x => x.Обозначение).ToList();
+            //BomListPrt = BomList.Where(x => x.ТипФайла == "sldprt" & x.Раздел == "" || x.Раздел == "Детали").OrderBy(x => x.Обозначение).ToList();
 
             #region LabelContent
-            var labelContentList = BomList.Where(x => x.Уровень == "0").ToList();
-            var labelContent = "";
-            foreach (var bomCells in labelContentList)
-            {
-                labelContent = " Сборка - " + Path.GetFileNameWithoutExtension(bomCells.Путь) + " Наименование - " + bomCells.Наименование + " Конфигурация - " + bomCells.Конфигурация;
-            }
-            СборкаLbl.Content = labelContent;
+            //var labelContentList = BomList.Where(x => x.Уровень == "0").ToList();
+            //var labelContent = "";
+            //foreach (var bomCells in labelContentList)
+            //{
+            //    labelContent = " Сборка - " + Path.GetFileNameWithoutExtension(bomCells.Путь) + " Наименование - " + bomCells.Наименование + " Конфигурация - " + bomCells.Конфигурация;
+            //}
+            //СборкаLbl.Content = labelContent;
+
+
             #endregion
 
         }
@@ -611,40 +613,40 @@ namespace AirVentsCadWpf.DataControls
         public static ModelDoc2 SwModel;
         public static DrawingDoc SwDraw;
 
-        public static IEdmObject5 GetObject(IEdmVault12 vault, int objectId, EdmObjectType objectType)
-        {
-            try
-            {
-                var obj = vault.GetObject(objectType, objectId);
-                return obj;
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine("Ошибка в процедуре  public static IEdmObject5 GetObject {0}:", exception);
-            }
-            foreach (EdmObjectType enumObjectType in Enum.GetValues(typeof(EdmObjectType)))
-            {
-                try
-                {
-                    var obj = vault.GetObject(enumObjectType, objectId);
-                    return obj;
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine("Ошибка в процедуре  public static IEdmObject5 GetObject {0}:", exception);
-                }
-            }
-            //nothing found  
-            return null;
-        }
+        //public static IEdmObject5 GetObject(IEdmVault12 vault, int objectId, EdmObjectType objectType)
+        //{
+        //    try
+        //    {
+        //        var obj = vault.GetObject(objectType, objectId);
+        //        return obj;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine("Ошибка в процедуре  public static IEdmObject5 GetObject {0}:", e);
+        //    }
+        //    foreach (EdmObjectType enumObjectType in Enum.GetValues(typeof(EdmObjectType)))
+        //    {
+        //        try
+        //        {
+        //            var obj = vault.GetObject(enumObjectType, objectId);
+        //            return obj;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine("Ошибка в процедуре  public static IEdmObject5 GetObject {0}:", e);
+        //        }
+        //    }
+        //    //nothing found  
+        //    return null;
+        //}
 
         static void CreateFlattPatternUpdateCutlist(string filePath, bool savedxf)
         {
-            var vault1 = new EdmVault5();
-            IEdmFolder5 oFolder;
-            vault1.LoginAuto("Vents-PDM", 0);
-            var edmFile5 = vault1.GetFileFromPath("D:\\Vents-PDM\\Библиотека проектирования\\Templates\\flattpattern.drwdot", out oFolder);
-            edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
+            //var vault1 = new EdmVault5();
+            //IEdmFolder5 oFolder;
+            //vault1.LoginAuto("Vents-PDM", 0);
+            //var edmFile5 = vault1.GetFileFromPath("D:\\Vents-PDM\\Библиотека проектирования\\Templates\\flattpattern.drwdot", out oFolder);
+            //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
 
             try
             {
@@ -954,7 +956,7 @@ namespace AirVentsCadWpf.DataControls
                     }
                     catch (Exception)
                     {
-                        // Console.WriteLine(exception.Message);
+                        // Console.WriteLine(e.Message);
                     }
 
                     #endregion
@@ -969,9 +971,9 @@ namespace AirVentsCadWpf.DataControls
                 myXml.Flush();
 
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                //  Console.WriteLine(exception.Message);
+                //  Console.WriteLine(e.Message);
             }
         }
 

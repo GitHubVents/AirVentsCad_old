@@ -17,11 +17,11 @@ using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 using AirVentsCadWpf.Properties;
 using BomPartList.Спецификации;
-using EdmLib;
 using HostingWindowsForms.EPDM;
 using MakeDxfUpdatePartData;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using VentsCadLibrary;
 
 namespace AirVentsCadWpf.DataControls.Specification
 {
@@ -111,16 +111,16 @@ namespace AirVentsCadWpf.DataControls.Specification
 
         #region ВыгрузитьВXml
         
-        void ВыгрузитьВXml_Click(object sender, RoutedEventArgs e)
+        void ВыгрузитьВXml_Click(object sender, RoutedEventArgs args)
         {
             try
             {
                 НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
                 ВыгрузкаСборкиВxml(Convert.ToBoolean(IncludeAsms.IsChecked));
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -140,7 +140,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             }
             catch (Exception)
             {
-               // MessageBox.Show(exception.Message + "\n" + "89779\n" + (path == null) + "\n" + имяСборки + ".SLDASM" + "\n" );
+               // MessageBox.Show(args.Message + "\n" + "89779\n" + (path == null) + "\n" + имяСборки + ".SLDASM" + "\n" );
             }
            
             try
@@ -162,9 +162,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                     //partPath = spec[0].FilePath;
                     //name = spec[0].FileName;
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    //MessageBox.Show(exception.ToString(), "списокКонфигурацийСборки");
+                    //MessageBox.Show(args.ToString(), "списокКонфигурацийСборки");
                 }
 
                 if (lastVerOfAsm != null)
@@ -178,9 +178,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 {
                     if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int) lastVerOfAsm);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString());}
+                    MessageBox.Show(e.ToString());}
 
                 if (exist) return;
 
@@ -424,9 +424,9 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                  myXml.Close();
              }
-             catch (Exception exception)
+             catch (Exception e)
              {
-                 MessageBox.Show(exception.Message);
+                 MessageBox.Show(e.Message);
              }
          }
 
@@ -471,9 +471,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 {
                     if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int)lastVerOfAsm);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString(), "Try to find if exist XML");
+                    MessageBox.Show(e.ToString(), "Try to find if exist XML");
                 }
                 if (!exist) return;
 
@@ -721,9 +721,9 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                 myXml.Close();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -781,9 +781,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                     //            MessageBox.Show(спецификация.Count.ToString(), i.ToString());
                     //        }
                     //    }
-                    //    catch (Exception exception)
+                    //    catch (Exception args)
                     //    {
-                    //        MessageBox.Show(exception.Message, i.ToString());
+                    //        MessageBox.Show(args.Message, i.ToString());
                     //    }
                     //}
 
@@ -1010,9 +1010,9 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                 myXml.Close();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -1042,9 +1042,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 //MessageBox.Show(wew[0]);
                 ВыгрузитьСборкуПеречень(wew[0]);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
 
             if (включаяПодсборки)
@@ -1063,7 +1063,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                     }
                     catch (Exception)
                     {
-                      //MessageBox.Show(exception.StackTrace, "ВыгрузкаСборкиВxml(bool включаяПодсборки)");
+                      //MessageBox.Show(args.StackTrace, "ВыгрузкаСборкиВxml(bool включаяПодсборки)");
                     }
                 }
             }
@@ -1071,9 +1071,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             {
                 ВыгрузитьСборку(_путьКСборке);
             }
-
           //  MessageBox.Show($"Выгрузка сборки {имяСборки}{включаяВсеПодсборки} выполнена.", "Процесс завершен", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
-
         }
 
         #endregion
@@ -1155,7 +1153,7 @@ namespace AirVentsCadWpf.DataControls.Specification
 
         #endregion
 
-        void Registration(object sender, RoutedEventArgs e)
+        void Registration(object sender, RoutedEventArgs args)
         {
             var fileName = PartFile.Text;
             var extension = Path.GetExtension(fileName);
@@ -1167,7 +1165,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             cutlistClass.RegistrationPdm(fileName);
         }
 
-        void Выгрузить_PDF(object sender, RoutedEventArgs e)
+        void Выгрузить_PDF(object sender, RoutedEventArgs args)
         {
             var cutlistClass = new MakeDxfExportPartDataClass()
             {
@@ -1179,9 +1177,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 cutlistClass.SaveDrwAsPdf(@"E:\Vents-PDM\Заказы AirVents Frameless\AV02 E:\Vents-PDM\Заказы AirVents Frameless\AV02 001002\AV02 001002 Section A.slddrw", out file);
                 MessageBox.Show(file);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.StackTrace);
+                MessageBox.Show(e.StackTrace);
             }
         }
 
@@ -1195,34 +1193,44 @@ namespace AirVentsCadWpf.DataControls.Specification
         {
             try
             {
-                var vault1 = new EdmVault5Class();
-                if (!vault1.IsLoggedIn)
-                {
-                    vault1.LoginAuto(pdmBase, 0);
-                }
-                var fileDirectory = new FileInfo(path).DirectoryName;
+                VaultSystem.AddToPdmByPath(path, pdmBase);
 
-                var fileFolder = vault1.GetFolderFromPath(fileDirectory);
-                fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
+                #region To Delete
+
+                //var vault1 = new EdmVault5Class();
+                //if (!vault1.IsLoggedIn)
+                //{
+                //    vault1.LoginAuto(pdmBase, 0);
+                //}
+                //var fileDirectory = new FileInfo(path).DirectoryName;
+
+                //var fileFolder = vault1.GetFolderFromPath(fileDirectory);
+                //fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
+
+                #endregion
+
             }
-            catch (Exception){}
+            catch (Exception)
+            {
+                //
+            }
         }
 
         void ПоискEpdm(object sender, RoutedEventArgs e)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Start();
 
-            var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-            List<EpdmSearch.FindedDocuments> найденныеФайлы;
-            epdmSearch.SearchDoc("901.30.1.", EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
-            if (найденныеФайлы == null) return;
+            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+            //epdmSearch.SearchDoc("901.30.1.", EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+            //if (найденныеФайлы == null) return;
 
-            var newNames = найденныеФайлы.Select(findedDocumentse => findedDocumentse.Path).ToList();
+            //var newNames = найденныеФайлы.Select(findedDocumentse => findedDocumentse.Path).ToList();
 
-            СписокНайденныхФайлов.ItemsSource = newNames.ConvertAll(FileName);
-            stopwatch.Stop();
-            MessageBox.Show(string.Format(" Поиск {1} файлов {0} мс ", stopwatch.Elapsed, найденныеФайлы.Count));
+            //СписокНайденныхФайлов.ItemsSource = newNames.ConvertAll(FileName);
+            //stopwatch.Stop();
+            //MessageBox.Show(string.Format(" Поиск {1} файлов {0} мс ", stopwatch.Elapsed, найденныеФайлы.Count));
         }
 
         static string FileName(string filePath)
@@ -1240,16 +1248,28 @@ namespace AirVentsCadWpf.DataControls.Specification
 
         private void AutoCompleteTextBox1Reload()
         {
-            var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-
-            List<EpdmSearch.FindedDocuments> найденныеФайлы;
-            epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+            List< VaultSystem.SearchInVault.FindedDocuments> найденныеФайлы;
+            VaultSystem.SearchInVault.SearchDoc(AutoCompleteTextBox1.Text, VaultSystem.SearchInVault.SwDocType.SwDocAssembly, out найденныеФайлы, Settings.Default.PdmBaseName);
+            
             if (найденныеФайлы == null)
             {
-                epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+                VaultSystem.SearchInVault.SearchDoc(AutoCompleteTextBox1.Text, VaultSystem.SearchInVault.SwDocType.SwDocPart, out найденныеФайлы, Settings.Default.PdmBaseName);
                 if (найденныеФайлы == null) return;
                 FileType = "prt";
             }
+
+
+
+            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+
+            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
+            //epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+            //if (найденныеФайлы == null)
+            //{
+            //    epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+            //    if (найденныеФайлы == null) return;
+            //    FileType = "prt";
+            //}
             else FileType = "asm";
 
             var newNames = найденныеФайлы.Select(findedDocumentse => findedDocumentse.Path).ToList();
@@ -1777,9 +1797,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 var modelSw = new ModelSw();
                 modelSw.PartInfoToXml(путь);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 

@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AirVentsCadWpf.AirVentsClasses;
-using AirVentsCadWpf.Properties;
 using BomPartList;
-using EdmLib;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
 
 namespace AirVentsCadWpf.DataControls
@@ -39,42 +36,42 @@ namespace AirVentsCadWpf.DataControls
 
         bool Login()
         {
-             IEdmVault10 mVault = new EdmVault5Class();
-            try
-            {
-                try
-                {
-                    mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
-                }
-                catch (Exception)
-                {
-                    mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
-                    return false;
-                }
-                mVault.CreateSearch();
-            }
-            catch (COMException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return false;
-            }
-            var fileDialog = new Microsoft.Win32.OpenFileDialog
-            {
-                InitialDirectory = mVault.RootFolderPath,
-                Filter = "SolidWorks Assemblies|*.sldasm"
-            };
-            if (fileDialog.ShowDialog() != true) return false;
+            //IEdmVault10 mVault = new EdmVault5Class();
+            //try
+            //{
+            //    try
+            //    {
+            //        mVault.LoginAuto(Settings.Default.PdmBaseName, 0);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        mVault.Login(Settings.Default.UserName, Settings.Default.Password, Settings.Default.PdmBaseName);
+            //        return false;
+            //    }
+            //    mVault.CreateSearch();
+            //}
+            //catch (COMException ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    return false;
+            //}
+            //var fileDialog = new Microsoft.Win32.OpenFileDialog
+            //{
+            //    InitialDirectory = mVault.RootFolderPath,
+            //    Filter = "SolidWorks Assemblies|*.sldasm"
+            //};
+            //if (fileDialog.ShowDialog() != true) return false;
 
-            _bomClass = new PartProperty
-            {
-                PdmBaseName = Settings.Default.PdmBaseName,
-                UserName = Settings.Default.UserName,
-                UserPassword = Settings.Default.Password,
-                AssemblyPath = fileDialog.FileName,
-            };
+            //_bomClass = new PartProperty
+            //{
+            //    PdmBaseName = Settings.Default.PdmBaseName,
+            //    UserName = Settings.Default.UserName,
+            //    UserPassword = Settings.Default.Password,
+            //    AssemblyPath = fileDialog.FileName,
+            //};
 
-            _bom = _bomClass.BomList();
-            _bomPartsList = _bomClass.BomListPrt();
+            //_bom = _bomClass.BomList();
+            //_bomPartsList = _bomClass.BomListPrt();
             return true;
         }
         
@@ -138,9 +135,9 @@ namespace AirVentsCadWpf.DataControls
                 var docmgr = new SwDocMgr {SDocFileName = filePath};
                 try
                 {
-                  //  PartProperties.ItemsSource = docmgr.CustomPropertiesList();
-                //    PartPropertiesCombo.ItemsSource = (List<SwDocMgr.PartProperties>)docmgr.CustomPropertiesList();
-                 //   PartPropertiesCombo.DataContext = "PropName";
+                    //  PartProperties.ItemsSource = docmgr.CustomPropertiesList();
+                    //    PartPropertiesCombo.ItemsSource = (List<SwDocMgr.PartProperties>)docmgr.CustomPropertiesList();
+                    //   PartPropertiesCombo.DataContext = "PropName";
                     var list = (List<SwDocMgr.PartProperties>)docmgr.CustomPropertiesList();
                     foreach (var partPropertiese in list)
                     {
@@ -148,9 +145,9 @@ namespace AirVentsCadWpf.DataControls
                     }
                     docmgr.GetCustomProperties();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }
                 finally
                 {
@@ -162,7 +159,7 @@ namespace AirVentsCadWpf.DataControls
         private List<SwDocMgr.PartProperties> strList;
 
 
-        private void OpenAsm_Click(object sender, RoutedEventArgs e)
+        private void OpenAsm_Click(object sender, RoutedEventArgs args)
         {
             try
             {
@@ -170,9 +167,9 @@ namespace AirVentsCadWpf.DataControls
                 MessageBox.Show(_bomClass.AssemblyInfoLabel + "   " + _bomClass.Message);
                 BomTablePrt2.ItemsSource = _bomPartsList.Where(x => x.ТолщинаЛиста == "");
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
     }

@@ -172,7 +172,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             string path; int fileId; int projectId;
 
-            if (GetExistingFile(Path.GetFileNameWithoutExtension(newDamperPath), out path, out fileId, out projectId))
+            if (GetExistingFile(Path.GetFileNameWithoutExtension(newDamperPath), out path, out fileId, out projectId, Settings.Default.PdmBaseName))
             {
                 if (MessageBox.Show("Вибровставка " + Path.GetFileNameWithoutExtension(newDamperPath) + " уже есть в базе. Открыть?",
                     "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -1068,9 +1068,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             {
                                 VentsMatdll(material, null, newName);
                             }
-                            catch (Exception exception)
+                            catch (Exception e)
                             {
-                                MessageBox.Show(exception.Message);
+                                MessageBox.Show(e.Message);
                             }
 
                             _swApp.CloseDoc(newName);
@@ -1133,9 +1133,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 VentsMatdll(material, null, newName);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -1812,9 +1812,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(new[] { "1700" }, new[] { "", "Шаргень", "2" }, newPartName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
 
                     _swApp.CloseDoc(newPartName);
@@ -1886,10 +1886,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #endregion
 
-            catch (Exception exception)
+            catch (Exception e)
             {
-                //Logger.Log(LogLevel.Error, string.Format("Во время изменения детали 15-001.SLDPRT произошла ошибка"), exception);
-                MessageBox.Show(exception.Message);
+                //Logger.Log(LogLevel.Error, string.Format("Во время изменения детали 15-001.SLDPRT произошла ошибка"), e);
+                MessageBox.Show(e.Message);
             }
 
             //15-002
@@ -1931,9 +1931,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(new[] { "1700" }, new[] { "", "Шаргень", "2" }, newPartName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newPartName);
@@ -1943,9 +1943,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("ЗеркальныйКомпонент2@15-000", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
                     swDoc.EditSuppress2();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }
             }
             else if (type != "6")

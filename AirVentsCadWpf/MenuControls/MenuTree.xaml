@@ -54,8 +54,8 @@
                 </TreeViewItem.Header>
                 <TreeViewItem Header="Спецификация"/>
                 <!--<TreeViewItem Header="Спецификации"/>-->
-                <TreeViewItem Header="Классификатор"/>
-                <TreeViewItem Header="Комплектующие"/>
+                <!--<TreeViewItem Header="Классификатор"/>-->
+                <!--<TreeViewItem Header="Комплектующие"/>-->
                 <!--     <TreeViewItem Header="Перечень деталей"/> 
                 <TreeViewItem Header="Заказы"/> -->
             </TreeViewItem>

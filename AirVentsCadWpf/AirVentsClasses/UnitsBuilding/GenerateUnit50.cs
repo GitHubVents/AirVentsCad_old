@@ -12,7 +12,6 @@ using System.Windows;
 using System.Xml;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
-
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsMaterials;
@@ -117,9 +116,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         //}
 
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("Введите корректные данные! " + exception.Message);
+                        MessageBox.Show("Введите корректные данные! " + e.Message);
                     }
                     finally
                     {
@@ -187,10 +186,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 AssemblyUnitsSTr(size, type, side, unit1, unit2);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Ошибка во время генерации блока {$"{size}-{type}"}. {exception.Message}", exception.StackTrace, "AssemblyUnits");
+                    $"Ошибка во время генерации блока {$"{size}-{type}"}. {e.Message}", e.StackTrace, "AssemblyUnits");
             }
         }
 
@@ -378,10 +377,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     LoggerInfo($"Компоненты, осзданные во время генерации  {$"{coponent.Name}"}","", "UnitS50");
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Ошибка во время генерации блока {$"{size}-{type}-{lenghtS}"}, время - {exception.Message}", exception.StackTrace, "UnitS50");
+                    $"Ошибка во время генерации блока {$"{size}-{type}-{lenghtS}"}, время - {e.Message}", e.StackTrace, "UnitS50");
             }
         }
         
@@ -1074,10 +1073,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         panels, roofType, section, profilOfCascet);
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
               LoggerError(
-                  $"Ошибка во время генерации блока {$"{size}-{order}-{section}"}. {exception.Message}", exception.StackTrace, "UnitAsmbly");
+                  $"Ошибка во время генерации блока {$"{size}-{order}-{section}"}. {e.Message}", e.StackTrace, "UnitAsmbly");
             }
         }
 
@@ -1281,9 +1280,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Frame");
+                MessageBox.Show(e.Message, "Frame");
             }
             
             #endregion
@@ -1313,9 +1312,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Roof");
+                MessageBox.Show(e.Message, "Roof");
             }
                 
             #endregion
@@ -1406,9 +1405,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString(), "Panels");
+                MessageBox.Show(e.ToString(), "Panels");
             }
 
             #endregion
@@ -1432,9 +1431,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Монтажная рама");
+                MessageBox.Show(e.Message, "Монтажная рама");
             }
 
             #endregion
@@ -1599,10 +1598,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         panels, roofType, section);
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Ошибка во время генерации блока {$"{size}-{order}-{section}"}. {exception.Message}", exception.StackTrace, "UnitAsmbly");
+                    $"Ошибка во время генерации блока {$"{size}-{order}-{section}"}. {e.Message}", e.StackTrace, "UnitAsmbly");
             }
         }
 
@@ -1787,9 +1786,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Frame");
+                MessageBox.Show(e.Message, "Frame");
             }
 
             #endregion
@@ -1817,9 +1816,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Roof");
+                MessageBox.Show(e.Message, "Roof");
             }
 
             #endregion
@@ -1860,9 +1859,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("02-04-400-625-30-Az-Az-MW-1@" + modelName, "COMPONENT", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString(), "Panels");
+                MessageBox.Show(e.ToString(), "Panels");
             }
 
             #endregion
@@ -1886,9 +1885,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.EditDelete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message, "Монтажная рама");
+                MessageBox.Show(e.Message, "Монтажная рама");
             }
 
             #endregion
@@ -2435,9 +2434,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     //    _swApp.ActivateDoc2("02-11-01-40-.SLDPRT", true, 0);
                     //    setMaterials.SetColor("00", покрытие[6], покрытие[1], покрытие[2], _swApp);// setMaterials.SetColor("00", "F6F6F6", "Шаргень", "2", _swApp);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
-                    //    MessageBox.Show(exception.StackTrace);
+                    //    MessageBox.Show(e.StackTrace);
                     //}
 
                     #endregion
@@ -2462,9 +2461,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
                     
                     _swApp.CloseDoc(newName);
@@ -2518,9 +2517,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     //    _swApp.ActivateDoc2("02-11-01-40-.SLDPRT", true, 0);
                     //    setMaterials.SetColor("00", покрытие[7], покрытие[4], покрытие[5], _swApp);// setMaterials.SetColor("00", "F6F6F6", "Шаргень", "2", _swApp);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
-                    //    MessageBox.Show(exception.StackTrace);
+                    //    MessageBox.Show(e.StackTrace);
                     //}
 
                     #endregion
@@ -2543,9 +2542,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
                     _swApp.CloseDoc(newName);
                 }
@@ -2697,9 +2696,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }                    
                     _swApp.CloseDoc(newName);
                 }
@@ -2753,9 +2752,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP1, new[] {покрытие[7], покрытие[4], покрытие[5]}, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
 
                     _swApp.CloseDoc(newName);
@@ -3105,9 +3104,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newName);
@@ -3145,9 +3144,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3247,9 +3246,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newName);
@@ -3287,9 +3286,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3388,9 +3387,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newName);
@@ -3428,9 +3427,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3531,9 +3530,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newName);
@@ -3573,9 +3572,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3611,9 +3610,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             //VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3713,9 +3712,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
 
                         _swApp.CloseDoc(newName);
@@ -3755,9 +3754,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3793,9 +3792,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         {
                             //VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                         }
-                        catch (Exception exception)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(exception.Message);
+                            MessageBox.Show(e.Message);
                         }
                         _swApp.CloseDoc(newName);
                     }
@@ -3934,9 +3933,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
                     _swApp.CloseDoc(newName);
                 }
@@ -3974,9 +3973,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(materialP1, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message);
+                        MessageBox.Show(e.Message);
                     }
 
                     _swApp.CloseDoc(newName);
@@ -4136,14 +4135,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         MessageBox.Show(message, newName);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace, exception.Message);
+                    MessageBox.Show(e.StackTrace, e.Message);
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.StackTrace);
+                MessageBox.Show(e.StackTrace);
             }
 
             GabaritsForPaintingCamera(_swApp.IActiveDoc2);
@@ -4384,9 +4383,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         panelNumber: PanelNumber
                         );
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
                 return id;
             }
@@ -4420,9 +4419,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         stepInsertion: "0",
                         airHole: AirHole);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace);
+                    MessageBox.Show(e.StackTrace);
                 }
                 return id;
             }
@@ -5397,9 +5396,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 //    setMaterials.SetColor("00", покрытие[3], покрытие[1], покрытие[2], _swApp);
                 //  //  MessageBox.Show("Цвет применен");
                 //}
-                //catch (Exception exception)
+                //catch (Exception e)
                 //{
-                //    MessageBox.Show(exception.StackTrace);
+                //    MessageBox.Show(e.StackTrace);
                 //}
 
                 swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
@@ -5408,9 +5407,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     VentsMatdll(new[] { material }, new[] { покрытие[3], покрытие[1], покрытие[2] }, newPartPath);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }
                 _swApp.CloseDoc(newPartName);
                 NewComponents.Add(new FileInfo(newPartPath));
@@ -5465,18 +5464,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     //    _swApp.ActivateDoc2("10-02-01-4", true, 0);
                     //    setMaterials.SetColor("00", покрытие[3], покрытие[1], покрытие[2], _swApp);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
-                    //    MessageBox.Show(exception.StackTrace);
+                    //    MessageBox.Show(e.StackTrace);
                     //}
                     swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                     try
                     {
                         VentsMatdll(new[] { material }, new[] { покрытие[3], покрытие[1], покрытие[2] }, newPartPath);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        //  MessageBox.Show(exception.Message);
+                        //  MessageBox.Show(e.Message);
                     }
                     _swApp.CloseDoc(newPartName);
                     NewComponents.Add(new FileInfo(newPartPath));
@@ -5518,18 +5517,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     //    _swApp.ActivateDoc2("10-04-4", true, 0);
                     //    setMaterials.SetColor("00", покрытие[3], покрытие[1], покрытие[2], _swApp);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
-                    //    MessageBox.Show(exception.StackTrace);
+                    //    MessageBox.Show(e.StackTrace);
                     //}
                     swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                     try
                     {
                         VentsMatdll(new[] { material }, new[] { покрытие[3], покрытие[1], покрытие[2] }, newPartPath);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        //  MessageBox.Show(exception.Message);
+                        //  MessageBox.Show(e.Message);
                     }
                     _swApp.CloseDoc(newPartName);
                     NewComponents.Add(new FileInfo(newPartName));
@@ -5589,18 +5588,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 //    setMaterials.SetColor("00", покрытие[3], покрытие[1], покрытие[2], _swApp);
                 //    //MessageBox.Show("Материал применен");
                 //}
-                //catch (Exception exception)
+                //catch (Exception e)
                 //{
-                //    MessageBox.Show(exception.StackTrace);
+                //    MessageBox.Show(e.StackTrace);
                 //}
                 swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                 try
                 {
                     VentsMatdll(new[] { material }, new[] { покрытие[3], покрытие[1], покрытие[2] }, newPartPath);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    //  MessageBox.Show(exception.Message);
+                    //  MessageBox.Show(e.Message);
                 }
                 if (typeOfMf == "2")
                 {
@@ -5614,9 +5613,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     {
                         VentsMatdll(new[] { material }, new[] { покрытие[3], покрытие[1], покрытие[2] }, newPartPath);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        //  MessageBox.Show(exception.Message);
+                        //  MessageBox.Show(e.Message);
                     }
                     _swApp.CloseDoc(newPrt0202);
                     NewComponents.Add(new FileInfo(newPrt0202));
@@ -5763,9 +5762,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 var swAssembly = ((AssemblyDoc)(balka));
                 swAssembly.ReplaceComponents(newPartPath0301, "", true, true);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
 
             if (typeOfMf == "2")
@@ -5786,9 +5785,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     _swApp.CloseDoc(Path.GetFileNameWithoutExtension(newAsm0202) + ".SLDASM");
 
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                 }
             }
 
@@ -5839,10 +5838,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 #endregion
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {exception.Message}", exception.StackTrace, "GetLastVersionPdm");
+                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {e.Message}", e.StackTrace, "GetLastVersionPdm");
             }        
         }
 
@@ -5874,11 +5873,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 #endregion
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
                 LoggerError(
-                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {exception.Message}", exception.StackTrace, "GetLastVersionPdm");
+                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {e.Message}", e.StackTrace, "GetLastVersionPdm");
             }
         }
 
@@ -5903,10 +5902,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                     #endregion
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
                     LoggerError(
-                        $"Во время получения последней версии по пути {path[i]} возникла ошибка!\nБаза - {vaultName}. {exception.Message}", exception.StackTrace, "GetLastVersionPdm");
+                        $"Во время получения последней версии по пути {path[i]} возникла ошибка!\nБаза - {vaultName}. {e.Message}", e.StackTrace, "GetLastVersionPdm");
                 }
             }
          }
@@ -5926,9 +5925,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         //            var edmFile5 = vault1.GetFileFromPath(path, out oFolder);
         //            edmFile5.GetFileCopy(1, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
         //        }
-        //        catch (Exception exception)
+        //        catch (Exception e)
         //        {
-        //            Logger.Log(LogLevel.Error, string.Format("Во время получения последней версии по пути {0} возникла ошибка\nБаза - {1}", path, vaultName), exception);
+        //            Logger.Log(LogLevel.Error, string.Format("Во время получения последней версии по пути {0} возникла ошибка\nБаза - {1}", path, vaultName), e);
         //        }
         //}
 
@@ -5954,10 +5953,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 //edmFile5.GetFileCopy(1, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
                 #endregion
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Во время получения последней версии по пути {path} возникла ошибка\nБаза - {vaultName}. {exception.Message}", exception.StackTrace, "GetLastVersionPdm");
+                    $"Во время получения последней версии по пути {path} возникла ошибка\nБаза - {vaultName}. {e.Message}", e.StackTrace, "GetLastVersionPdm");
             }
         }
 
@@ -6049,12 +6048,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             //        }
 
             //        }
-            //        catch (Exception exception)
+            //        catch (Exception e)
             //        {
-            //            MessageBox.Show(exception.ToString());
+            //            MessageBox.Show(e.ToString());
 
             //            retryCount--;
-            //            ex = exception;
+            //            ex = e;
             //            Thread.Sleep(200);
             //            if (retryCount == 0)
             //            {
@@ -6085,9 +6084,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swModel.EditRebuild3();
                 //myEqu.Add2(index, "\"" + System.Convert.ToChar(index) + "\"=" + index, false);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                LoggerError($"Удаление уравнения #{index} в модели {swModel.GetPathName()}. {exception.Message}",exception.StackTrace,"DelEquations");
+                LoggerError($"Удаление уравнения #{index} в модели {swModel.GetPathName()}. {e.Message}",e.StackTrace,"DelEquations");
             }
         }
 
@@ -6125,9 +6124,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 #endregion
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                LoggerError($"Не удалось создать папку по пути {path}. Ошибка {exception.Message}", exception.StackTrace, "CreateDistDirectory");
+                LoggerError($"Не удалось создать папку по пути {path}. Ошибка {e.Message}", e.StackTrace, "CreateDistDirectory");
             }
         }
 
@@ -6188,14 +6187,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         myDimension.SystemValue = swParametr / 1000;
                         swDoc.EditRebuild3();
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
                         Логгер.Отладка(string.Format("Во время изменения детали {4} произошла ошибка при изменении параметров {0}={1}. {2} {3}",
-                            newParams[i, 0], newParams[i, 1], exception.TargetSite, exception.Message, Path.GetFileNameWithoutExtension(modName)),
+                            newParams[i, 0], newParams[i, 1], e.TargetSite, e.Message, Path.GetFileNameWithoutExtension(modName)),
                             "", "", "SwPartParamsChangeWithNewName");
 
                         LoggerDebug(string.Format("Во время изменения детали {4} произошла ошибка при изменении параметров {0}={1}. {2} {3}",
-                            newParams[i, 0], newParams[i, 1], exception.TargetSite, exception.Message, Path.GetFileNameWithoutExtension(modName)),
+                            newParams[i, 0], newParams[i, 1], e.TargetSite, e.Message, Path.GetFileNameWithoutExtension(modName)),
                             "", "SwPartParamsChangeWithNewName");
                     }
                 }
@@ -6255,9 +6254,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 Логгер.Отладка($"Деталь {partName} изменена и сохранена по пути {new FileInfo(newName).FullName}", "", "", "SwPartParamsChangeWithNewName");
                 LoggerInfo($"Деталь {partName} изменена и сохранена по пути {new FileInfo(newName).FullName}", "", "SwPartParamsChangeWithNewName");
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }            
         }
 
@@ -6306,7 +6305,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             catch (Exception)
             {
-             //   MessageBox.Show(exception.Message, "degfv");
+             //   MessageBox.Show(e.Message, "degfv");
             }
             return isSheetMetal;
         }
@@ -6351,9 +6350,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     _swApp.CloseDoc(doc.GetTitle());
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -6675,9 +6674,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     LoggerError("Закончена обработка детали " + Path.GetFileName(filePath) + " с ошибками", "", "PartInfoToXml");
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                LoggerError("Ошибка: " + exception.StackTrace, GetHashCode().ToString("X"), "OnTaskRun");
+                LoggerError("Ошибка: " + e.StackTrace, GetHashCode().ToString("X"), "OnTaskRun");
             }
         }
 
@@ -6806,7 +6805,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
        //     //    }
        //     //    catch (Exception)
        //     //    {
-       //     //       // MessageBox.Show(exception.StackTrace);
+       //     //       // MessageBox.Show(e.StackTrace);
        //     //    }
 
        //     //    fileName = edmFile5.Name;
@@ -6816,8 +6815,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
        //     //}
        //     //catch (Exception)
        //     //{
-       //     //   // MessageBox.Show(exception.StackTrace + " \n " + path, "GetIdPdm");
-       //     //    //LoggerError(string.Format("Во время получения последней версии по пути {0} возникла ошибка!\nБаза - {1}. {2}", path, vaultName, exception.Message), exception.StackTrace, "GetLastVersionPdm");
+       //     //   // MessageBox.Show(e.StackTrace + " \n " + path, "GetIdPdm");
+       //     //    //LoggerError(string.Format("Во время получения последней версии по пути {0} возникла ошибка!\nБаза - {1}. {2}", path, vaultName, e.Message), e.StackTrace, "GetLastVersionPdm");
        //     //}
 
        //     #endregion
@@ -6895,10 +6894,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         //            //    LoggerInfo(string.Format("В базе PDM - {1}, зарегестрирован документ по пути {0}", file.LocalPartFileInfo.FullName, vaultName), "", "CheckInOutPdm");
         //            #endregion
         //        }
-        //        catch (Exception exception)
+        //        catch (Exception e)
         //        {
         //            LoggerError(
-        //                $"Во время регистрации документа по пути {file.LocalPartFileInfo} возникла ошибка\nБаза - {vaultName}. {exception.Message}", "", "CheckInOutPdm");
+        //                $"Во время регистрации документа по пути {file.LocalPartFileInfo} возникла ошибка\nБаза - {vaultName}. {e.Message}", "", "CheckInOutPdm");
         //        }
         //        finally
         //        {
@@ -6968,9 +6967,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
         //        poAdder.CommitAdd(0, null);
         //    }
-        //    catch (Exception exception)
+        //    catch (Exception e)
         //    {
-        //        MessageBox.Show(exception.Message, "BatchAddFiles");
+        //        MessageBox.Show(e.Message, "BatchAddFiles");
         //    }
         //}
 
@@ -7095,9 +7094,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swModel.EditRebuild3();
                     swModel.ForceRebuild3(false);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    LoggerMine.Error(string.Format("Ошибка при обработке детали {2}: {0} Строка: {1}", exception.Message, exception.StackTrace, Path.GetFileName(filePath)), exception.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
+                    LoggerMine.Error(string.Format("Ошибка при обработке детали {2}: {0} Строка: {1}", e.Message, e.StackTrace, Path.GetFileName(filePath)), e.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
                     return;
                 }
 
@@ -7111,9 +7110,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         return;
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    LoggerMine.Error(string.Format("Ошибка2 при обработке детали {2}: {0} Строка: {1}", exception.Message, exception.StackTrace, Path.GetFileName(filePath)), exception.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
+                    LoggerMine.Error(string.Format("Ошибка2 при обработке детали {2}: {0} Строка: {1}", e.Message, e.StackTrace, Path.GetFileName(filePath)), e.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
                 }
                 
                 #region Сохранение детали в eDrawing
@@ -7136,9 +7135,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             (int) swSaveAsOptions_e.swSaveAsOptions_Silent, null, 0, 0);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    LoggerMine.Error(exception.StackTrace, "", "File.Delete(_eDrwFileName);");
+                    LoggerMine.Error(e.StackTrace, "", "File.Delete(_eDrwFileName);");
                 }
 
                 #endregion
@@ -7150,15 +7149,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swApp.ExitApp();
                     LoggerMine.Info("Обработка файла " + swApp.IActiveDoc2.GetTitle() + ".sldprt" + ".sldprt" + " успешно завершена", "", "CreateFlattPatternUpdateCutlistAndEdrawing");
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    LoggerMine.Error(exception.StackTrace, "", "File.Delete(_eDrwFileName);");
+                    LoggerMine.Error(e.StackTrace, "", "File.Delete(_eDrwFileName);");
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerMine.Error(
-                    $"Общая ошибка метода: {exception.Message} Строка: {exception.StackTrace} exception.Source - ", exception.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
+                    $"Общая ошибка метода: {e.Message} Строка: {e.StackTrace} e.Source - ", e.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
             }
         }
 
@@ -7189,11 +7188,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     //    var edmFile5 = vault1.GetFileFromPath(filePath, out oFolder);
                     //    edmFile5.GetFileCopy(0, 0, oFolder.ID, (int) EdmGetFlag.EdmGet_Simple);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
                     //    LoggerMine.Error(
                     //        $"Ошибка при получении значения последней версии файла {Path.GetFileName(filePath)}",
-                    //        exception.ToString(), "CreateFlattPatternUpdateCutlistAndEdrawing");
+                    //        e.ToString(), "CreateFlattPatternUpdateCutlistAndEdrawing");
                     //}
 
                     #endregion
@@ -7275,7 +7274,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                     catch (Exception)
                     {
-                        // MessageBox.Show(exception.ToString());
+                        // MessageBox.Show(e.ToString());
                     }
 
                     #endregion
@@ -7379,7 +7378,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         catch (Exception)
                         {
-                            // MessageBox.Show(exception.ToString());
+                            // MessageBox.Show(e.ToString());
                         }
 
                         #endregion
@@ -7484,9 +7483,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swFeat2 = swFeat2.GetNextFeature();
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
 
             return propertyValue;

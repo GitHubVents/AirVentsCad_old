@@ -46,7 +46,7 @@ namespace AirVentsCadWpf.AirVentsClasses
                 var swClassFact = new SwDMClassFactory();
                 var swDocMgr = swClassFact.GetApplication("82EC0E04A67C7A48A3AB757A947C507A8210C1E87738B58E");
                 //_nDocType = SwDocMgrDocType(filePath);
-                var nDocType = SwDmDocumentType.swDmDocumentPart;
+                const SwDmDocumentType nDocType = SwDmDocumentType.swDmDocumentPart;
                 var swDocument15 = (SwDMDocument15) swDocMgr.GetDocument(@filePath, nDocType, true, out _nRetVal);
                 var swDocument13 = (SwDMDocument13) swDocument15;
                 var swCfgMgr = swDocument13.ConfigurationManager;
@@ -66,7 +66,7 @@ namespace AirVentsCadWpf.AirVentsClasses
             var swClassFact = new SwDMClassFactory();
             var swDocMgr = swClassFact.GetApplication("82EC0E04A67C7A48A3AB757A947C507A8210C1E87738B58E");
             //_nDocType = SwDocMgrDocType(filePath);
-            var nDocType = SwDmDocumentType.swDmDocumentPart;
+            const SwDmDocumentType nDocType = SwDmDocumentType.swDmDocumentPart;
             var swDocument15 = (SwDMDocument15)swDocMgr.GetDocument(@filePath, nDocType, true, out _nRetVal);
             var swDocument13 = (SwDMDocument13)swDocument15;
             var swCfgMgr = swDocument13.ConfigurationManager;
@@ -94,7 +94,7 @@ namespace AirVentsCadWpf.AirVentsClasses
             var swClassFact = new SwDMClassFactory();
             var swDocMgr = swClassFact.GetApplication("82EC0E04A67C7A48A3AB757A947C507A8210C1E87738B58E");
             //_nDocType = SwDocMgrDocType(filePath);
-            var nDocType = SwDmDocumentType.swDmDocumentPart;
+            const SwDmDocumentType nDocType = SwDmDocumentType.swDmDocumentPart;
             var swDocument15 = (SwDMDocument15)swDocMgr.GetDocument(@filePath, nDocType, true, out _nRetVal);
 
             var swDocument13 = (SwDMDocument13)swDocument15;
@@ -113,10 +113,10 @@ namespace AirVentsCadWpf.AirVentsClasses
                 MessageBox.Show(value);
                 nPropTypeStr = nPropType.ToString();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
 
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             // CloseDoc
             swDocument15.CloseDoc();
@@ -140,18 +140,18 @@ namespace AirVentsCadWpf.AirVentsClasses
             var swCfg = (SwDMConfiguration13)swCfgMgr.GetConfigurationByName(configName);
             
             ProcessConfigCustomProperties(swCfg);
-            SwDmCustomInfoType nPropType;
             try
             {
+                SwDmCustomInfoType nPropType;
                 var propStr = swCfg.GetCustomProperty("Материал", out nPropType);
                 swCfg.SetCustomProperty("Материал", "Лист Оцинковка");
                 MessageBox.Show(propStr);
                 propStr = swCfg.GetCustomProperty("Материал", out nPropType);
                 MessageBox.Show(propStr);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             
             // CloseDoc

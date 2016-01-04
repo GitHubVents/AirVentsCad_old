@@ -20,21 +20,16 @@ namespace AirVentsCadWpf.DataControls
             InitializeComponent();
         }
         
-        //private static readonly Logger Logger = LogManager.GetLogger("RoofUC");
-
         void BuildRoof_Click(object sender, RoutedEventArgs e)
         {
-           // MessageBox.Show(TypeOfRoof.Text);
             try
             {
-                //        
                 var sw = new ModelSw();
                 sw.Roof(TypeOfRoof.Text, WidthRoof.Text, LenghtRoof.Text);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                //Logger.Log(LogLevel.Error, string.Format("Ошибка при генерации крыши: тип - {0}, ширина - {1}, высота - {2}", TypeOfRoof.Text, WidthRoof.Text, LenghtRoof.Text), ex);
             }
         }
 

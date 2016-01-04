@@ -493,17 +493,6 @@
     <Resource Include="AHU Selection\ventusS1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="EdmLib">
-      <Guid>{5FA2C692-8393-4F31-9BDB-05E6F807D0D3}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>16</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="AHU Selection\br_icon_teaser_cad_sr_pos_150%281%29.ico" />
   </ItemGroup>
   <ItemGroup>

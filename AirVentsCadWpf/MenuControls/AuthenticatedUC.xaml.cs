@@ -23,9 +23,9 @@ namespace AirVentsCadWpf.MenuControls
                 UserName.Text = Properties.Settings.Default.UserName;
                 Password.Password = Properties.Settings.Default.Password;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
             
         }
@@ -71,22 +71,20 @@ namespace AirVentsCadWpf.MenuControls
             bool authenticateUser;
             try
             {
-                //Логгер.Информация("Аутентификация пользователя " + userName + " p:" + password, "", "AuthenticateUser", "AuthenticatedUC");
                 var directoryEntry = new DirectoryEntry("LDAP://" + domainName, userName, password);
                 var directorySearcher = new DirectorySearcher(directoryEntry);
                 directorySearcher.FindOne();
-                //Логгер.Информация("Аутентификация пользователя прошла успешно", "", "AuthenticateUser", "AuthenticatedUC");
                 authenticateUser = true;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                //Логгер.Ошибка("Ошибка:" + exception.StackTrace, exception.ToString(), "AuthenticateUser", "AuthenticatedUC");
+                //Логгер.Ошибка("Ошибка:" + args.StackTrace, args.ToString(), "AuthenticateUser", "AuthenticatedUC");
                 authenticateUser = false;
             }
             return authenticateUser;
         }
 
-         void Grid_Loaded_1(object sender, RoutedEventArgs e)
+         void Grid_Loaded_1(object sender, RoutedEventArgs args)
         {
             try
             {
@@ -104,9 +102,9 @@ namespace AirVentsCadWpf.MenuControls
                     Panel1 = {SelectionStart = 2}
                 });
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Во время запуска программы возникла ошибка" + exception);
+                MessageBox.Show("Во время запуска программы возникла ошибка" + e);
             }
             
         }

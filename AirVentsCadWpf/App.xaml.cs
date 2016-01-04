@@ -22,9 +22,9 @@ namespace AirVentsCadWpf
                 new FrameworkPropertyMetadata(
                     XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -40,6 +40,9 @@ namespace AirVentsCadWpf
             Intermech
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static int VaultType
         {
             get { return (int)VaultTypes.Intermech; }

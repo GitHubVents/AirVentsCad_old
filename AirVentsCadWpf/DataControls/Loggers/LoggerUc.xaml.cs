@@ -81,17 +81,17 @@ namespace AirVentsCadWpf.DataControls.Loggers
                                 //    Text = row[3]
                                 //}));
                             }
-                            catch (Exception exception)
+                            catch (Exception e)
                             {
-                                MessageBox.Show(exception.Message);
+                                MessageBox.Show(e.Message);
                             }
                         }
                     }
                     return listLog;
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка при получении списка! \n" + exception.Message);
+                    MessageBox.Show("Ошибка при получении списка! \n" + e.Message);
                     return null;
                 }
             }
@@ -158,12 +158,11 @@ namespace AirVentsCadWpf.DataControls.Loggers
         {
             if (СобытийТаблицаDataGrid.Items.Count <= 0) return;
             var border = VisualTreeHelper.GetChild(СобытийТаблицаDataGrid, 0) as Decorator;
-            if (border == null) return;
-            var scroll = border.Child as ScrollViewer;
-            if (scroll != null) scroll.ScrollToEnd();
+            var scroll = border?.Child as ScrollViewer;
+            scroll?.ScrollToEnd();
         }
 
-        void УровеньКомбо_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void УровеньКомбо_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             try
             {
@@ -195,13 +194,13 @@ namespace AirVentsCadWpf.DataControls.Loggers
                 СобытийТаблицаDataGrid.ItemsSource = _logListFiltered;
                 ScrollDown();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
-        void ДатаComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void ДатаComboBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             try
             {
@@ -227,9 +226,9 @@ namespace AirVentsCadWpf.DataControls.Loggers
                 СобытийТаблицаDataGrid.ItemsSource = _logListFiltered;
                 ScrollDown();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             
         }
@@ -272,9 +271,9 @@ namespace AirVentsCadWpf.DataControls.Loggers
                         }).ToList();
                     return listLog;
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка при получении списка! \n" + exception.Message);
+                    MessageBox.Show("Ошибка при получении списка! \n" + e.Message);
                     return null;
                 }
             }
@@ -294,9 +293,9 @@ namespace AirVentsCadWpf.DataControls.Loggers
                         sqlDataAdapter.Dispose();
                         //ordersList.Columns["LastName"].ColumnName = "Фамилия";
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.Message, "Ошибка выгрузки данных из базы");
+                        MessageBox.Show(e.Message, "Ошибка выгрузки данных из базы");
                     }
                     finally
                     {
@@ -380,7 +379,7 @@ namespace AirVentsCadWpf.DataControls.Loggers
             var border = VisualTreeHelper.GetChild(ТаблицаДанных, 0) as Decorator;
             if (border == null) return;
             var scroll = border.Child as ScrollViewer;
-            if (scroll != null) scroll.ScrollToEnd();
+            scroll?.ScrollToEnd();
 
 
             SqlLog.Header = "SQL " + tempList.Count + " записи(ей)";

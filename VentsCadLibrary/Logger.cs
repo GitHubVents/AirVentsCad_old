@@ -41,19 +41,11 @@ namespace VentsCadLibrary
 
             public static void Error(string message, string код, string функция)
             {
-                //using (var streamWriter = new StreamWriter("C:\\log.txt", true))
-                //{
-                //    streamWriter.WriteLine("{0,-20}  {2,-7} {3,-20} {1}", DateTime.Now + ":", message, "Error", ClassName);
-                //}
                 WriteToBase(message, "Error", код, ClassName, функция);
             }
 
             public static void Info(string message, string код, string функция)
             {
-                //using (var streamWriter = new StreamWriter("C:\\log.txt", true))
-                //{
-                //    streamWriter.WriteLine("{0,-20}  {2,-7} {3,-20} {1}", DateTime.Now + ":", message, "Info", ClassName);
-                //}
                 WriteToBase(message, "Info", код, ClassName, функция);
             }
 
@@ -78,9 +70,9 @@ namespace VentsCadLibrary
                         
                         sqlCommand.ExecuteNonQuery();                        
                     }
-                    catch (Exception exception)
+                    catch (Exception)
                     {
-                        //MessageBox.Show("Введите корректные данные! " + exception.Message);
+                        //
                     }
                     finally
                     {

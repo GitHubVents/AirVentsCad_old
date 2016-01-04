@@ -421,9 +421,9 @@ namespace VentsCadLibrary
                     {
                         VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.ToString());
+                        MessageBox.Show(e.ToString());
                     }
 
                     _swApp.CloseDoc(newName);
@@ -477,9 +477,9 @@ namespace VentsCadLibrary
                     //    _swApp.ActivateDoc2("02-11-01-40-.SLDPRT", true, 0);
                     //    setMaterials.SetColor("00", покрытие[7], покрытие[4], покрытие[5], _swApp);// setMaterials.SetColor("00", "F6F6F6", "Шаргень", "2", _swApp);
                     //}
-                    //catch (Exception exception)
+                    //catch (Exception e)
                     //{
-                    //    MessageBox.Show(exception.StackTrace);
+                    //    MessageBox.Show(e.StackTrace);
                     //}
 
                     #endregion
@@ -501,9 +501,9 @@ namespace VentsCadLibrary
                     {
                         VentsMatdll(materialP2, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.ToString());
+                        MessageBox.Show(e.ToString());
                     }
                     _swApp.CloseDoc(newName);
                 }
@@ -648,9 +648,9 @@ namespace VentsCadLibrary
                     {
                         VentsMatdll(materialP1, new[] { покрытие[6], покрытие[1], покрытие[2] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.ToString());
+                        MessageBox.Show(e.ToString());
                     }
                     _swApp.CloseDoc(newName);
                 }
@@ -702,9 +702,9 @@ namespace VentsCadLibrary
                     {
                         VentsMatdll(materialP1, new[] { покрытие[7], покрытие[4], покрытие[5] }, newName);
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show(exception.ToString());
+                        MessageBox.Show(e.ToString());
                     }
 
                     _swApp.CloseDoc(newName);

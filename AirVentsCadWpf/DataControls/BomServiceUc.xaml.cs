@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,11 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.Properties;
-//using AirVentsCadWpf.ServiceReference2;
-//using AirVentsCadWpf.ServiceReference3;
-//using AirVentsCadWpf.ServiceReference5;
 using BomPartList;
-using EdmLib;
 using VentsMaterials;
 using VentsPDM_dll;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
@@ -86,9 +81,9 @@ namespace AirVentsCadWpf.DataControls
                 //_allAsmInPdm = _serviceClient.AsmNames();
                 FindAsm();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Не удалость подключиться к сервису! \n" + exception.Message);
+                MessageBox.Show("Не удалость подключиться к сервису! \n" + e.Message);
             }
             
 
@@ -256,9 +251,9 @@ namespace AirVentsCadWpf.DataControls
                 //BomTablePrt.ItemsSource = _bomPartsList;
                 //AssemblyInfo.Content = _assemblyPath;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -278,9 +273,9 @@ namespace AirVentsCadWpf.DataControls
             //    BomTablePrt.ItemsSource = _bomPartsList;
             //    AssemblyInfo.Content = _assemblyPath;
             //}
-            //catch (Exception exception)
+            //catch (Exception args)
             //{
-            //    MessageBox.Show(exception.Message);
+            //    MessageBox.Show(args.Message);
             //}
 
         }
@@ -317,9 +312,9 @@ namespace AirVentsCadWpf.DataControls
             //           // partDataClass.CreateFlattPatternUpdateCutlistAndEdrawing(selectedPrt.Путь);
             //        }
             //    }
-            //    catch (Exception exception)
+            //    catch (Exception args)
             //    {
-            //        MessageBox.Show(exception.Message);
+            //        MessageBox.Show(args.Message);
             //        return;
             //    }
             //}
@@ -374,31 +369,31 @@ namespace AirVentsCadWpf.DataControls
             {
                 if (!_modelSwClass.IsSheetMetalPart(partPath, pdmBase))
                 {
-                    //MessageBox.Show("Не листовая деталь");
+                    //MessageBox.Show("Нелистовая деталь");
                     return;
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время определения листовой детали" + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время определения листовой детали" + e.Message, partPath);
             }
 
             try
             {
                 _modelSwClass.CheckInOutPdm(partPath, false, pdmBase);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время разрегистрации " + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время разрегистрации " + e.Message, partPath);
             }
 
             try
             {
                 _swMaterials.ApplyMaterial(partPath, partConfig, materialId, null);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка во время применения материала " + exception.Message, partPath);
+                MessageBox.Show("Ошибка во время применения материала " + e.Message, partPath);
             }
 
             finally
@@ -407,29 +402,26 @@ namespace AirVentsCadWpf.DataControls
                 {
                     _modelSwClass.CheckInOutPdm(partPath, true, pdmBase);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка во время регистрации " + exception.Message, partPath);
+                    MessageBox.Show("Ошибка во время регистрации " + e.Message, partPath);
                 }
             }
         }
-
-
- 
 
         private List<SwDocMgr.PartProperties> strList;
 
         #endregion
 
-        private void BeginUpdate1_Click(object sender, RoutedEventArgs e)
+        private void BeginUpdate1_Click(object sender, RoutedEventArgs args)
         {
             try
             {
               //  _bomClass.AcceptAllChanges(_bomPartsListOriginal, _bomPartsList);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message);
             }
             ChangedDataGrid(false);
         }
@@ -447,68 +439,21 @@ namespace AirVentsCadWpf.DataControls
         }
         
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-         
-            try
-            {
-               
-                var vault1 = new EdmVault5();
-                vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
-
-                var search = vault1.CreateSearch();
-                search.FindFiles = true;
-                search.FindFolders = false;
-
-                var edmFile5 = vault1.GetObject(EdmObjectType.EdmObject_File, 125);
-                
-                search.FileName = edmFile5.Name;
-                var result =  search.GetFirstResult();
-                MessageBox.Show(result.Path);
-        
-                var searchDir = new DirectoryInfo(@"E:\Vents-PDM");
-                var files = searchDir.GetFiles("*.sldasm", SearchOption.AllDirectories);
-
-                var allfiles = files.Aggregate("", (current, fileInfo) => " " + current + fileInfo.Name);
-
-                MessageBox.Show(allfiles);
-
-
-                //   var edmFile5 = (IEdmFile5)vault1.GetObject(EdmObjectType.EdmObject_ItemFolder, 125);
-                //edmFile5.GetFileCopy();
-                //            MessageBox.Show(edmFile5.Name + "  " + edmFile5.ID + "  " +  edmFile5.Vault.);
-                //    var edmFile5 = vault1.GetFileFromPath(path, out oFolder);
-                //   edmFile5.GetFileCopy(1, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
-
-            }
-
-            catch (Exception exception)
-            {
-            }
-
-       
-        }
-
-      
-
-
-
          void FindAsm()
         {
-
-             try
-             {
-                 var allAsmInPdmFind = _allAsmInPdm.ToList();
-                 allAsmInPdmFind = allAsmInPdmFind.Where(x => x.Contains(NamePdm.Text)).ToList();
-                 AsmNames.ItemsSource = allAsmInPdmFind;
-                 AsmNames.SelectedIndex = 0;
-                 AsmNames.IsDropDownOpen = true;
-             }
-             catch (Exception)
-             {
-                
-             }
-         }
+            try
+            {
+                var allAsmInPdmFind = _allAsmInPdm.ToList();
+                allAsmInPdmFind = allAsmInPdmFind.Where(x => x.Contains(NamePdm.Text)).ToList();
+                AsmNames.ItemsSource = allAsmInPdmFind;
+                AsmNames.SelectedIndex = 0;
+                AsmNames.IsDropDownOpen = true;
+            }
+            catch (Exception)
+            {
+                //
+            }
+        }
         
         void namePdm_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -522,70 +467,9 @@ namespace AirVentsCadWpf.DataControls
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-          //  var yandexService = new ServiceReference3.checkTextRequest("Провека","rus",0,"");
-          //  MessageBox.Show(yandexService.text);
-            //   yandexService.Open();
-            //var wrg =   yandexService.checkText("Работает прводчик", "rus", 0, "").ToString();
-            //    MessageBox.Show(wrg.ToString());
-            //   yandexService.Close();
-
-           //checkTextResponse checkTextResponse;
-           // checkTextResponse = new checkTextResponse(new SpellError[]);
-
-           //var chkr = spellServiceSoap.checkText(checkTextResponse.SpellResult);
-
-           //(using var pdmDll = VentsP)
-           // {
-                
-           // }
-
             var  pdmDll = new PDM {vaultname = "Vents-PDM"};
 
             MessageBox.Show(pdmDll.SearchDoc("02-05-50"));
-
-            //  var yandexService = new SpellServiceSoapClient();
-
-            //  //  yandexService.Open();
-
-            //  MessageBox.Show(yandexService.State.ToString());
-
-
-
-            //  //var checkText = yandexService.checkText("вперде", "rus", 1, "").ToList();
-
-            //  //foreach (SpellError error in checkText)
-            //  //{
-            //  //    MessageBox.Show(error.word);
-            //  //}
-
-            //// yandexService.DisplayInitializationUI(); 
-
-            //yandexService.Close();
-
-
-            //     MessageBox.Show(yandexService.State.ToString());
-            //var yandexService = new ServiceReference3.SpellError();
         }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            //var languageServiceClient = new ServiceReference4.LanguageServiceClient();
-            //var httpRequestProperty = new HttpRequestMessageProperty();
-            
-
-            //// Creates a block within which an OperationContext object is in scope.
-            //using (var operationContextScope = new OperationContextScope(languageServiceClient.InnerChannel))
-            //{
-            //    OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
-            //    const string sourceText = "Use pixels to express measurements for padding and margins.";
-            //    //Keep appId parameter blank as we are sending access token in authorization header.
-            //    var translationResult = languageServiceClient.Translate("", sourceText, "en", "de", "text/plain", "");
-
-
-            //    MessageBox.Show(String.Format("Translation for source {0} from {1} to {2} is", sourceText, "en", "de"), translationResult);
-            //   // Console.WriteLine(translationResult);
-            //}
-        }
-        
     }
 }

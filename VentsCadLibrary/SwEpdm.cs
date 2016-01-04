@@ -3,12 +3,32 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
 using EdmLib;
 
 namespace VentsCadLibrary
 {
     public class SwEpdm
     {
+        public static void AddToPdmByPath(string path, string vaultName)
+        {
+            try
+            {
+                var vault1 = new EdmVault5Class();
+                if (!vault1.IsLoggedIn)
+                {
+                    vault1.LoginAuto(vaultName, 0);
+                }
+                var fileDirectory = new FileInfo(path).DirectoryName;
+
+                var fileFolder = vault1.GetFolderFromPath(fileDirectory);
+                fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
+            }
+            catch (Exception)
+            {
+                //
+            }
+        }
         public static void GoToFile(string path, string vaultName)
         {
             try
@@ -319,7 +339,6 @@ namespace VentsCadLibrary
                 //
             }
         }
-
        
         public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, string vaultName, out List<VaultSystem.VentsCadFiles> newFilesList)
         {
@@ -335,9 +354,9 @@ namespace VentsCadLibrary
             {
                 BatchUnLock(filesList, edmVault5);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //  MessageBox.Show(ex.Message, " BatchAddFiles(filesList) ");
+                 MessageBox.Show(e.Message, " BatchAddFiles(filesList) ");
             }
             
             newFilesList = new List<VaultSystem.VentsCadFiles>();
@@ -407,20 +426,55 @@ namespace VentsCadLibrary
         {
             try
             {
-             var  poAdder = (IEdmBatchAdd2)edmVault5.CreateUtility(EdmUtility.EdmUtil_BatchAdd);
+                var  poAdder = (IEdmBatchAdd2)edmVault5.CreateUtility(EdmUtility.EdmUtil_BatchAdd);
 
+                var list = "Всего файлов - "  + filesList.Count;
+                var i = 0;
                 foreach (var file in filesList)
                 {
-                    var directoryName = file.LocalPartFileInfo.Replace(file.PartWithoutExtension, "");
-                    //  MessageBox.Show(directoryName + "\nLocalPartFileInfo - " + file.LocalPartFileInfo, "BatchAddFiles");
-                    poAdder.AddFileFromPathToPath(file.LocalPartFileInfo, directoryName);                    
-                }
+                    //MessageBox.Show(file.LocalPartFileInfo);
 
-                poAdder.CommitAdd(0, null);
+                    i++;
+
+                    var stringMess = list + "\n" + i + ". " + file.LocalPartFileInfo;
+                    
+                    var directoryName = file.LocalPartFileInfo.Replace(file.PartWithoutExtension, "");
+
+                    list = stringMess + " -|- " + directoryName;
+                    
+                    //MessageBox.Show(directoryName + "\nLocalPartFileInfo - " + file.LocalPartFileInfo, "BatchAddFiles");
+
+                    if (!string.IsNullOrEmpty(Path.GetExtension(file.LocalPartFileInfo)))
+                    {
+                        try
+                        {
+                            poAdder.AddFileFromPathToPath(new FileInfo(file.LocalPartFileInfo).FullName, directoryName);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.StackTrace, "1");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(file.LocalPartFileInfo);
+                    }
+                }
+                
+                //MessageBox.Show(list);
+                try
+                {
+                    //MessageBox.Show(poAdder.CommitAdd(0, null).ToString());
+                    poAdder.CommitAdd(-1, null);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.StackTrace, "2");
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-               // MessageBox.Show(exception.Message, "BatchAddFiles");
+                MessageBox.Show(e.StackTrace, "BatchAddFiles");
             }
         }
         
@@ -433,6 +487,10 @@ namespace VentsCadLibrary
             var ppoSelection = new EdmSelItem[filesList.Count];
             foreach (var file in filesList)
             {
+              //  MessageBox.Show( "\nLocalPartFileInfo - " + file.LocalPartFileInfo, "BatchUnLock");
+
+                if (string.IsNullOrEmpty(Path.GetExtension(file.LocalPartFileInfo))) continue;
+              
                 IEdmFolder5 ppoRetParentFolder;
                 var aFile = edmVault5.GetFileFromPath(file.LocalPartFileInfo, out ppoRetParentFolder);
                 aPos = aFile.GetFirstFolderPosition();
@@ -463,9 +521,9 @@ namespace VentsCadLibrary
         
         public class EpdmSearch
         {
-            public string VaultName { private get; set; }
+            //public string VaultName { private get; set; }
 
-            private IEdmVault5 _edmVault5;
+            private static IEdmVault5 _edmVault5;
 
             /// <summary>
             /// Тип документа для поиска. 
@@ -503,7 +561,7 @@ namespace VentsCadLibrary
                 public int ProjectId { get; set; }
             }
 
-            public void SearchDoc(string fileName, SwDocType swDocType, out List<FindedDocuments> fileList)
+            public static void SearchDoc(string fileName, SwDocType swDocType, out List<FindedDocuments> fileList, string vaultName)
             {
                 var files = new List<FindedDocuments>();
 
@@ -517,7 +575,7 @@ namespace VentsCadLibrary
 
                     if (!_edmVault5.IsLoggedIn)
                     {
-                        _edmVault5.LoginAuto(VaultName, 0);
+                        _edmVault5.LoginAuto(vaultName, 0);
                     }
 
                     //Search for all text files in the edmVault7

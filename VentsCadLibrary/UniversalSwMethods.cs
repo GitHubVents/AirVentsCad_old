@@ -1,11 +1,9 @@
-﻿using EdmLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using MakeDxfUpdatePartData;
 using SolidWorks.Interop.sldworks;
@@ -38,18 +36,24 @@ namespace VentsCadLibrary
             try
             {
                 LoggerInfo($"Получение последней версии по пути {path}\nБаза - {vaultName}", "", "GetLastVersionPdm");
-                MessageBox.Show($"Получение последней версии по пути {path}\nБаза - {vaultName}", "GetLastVersionPdm");
-                var vaultSource = new EdmVault5();
-                IEdmFolder5 oFolder;
-                vaultSource.LoginAuto(vaultName, 0);
-                var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
-                edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
 
+                VaultSystem.GetLastVersionOfFile(path, vaultName);
+
+                #region to delete
+
+                //  MessageBox.Show($"Получение последней версии по пути {path}\nБаза - {vaultName}", "GetLastVersionPdm");
+                //var vaultSource = new EdmVault5();
+                //IEdmFolder5 oFolder;
+                //vaultSource.LoginAuto(vaultName, 0);
+                //var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
+                //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
+
+                #endregion
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
                 LoggerError(
-                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {exception.Message}", exception.StackTrace, "GetLastVersionPdm");
+                    $"Во время получения последней версии по пути {path} возникла ошибка!\nБаза - {vaultName}. {e.Message}", e.StackTrace, "GetLastVersionPdm");
             }
         }
 
@@ -75,120 +79,23 @@ namespace VentsCadLibrary
                 myEqu.Delete(index);
                 swModel.EditRebuild3();                
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                LoggerError($"Удаление уравнения #{index} в модели {swModel.GetPathName()}. {exception.Message}", exception.StackTrace, "DelEquations");
+                LoggerError($"Удаление уравнения #{index} в модели {swModel.GetPathName()}. {e.Message}", e.StackTrace, "DelEquations");
             }
         }
-
-        //public class VentsCadFiles
-        //{
-        //    public int PartIdSql { get; set; }
-
-        //    public string PartName { get; set; }
-
-        //    public string PartWithoutExtension => LocalPartFileInfo.Substring(LocalPartFileInfo.LastIndexOf('\\'));
-
-        //    public int PartIdPdm { get; set; }
-
-        //    public string LocalPartFileInfo { get; set; }
-        //}
         
-        //void CheckInOutPdm(List<VentsCadFiles> filesList, string pdmBase, out List<VentsCadFiles> newFilesList)
-        //{
-        //    if (!_vault5.IsLoggedIn)
-        //    {
-        //        _vault5.LoginAuto(pdmBase, 0);
-        //    }
-
-        //    BatchAddFiles(filesList);            
-
-        //    try
-        //    {
-        //        BatchUnLock(filesList);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        // ignored
-        //    }
-
-        //    newFilesList = new List<VentsCadFiles>();                      
-
-        //    foreach (var file in filesList)
-        //    {
-        //        try
-        //        {
-        //            #region Check In Out Pdm
-
-        //            //    var vault1 = new EdmVault5();
-        //            //    IEdmFolder5 oFolder;
-        //            //    vault1.LoginAuto("Tets_debag", 0);
-        //            //    var attempts = 1;
-        //            //m1:
-        //            //    Thread.Sleep(350);
-        //            //    var edmFile5 = vault1.GetFileFromPath(file.LocalPartFileInfo.FullName, out oFolder);
-
-        //            //   // MessageBox.Show(file.LocalPartFileInfo.FullName);
-
-        //            //    if (oFolder == null)
-        //            //    {
-        //            //        attempts++;
-        //            //        if (attempts > 25)
-        //            //        {
-        //            //            MessageBox.Show(file.LocalPartFileInfo.FullName, "Не взят");
-        //            //            goto m2;
-        //            //        }
-        //            //        goto m1;
-        //            //    }
-        //            //m2:
-        //            //    // Разрегистрировать
-        //            //    if (registration == false)
-        //            //    {
-        //            //        edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
-        //            //        edmFile5.LockFile(oFolder.ID, 0);
-        //            //    }
-        //            //    // Зарегистрировать
-        //            //    if (registration)
-        //            //    {
-        //            //        edmFile5.UnlockFile(oFolder.ID, "");
-        //            //    }                    
-        //            //    LoggerInfo(string.Format("В базе PDM - {1}, зарегестрирован документ по пути {0}", file.LocalPartFileInfo.FullName, vaultName), "", "CheckInOutPdm");
-
-        //            #endregion
-        //        }
-        //        catch (Exception exception)
-        //        {
-        //            LoggerError(
-        //                $"Во время регистрации документа по пути {file.LocalPartFileInfo} возникла ошибка\nБаза - {pdmBase}. {exception.Message}", "", "CheckInOutPdm");
-        //        }
-        //        finally
-        //        {
-        //            string fileName;
-        //            int fileIdPdm;
-        //            GetIdPdm(file.LocalPartFileInfo, out fileName, out fileIdPdm);
-        //            newFilesList.Add(new VentsCadFiles
-        //            {
-        //                PartName = fileName,
-        //                PartIdPdm = fileIdPdm,
-        //                LocalPartFileInfo = file.LocalPartFileInfo,
-        //                PartIdSql = file.PartIdSql
-        //            });
-        //        }
-        //    }
-        //}
-        
-        bool GetExistingFile(string fileName, int type)
+        bool GetExistingFile(string fileName, int type, string vaultName)
         {
-            var epdmSearch = new SwEpdm.EpdmSearch { VaultName = VaultName };
             List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
             switch (type)
             {
                 case 0:
-                    epdmSearch.SearchDoc(fileName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
+                    VaultSystem.SearchInVault.SearchDoc(fileName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, vaultName);
                     if (найденныеФайлы?.Count > 0) goto m1;
                     break;
                 case 1:
-                    epdmSearch.SearchDoc(fileName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
+                    VaultSystem.SearchInVault.SearchDoc(fileName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы, vaultName);
                     if (найденныеФайлы?.Count > 0) goto m1;
                     break;
             }
@@ -200,29 +107,27 @@ namespace VentsCadLibrary
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(найденныеФайлы[0].Path);
                 return fileNameWithoutExtension != null && string.Equals(fileNameWithoutExtension, fileName, StringComparison.CurrentCultureIgnoreCase);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString()); return false;
+                MessageBox.Show(e.ToString()); return false;
             }
             m2:
             return false;
-        }
 
+        }
 
         bool GetExistingFile(string partName, out string path, out int fileId, out int projectId)
         {
             fileId = 0;
             projectId = 0;
             path = null;
-            // MessageBox.Show("Поиск" + partName);
-            var epdmSearch = new SwEpdm.EpdmSearch { VaultName = VaultName };
+            
             List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
-            epdmSearch.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
-            // MessageBox.Show(найденныеФайлы?[0] + " - Сборка");
+            VaultSystem.SearchInVault.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, VaultName);
+            
             if (найденныеФайлы != null) goto m1;
 
-            epdmSearch.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
-            // MessageBox.Show(найденныеФайлы?[0] + " - Деталь");
+            VaultSystem.SearchInVault.SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы, VaultName);
             if (найденныеФайлы != null) goto m1;
 
             return false;
@@ -240,11 +145,9 @@ namespace VentsCadLibrary
                 return false;
             }
         }
-
-
+        
         void AddInSqlBaseSpigot(string fileName, int? idPdm, int? typeOfSpigot, int? height, int? width)
         {
-            var status = false;
             using (var con = new SqlConnection(ConnectionToSql))
             {
                 try
@@ -272,6 +175,7 @@ namespace VentsCadLibrary
                         sqlParameter.AddWithValue("@IDPDM", idPdm);
                     }
 
+                    #region to delete
                     //if (fileType == null)
                     //{
                     //    sqlParameter.AddWithValue("@FileType", DBNull.Value);
@@ -280,6 +184,7 @@ namespace VentsCadLibrary
                     //{
                     //    sqlParameter.AddWithValue("@FileType", fileType);
                     //}
+                    #endregion
 
                     if (typeOfSpigot == null)
                     {
@@ -306,17 +211,26 @@ namespace VentsCadLibrary
                     else
                     {
                         sqlParameter.AddWithValue("@Width", width);
-                    }                                       
+                    }
+
+                    #region ReturnValue
 
                     //sqlCommand.Parameters.Add("@status", SqlDbType.Bit);
                     //sqlCommand.Parameters["@status"].Direction = ParameterDirection.ReturnValue;
+
+                    #endregion
+
                     sqlCommand.ExecuteNonQuery();
+
+                    #region ReturnValue
 
                     //status = Convert.ToBoolean(sqlCommand.Parameters["@status"].Value);
 
                     //MessageBox.Show(
                     //    $"fileName - {fileName} idPdm - {idPdm} fileType - {fileType} typeOfSpigot - {typeOfSpigot} height - {height} width - {width}");
                     //MessageBox.Show(status ? "Деталь есть в базе" : "Детали нет в базе", fileName);
+
+                    #endregion
                 }
                 catch (Exception exception)
                 {
@@ -357,9 +271,9 @@ namespace VentsCadLibrary
                     LoggerError("Закончена обработка детали " + Path.GetFileName(filePath) + " с ошибками", "", "PartInfoToXml");
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                LoggerError("Ошибка: " + exception.StackTrace, GetHashCode().ToString("X"), "OnTaskRun");
+                LoggerError("Ошибка: " + e.StackTrace, GetHashCode().ToString("X"), "OnTaskRun");
             }
         }
 
@@ -427,75 +341,9 @@ namespace VentsCadLibrary
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
-            }
-        }
-
-        //bool ExistFileInPdmBase(string fileName)
-        //{
-            //var emdpService = new EpdmServiceClient();
-            //var path = emdpService.SearchDoc(fileName);
-            //MessageBox.Show(path[0].FileName + " " + (path.Length > 0) );
-            //return path.Length > 0;
-        //}
-
-        readonly EdmVault5 _vault5 = new EdmVault5();        
-
-        public void BatchAddFiles(List<VaultSystem.VentsCadFiles> filesList)
-        {
-            try
-            {
-                poAdder = (IEdmBatchAdd2)_vault5.CreateUtility(EdmUtility.EdmUtil_BatchAdd);
-
-                foreach (var file in filesList)
-                {
-                    var directoryName = file.LocalPartFileInfo.Replace(file.PartWithoutExtension, "");
-                    poAdder.AddFileFromPathToPath(file.LocalPartFileInfo, directoryName, 0);
-                }
-                poAdder.CommitAdd(0, null);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.ToString(), "BatchAddFiles");
-            }            
-        }
-                
-        public void BatchUnLock(List<VaultSystem.VentsCadFiles> filesList)
-        {
-            batchUnlocker = (IEdmBatchUnlock2)_vault5.CreateUtility(EdmUtility.EdmUtil_BatchUnlock);
-            var i = 0;
-            var ppoSelection = new EdmSelItem[filesList.Count];
-
-            foreach (var file in filesList)
-            {
-                aFile = _vault5.GetFileFromPath(file.LocalPartFileInfo, out ppoRetParentFolder);                
-                aPos = aFile.GetFirstFolderPosition();
-                aFolder = aFile.GetNextFolder(aPos);
-
-                ppoSelection[i] = new EdmSelItem
-                {
-                    mlDocID = aFile.ID,
-                    mlProjID = aFolder.ID
-                };
-                i++;
-            }
-
-            // Add selections to the batch of files to check in
-            batchUnlocker.AddSelection(_vault5, ppoSelection);
-
-            if ((batchUnlocker != null))
-            {
-                batchUnlocker.CreateTree(0, (int)EdmUnlockBuildTreeFlags.Eubtf_ShowCloseAfterCheckinOption + (int)EdmUnlockBuildTreeFlags.Eubtf_MayUnlock);
-                fileList = (IEdmSelectionList6)batchUnlocker.GetFileList((int)EdmUnlockFileListFlag.Euflf_GetUnlocked + (int)EdmUnlockFileListFlag.Euflf_GetUndoLocked + (int)EdmUnlockFileListFlag.Euflf_GetUnprocessed);
-                aPos = fileList.GetHeadPosition();
-
-                while (!(aPos.IsNull))
-                {
-                    fileList.GetNext2(aPos, out poSel);
-                }
-                batchUnlocker.UnlockFiles(0);
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -504,39 +352,19 @@ namespace VentsCadLibrary
             fileName = null;
             fileIdPdm = 0;
             try
-            {                
-                //LoggerInfo(string.Format("Получение последней версии по пути {0}\nБаза - {1}", path, vaultName), "", "GetLastVersionPdm");               
-                IEdmFolder5 oFolder;
-                var tries = 1;
-                m1:
-                Thread.Sleep(500);
-                var edmFile5 = _vault5.GetFileFromPath(path, out oFolder);
-                if (oFolder == null)
-                {
-                    tries++;
-                    if (tries > 20)
-                    {
-                        return;
-                    }
-                    goto m1;
-                }
-                edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
-                fileName = edmFile5.Name;
-                fileIdPdm = edmFile5.ID;
+            {             
+                VaultSystem.GetIdPdm(path, out fileName, out fileIdPdm, VaultName);
             }
             catch (Exception)
             {
-                //LoggerError(string.Format("Во время получения последней версии по пути {0} возникла ошибка!\nБаза - {1}. {2}", path, vaultName, exception.Message), exception.StackTrace, "GetLastVersionPdm");
+                //LoggerError(string.Format("Во время получения последней версии по пути {0} возникла ошибка!\nБаза - {1}. {2}", path, vaultName, e.Message), e.StackTrace, "GetLastVersionPdm");
             }
         }
         
-
         private void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
         {
             try
             {
-                //MessageBox.Show(newName);                
-
                 _swApp.ActivateDoc2(newName, true, 0);
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = ConnectionToSql;
@@ -568,15 +396,15 @@ namespace VentsCadLibrary
                         MessageBox.Show(message, newName);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.StackTrace, exception.Message);
+                 //   MessageBox.Show(e.StackTrace, e.Message);
                 }
             }
 
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.StackTrace);
+               // MessageBox.Show(e.StackTrace);
             }
 
             finally
@@ -586,18 +414,61 @@ namespace VentsCadLibrary
                     GabaritsForPaintingCamera(_swApp.IActiveDoc2);
                     _swApp.IActiveDoc2.Save();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.ToString());
+                 //   MessageBox.Show(e.ToString());
                 }    
             }
         }
 
-        void SwPartParamsChangeWithNewName(string partName, string newName, string[,] newParams, bool newFuncOfAdding)
+        //Todo using
+
+        // Данный класс реализует интерейс IDisposable
+        class FinalizeObject : IDisposable
+        {
+            private int Id { get; set; }
+
+            public FinalizeObject(int id)
+            {
+                this.Id = id;
+            }
+
+            // Реализуем метод Dispose()
+            public void Dispose()
+            {
+                Console.WriteLine("Высвобождение объекта!");
+            }
+        }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                FinalizeObject obj = new FinalizeObject(4);
+                obj.Dispose();
+
+                Console.Read();
+
+                using (FinalizeObject objusing = new FinalizeObject(4))
+                {
+                    // Необходимые действия
+                }
+
+            }
+        }
+    
+      
+
+
+
+
+
+
+
+void SwPartParamsChangeWithNewName(string partName, string newName, string[,] newParams, bool newFuncOfAdding)
         {
             try
             {
-
                 LoggerDebug($"Начало изменения детали {partName}", "", "SwPartParamsChangeWithNewName");
                 var swDoc = _swApp.OpenDoc6(partName + ".SLDPRT", (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
                 
@@ -611,10 +482,10 @@ namespace VentsCadLibrary
                         myDimension.SystemValue = swParametr / 1000;
                         swDoc.EditRebuild3();
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
                         LoggerDebug(string.Format("Во время изменения детали {4} произошла ошибка при изменении параметров {0}={1}. {2} {3}",
-                            newParams[i, 0], newParams[i, 1], exception.TargetSite, exception.Message, Path.GetFileNameWithoutExtension(modName)),
+                            newParams[i, 0], newParams[i, 1], e.TargetSite, e.Message, Path.GetFileNameWithoutExtension(modName)),
                             "", "SwPartParamsChangeWithNewName");
                     }
                 }
@@ -646,9 +517,9 @@ namespace VentsCadLibrary
                 _swApp.CloseDoc(newName + ".SLDPRT");
                 LoggerInfo($"Деталь {partName} изменена и сохранена по пути {new FileInfo(newName).FullName}", "", "SwPartParamsChangeWithNewName");
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -669,10 +540,10 @@ namespace VentsCadLibrary
                         myDimension.SystemValue = swParametr / 1000;
                         swDoc.EditRebuild3();
                     }
-                    catch (Exception exception)
+                    catch (Exception e)
                     {
                         LoggerDebug(string.Format("Во время изменения детали {4} произошла ошибка при изменении параметров {0}={1}. {2} {3}",
-                            newParams[i, 0], newParams[i, 1], exception.TargetSite, exception.Message, Path.GetFileNameWithoutExtension(modName)),
+                            newParams[i, 0], newParams[i, 1], e.TargetSite, e.Message, Path.GetFileNameWithoutExtension(modName)),
                             "", "SwPartParamsChangeWithNewName");
                     }
                 }
@@ -709,9 +580,9 @@ namespace VentsCadLibrary
                 _swApp.CloseDoc(newName + ".SLDPRT");
                 LoggerInfo($"Деталь {partName} изменена и сохранена по пути {new FileInfo(newName).FullName}", "", "SwPartParamsChangeWithNewName");
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 

@@ -71,9 +71,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                         });
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    MessageBox.Show(exception.Message);
+                    MessageBox.Show(e.Message);
                     return false;
                 }
 
