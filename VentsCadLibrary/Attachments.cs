@@ -827,13 +827,13 @@ namespace VentsCadLibrary
                         swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                         _swApp.CloseDoc(newName);
 
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
 
-                        NewComponents.Add(new VaultSystem.VentsCadFiles
-                        {
-                            LocalPartFileInfo = new FileInfo(
-                            $@"{destinationFolder}\{DamperDestinationFolder}\{newName}").FullName
-                        });
+                        //NewComponents.Add(new VaultSystem.VentsCadFiles
+                        //{
+                        //    LocalPartFileInfo = new FileInfo(
+                        //    $@"{destinationFolder}\{DamperDestinationFolder}\{newName}").FullName
+                        //});
                     }
 
                     #endregion
@@ -851,7 +851,10 @@ namespace VentsCadLibrary
                     _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
                         $@"{destinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
 
-                    NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+
+                    NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                    //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+
                     NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
                 }
             }
@@ -911,6 +914,8 @@ namespace VentsCadLibrary
                             false,
                             null);
                         AddMaterial(material, newName);
+
+                  //      NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
 
                         NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
@@ -1426,8 +1431,17 @@ namespace VentsCadLibrary
             #endregion
 
             swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm, true, 0)));
+            try
+            {
+                GabaritsForPaintingCamera(swDoc);
+            }
+            catch (Exception)
+            {
+                //
+            }
+            
 
-            GabaritsForPaintingCamera(swDoc);
+
             swDoc.EditRebuild3();
             swDoc.ForceRebuild3(true);
             var name = $@"{destinationFolder}\{DamperDestinationFolder}\{newDamperName}";

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="AirVentsCad.exe" version="2.0.3.82" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
+  <asmv1:assemblyIdentity name="AirVentsCad.exe" version="2.0.3.83" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
   <description asmv2:iconFile="AHU Selection\br_icon_teaser_cad_sr_pos_150(1).ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -55,7 +55,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>dNG5THQftGJw/xa0aGcmtH0LpNWjZwsQzk493WC9F3s=</dsig:DigestValue>
+        <dsig:DigestValue>+CvJ/2s3br7/++f4EO5O5j6yJsc/jgDnH7mV+ofTA+U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -84,6 +84,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FixBends.dll" size="13824">
+      <assemblyIdentity name="FixBends" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>cPed/Ycau3TS0OlBNj3Mv8KqwwIL4UrGWnvUCUrdbWQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HostingWindowsForms.exe" size="110592">
       <assemblyIdentity name="HostingWindowsForms" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
@@ -108,14 +120,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MakeDxfUpdatePartData.dll" size="59392">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MakeDxfUpdatePartData.dll" size="58880">
       <assemblyIdentity name="MakeDxfUpdatePartData" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>zvl3s65g8p8sYBf3BI+djwGyXoVJFQ0QZfuRo+Honfc=</dsig:DigestValue>
+        <dsig:DigestValue>F7A+A8G53m0bW5Ep2aCjhb0JSLGsbC5X15WU6GAHCFc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -151,7 +163,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>LIxOL7CfjQ2H/u8fGNuzwLL70o5+MCBVrruzCFb8cO0=</dsig:DigestValue>
+        <dsig:DigestValue>kjjfwHiBIR+2f+JI2X3Fl1tRTukY5JeGbEbMTJRaCe4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

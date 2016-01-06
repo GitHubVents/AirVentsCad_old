@@ -76,8 +76,7 @@ namespace AirVentsCadWpf.DataControls
 
                 //MessageBox.Show("Finish");
 
-
-                //  return;
+                //return;
 
                 var mat1Code = "";
                 var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;

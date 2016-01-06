@@ -521,3 +521,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVe
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCadWpf.csproj.GenerateResource.Cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad.exe.manifest
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad.application
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\FixBends.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\FixBends.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\MakeDxfUpdatePartData.dll

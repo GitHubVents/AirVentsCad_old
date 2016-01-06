@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>82</ApplicationRevision>
+    <ApplicationRevision>83</ApplicationRevision>
     <ApplicationVersion>2.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -79,9 +79,12 @@
     <Reference Include="BomPartList">
       <HintPath>..\..\BomPartList\BomPartList\bin\Debug\BomPartList.dll</HintPath>
     </Reference>
+    <Reference Include="FixBends">
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2015\Projects\FixBends\FixBends\bin\Debug\FixBends.dll</HintPath>
+    </Reference>
     <Reference Include="MakeDxfUpdatePartData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Documents\Visual Studio 2012\Projects\MakeDxfUpdatePartData\MakeDxfUpdatePartData\bin\Debug\MakeDxfUpdatePartData.dll</HintPath>
+      <HintPath>..\..\..\..\Projects VS2012\MakeDxfUpdatePartData\MakeDxfUpdatePartData\bin\Debug\MakeDxfUpdatePartData.dll</HintPath>
     </Reference>
     <Reference Include="SolidWorks.Interop.sldworks">
       <HintPath>..\..\..\..\..\SW2013\SolidWorks\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>

@@ -287,7 +287,8 @@ namespace VentsCadLibrary
 
                 for (var i = 0; i < swmodel.GetConfigurationCount(); i++)
                 {
-                    i = i + 1;
+                    //i++;
+                    //i = i + 1;
                     var configname = swmodel.IGetConfigurationNames(ref i);
 
                     Configuration swConf = swmodel.GetConfigurationByName(configname);
@@ -343,7 +344,7 @@ namespace VentsCadLibrary
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                MessageBox.Show(e.StackTrace + "\n" + swmodel.GetTitle() + "\n" + swmodel.GetType() + "\n" + swmodel.GetPathName());
             }
         }
 
@@ -456,12 +457,6 @@ namespace VentsCadLibrary
 
             }
         }
-    
-      
-
-
-
-
 
 
 

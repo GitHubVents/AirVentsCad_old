@@ -12,6 +12,7 @@ using System.Windows;
 using System.Xml;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
+using FixBends;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsMaterials;
@@ -6823,18 +6824,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
        // }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        ///// <summary>
+        ///// 
+        ///// </summary>
         //public EdmVault5 VaultB = new EdmVault5();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filesList"></param>
-        /// <param name="registration"></param>
-        /// <param name="vaultName"></param>
-        /// <param name="newFilesList"></param>
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="filesList"></param>
+        ///// <param name="registration"></param>
+        ///// <param name="vaultName"></param>
+        ///// <param name="newFilesList"></param>
         //public void CheckInOutPdmNew(List<VentsCadFiles> filesList, bool registration, string vaultName, out List<VentsCadFiles> newFilesList)
         //{
         //    var edmVault5 = new EdmVault5();
@@ -7374,7 +7375,13 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                                 swFeature = swFeature.GetNextFeature();
                             }
                             swModel.EditRebuild3();
+
+
+                            new Bends().Fix(swApp);
+
                         }
+
+                       
 
                         catch (Exception)
                         {
@@ -7432,7 +7439,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         var sDxfName = swModel.GetTitle().Replace("ВНС-", "");
                         sDxfName = sDxfName + "-" + configName + "-" + thikness + valout + ".dxf";
-
+                        
                         var status = swPart.ExportToDWG(@"C:\DXF\" + sDxfName, swModel.GetPathName(),
                             //(int)swExportFlatPatternViewOptions_e swExportToDWG_e.swExportToDWG_ExportSheetMetal, 
                             1, true, varAlignment, false, false, 1, null);
