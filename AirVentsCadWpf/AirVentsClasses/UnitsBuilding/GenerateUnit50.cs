@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -12,14 +11,11 @@ using System.Windows;
 using System.Xml;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
-using FixBends;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using VentsMaterials;
-using MakeDxfUpdatePartData;
 using VentsCadLibrary;
-
-
+using VentsMaterials;
+using Environment = System.Environment;
 
 namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 {
@@ -95,7 +91,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         var sqlParameter = sqlCommand.Parameters;
 
-                        sqlParameter.AddWithValue("@UserName", System.Environment.UserName + " (" + System.Net.Dns.GetHostName() + ")");
+                        sqlParameter.AddWithValue("@UserName", Environment.UserName + " (" + Dns.GetHostName() + ")");
                         sqlParameter.AddWithValue("@ErrorModule", модуль);
                         sqlParameter.AddWithValue("@ErrorMessage", описание);
                         sqlParameter.AddWithValue("@ErrorCode", код);
@@ -997,34 +993,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.SaveAs2($@"{Settings.Default.DestinationFolder}{Unit50FolderD}\{newUnit50Name}.SLDASM", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
             NewComponents.Add(new FileInfo(newUnit50Path));
 
-            _swApp.CloseDoc(new FileInfo(newUnit50Path).Name);// _swApp.ExitApp();
+            _swApp.CloseDoc(new FileInfo(newUnit50Path).Name);
             _swApp = null;
-            CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);//.OrderBy(x => x.Length).ToList(), true, Settings.Default.TestPdmBaseName);
-            
-            //            var createdFileInfosM = "";
-            //            var count = 0;
-
-            //            foreach (var fileInfo in NewComponents.OrderByDescending(x => x.Length).ToList())
-            //            {
-            //                count += 1;
-            //                var fileSize = fileInfo.Length.ToString();
-            //                if (fileInfo.Length >= (1 << 30))
-            //                    fileSize = String.Format("{0}Gb", fileInfo.Length >> 30);
-            //                else if (fileInfo.Length >= (1 << 20))
-            //                    fileSize = String.Format("{0}Mb", fileInfo.Length >> 20);
-            //                else if (fileInfo.Length >= (1 << 10))
-            //                    fileSize = String.Format("{0}Kb", fileInfo.Length >> 10);
-            //                var extension = " Деталь - ";
-            //                if (Path.GetFileNameWithoutExtension(fileInfo.FullName).ToUpper() == ".SLDASM")
-            //                {
-            //                    extension = " Сборка - ";
-            //                }
-
-            //                createdFileInfosM = createdFileInfosM + @"
-            //" + count + ". " + extension + fileInfo.Name + " - " + fileSize;
-            //            }
-            //            MessageBox.Show(createdFileInfosM, "Созданы следующие файлы");
-
+            CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);
+          
             return newUnit50Path;
 
             #endregion
@@ -2020,7 +1992,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 return "";
             }
 
-            string thicknessOfPanel = typeOfPanel[2];
+            var thicknessOfPanel = typeOfPanel[2];
 
             Логгер.Отладка("Начало построения 50-й панели. ", "", "Panels50BuildStr", "Panels50BuildStr");
 
@@ -6654,26 +6626,31 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             try
             {
                 if (filePath == "") return;
-                var extension = Path.GetExtension(filePath);
-                if (extension == null) return;
-                if (extension.ToLower() != ".sldprt") return;
-                var @class = new MakeDxfExportPartDataClass
-                {
-                    PdmBaseName = Settings.Default.PdmBaseName
-                };
-                bool isErrors;
-                string newEdrwFileName;
+                //var extension = Path.GetExtension(filePath);
+                //if (extension == null) return;
+                //if (extension.ToLower() != ".sldprt") return;
+                //var @class = new MakeDxfExportPartDataClass
+                //{
+                //    PdmBaseName = Settings.Default.PdmBaseName
+                //};
+                //bool isErrors;
+                //string newEdrwFileName;
                 
-                @class.CreateFlattPatternUpdateCutlistAndEdrawing(filePath, out newEdrwFileName, out isErrors, false, false, true, true);
-                if (!isErrors)
-                {
-                    LoggerInfo("Закончена обработка " + Path.GetFileName(filePath), "", "PartInfoToXml");
-                }
-                else
-                {
-                    CheckInOutPdm(new List<FileInfo>{new FileInfo(newEdrwFileName)}, true, Settings.Default.TestPdmBaseName);
-                    LoggerError("Закончена обработка детали " + Path.GetFileName(filePath) + " с ошибками", "", "PartInfoToXml");
-                }
+                //var exportXmlSql = new ExportXmlSql { PdmBaseName = Settings.Default.PdmBaseName };
+                //exportXmlSql.Export(filePath);
+
+                //return;
+
+                //@class.CreateFlattPatternUpdateCutlistAndEdrawing(filePath, out newEdrwFileName, out isErrors, false, false, true, true);
+                //if (!isErrors)
+                //{
+                //    LoggerInfo("Закончена обработка " + Path.GetFileName(filePath), "", "PartInfoToXml");
+                //}
+                //else
+                //{
+                //    CheckInOutPdm(new List<FileInfo>{new FileInfo(newEdrwFileName)}, true, Settings.Default.TestPdmBaseName);
+                //    LoggerError("Закончена обработка детали " + Path.GetFileName(filePath) + " с ошибками", "", "PartInfoToXml");
+                //}
             }
             catch (Exception e)
             {
@@ -7161,342 +7138,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     $"Общая ошибка метода: {e.Message} Строка: {e.StackTrace} e.Source - ", e.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void CreateFlattPatternUpdateCutlistAndEdrawing(string filePath, string configuration, bool inPdm)
-        {
-            try
-            {
-                if (inPdm)
-                {
-                    VaultSystem.GetLastVersionOfFile(filePath, Settings.Default.PdmBaseName);
-                    #region To Delete
-
-                    //var vault1 = new EdmVault5();
-                    //try
-                    //{
-                    //    vault1.LoginAuto(Settings.Default.PdmBaseName, 0);
-
-                    //    //if (relativePath)
-                    //    //{
-                    //    //    //filePath = filePath.Replace("D:", "E:"); // new FileInfo( vault1.RootFolder + "\\" + filePath ).FullName;
-                    //    //    //MessageBox.Show(filePath);
-                    //    //}
-
-                    //    IEdmFolder5 oFolder;
-                    //    var edmFile5 = vault1.GetFileFromPath(filePath, out oFolder);
-                    //    edmFile5.GetFileCopy(0, 0, oFolder.ID, (int) EdmGetFlag.EdmGet_Simple);
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    LoggerMine.Error(
-                    //        $"Ошибка при получении значения последней версии файла {Path.GetFileName(filePath)}",
-                    //        e.ToString(), "CreateFlattPatternUpdateCutlistAndEdrawing");
-                    //}
-
-                    #endregion
-                }
-
-                SldWorks swApp;
-
-                try
-                {
-                    swApp = (SldWorks) Marshal.GetActiveObject("SldWorks.Application");
-                }
-                catch (Exception)
-                {
-                    swApp = new SldWorks {Visible = true};
-                }
-
-                var thisProc = Process.GetProcessesByName("SLDWORKS")[0];
-                thisProc.PriorityClass = ProcessPriorityClass.RealTime;
-
-                IModelDoc2 swModel = null; 
-
-                try
-                {
-                    swModel = swApp.OpenDoc6(filePath, (int) swDocumentTypes_e.swDocPART,
-                        (int) swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
-                }
-                catch (Exception){}
-
-                if (swModel == null) return;
-
-                if (!IsSheetMetalPart((IPartDoc) swModel))
-                {
-                    try
-                    {
-                        swApp.CloseDoc(new FileInfo(filePath).Name);
-                    }
-                    catch (Exception)
-                    {
-                        //
-                    }
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(configuration))
-                {
-                    
-                    swModel.ShowConfiguration2(configuration);
-                    swModel.EditRebuild3();
-
-                    #region Разгибание всех сгибов
-
-                    try
-                    {
-                        Feature swFeature = swModel.FirstFeature();
-                        while (swFeature != null)
-                        {
-                            if (swFeature.GetTypeName2() == "FlatPattern")
-                            {
-                                swFeature.Select(true);
-                                swModel.EditUnsuppress2();
-                                Feature swSubFeature = swFeature.GetFirstSubFeature();
-
-                                while (swSubFeature != null)
-                                {
-                                    if (swSubFeature.GetTypeName2() == "UiBend")
-                                    {
-                                        swSubFeature.SetSuppression2(
-                                            (int)swFeatureSuppressionAction_e.swUnSuppressFeature,
-                                            (int)swInConfigurationOpts_e.swConfigPropertySuppressFeatures,
-                                            configuration);
-                                    }
-                                    swSubFeature = swSubFeature.GetNextSubFeature();
-                                }
-                            }
-                            swFeature = swFeature.GetNextFeature();
-                        }
-                        swModel.EditRebuild3();
-                    }
-
-                    catch (Exception)
-                    {
-                        // MessageBox.Show(e.ToString());
-                    }
-
-                    #endregion
-
-                    var swModelDocExt = swModel.Extension;
-                    string valout;
-
-                    var swCustProp = swModelDocExt.CustomPropertyManager[configuration];
-                    try
-                    {
-                        string val;
-                        swCustProp.Get4("Код", false, out val, out valout);
-                    }
-                    catch (Exception)
-                    {
-                        valout = null;
-                    }
-
-                    if (!string.IsNullOrEmpty(valout))
-                    {
-                        valout = "-" + valout;
-                    }
-
-                    var thikness = GetFromCutlist(swModel, "Толщина листового металла");
-                    try
-                    {
-                        Directory.CreateDirectory(@"C:\DXF\");
-                    }
-                    catch (Exception)
-                    {
-                        //
-                    }
-                    
-                    var swPart = (IPartDoc)swModel;
-                    var dataAlignment = new double[12];
-
-                    dataAlignment[0] = 0.0;
-                    dataAlignment[1] = 0.0;
-                    dataAlignment[2] = 0.0;
-                    dataAlignment[3] = 1.0;
-                    dataAlignment[4] = 0.0;
-                    dataAlignment[5] = 0.0;
-                    dataAlignment[6] = 0.0;
-                    dataAlignment[7] = 1.0;
-                    dataAlignment[8] = 0.0;
-                    dataAlignment[9] = 0.0;
-                    dataAlignment[10] = 0.0;
-                    dataAlignment[11] = 1.0;
-                    object varAlignment = dataAlignment;
-
-                    var sDxfName = swModel.GetTitle().Replace("ВНС-", "");
-                    sDxfName = sDxfName + "-" + configuration + "-" + thikness + valout + ".dxf";
-
-                    swPart.ExportToDWG(@"C:\DXF\" + sDxfName, swModel.GetPathName(),
-                        //(int)swExportFlatPatternViewOptions_e swExportToDWG_e.swExportToDWG_ExportSheetMetal, 
-                        1, true, varAlignment, false, false, 1, null);
-
-                    swApp.CloseDoc(new FileInfo(filePath).Name);
-                }
-                else
-                {
-                    var swModelConfNames2 = (string[])swModel.GetConfigurationNames();
-
-                    foreach (var configName in from name in swModelConfNames2
-                        let config = (Configuration) swModel.GetConfigurationByName(name)
-                        where !config.IsDerived()
-                        select name)
-                    {
-                        swModel.ShowConfiguration2(configName);
-                        swModel.EditRebuild3();
-
-                        #region Разгибание всех сгибов
-
-                        try
-                        {
-                            Feature swFeature = swModel.FirstFeature();
-                            while (swFeature != null)
-                            {
-                                if (swFeature.GetTypeName2() == "FlatPattern")
-                                {
-                                    swFeature.Select(true);
-                                    swModel.EditUnsuppress2();
-                                    Feature swSubFeature = swFeature.GetFirstSubFeature();
-
-                                    while (swSubFeature != null)
-                                    {
-                                        if (swSubFeature.GetTypeName2() == "UiBend")
-                                        {
-                                            swSubFeature.SetSuppression2(
-                                                (int) swFeatureSuppressionAction_e.swUnSuppressFeature,
-                                                (int) swInConfigurationOpts_e.swConfigPropertySuppressFeatures,
-                                                configName);
-                                        }
-                                        swSubFeature = swSubFeature.GetNextSubFeature();
-                                    }
-                                }
-                                swFeature = swFeature.GetNextFeature();
-                            }
-                            swModel.EditRebuild3();
-
-
-                            new Bends().Fix(swApp);
-
-                        }
-
-                       
-
-                        catch (Exception)
-                        {
-                            // MessageBox.Show(e.ToString());
-                        }
-
-                        #endregion
-
-                        var swModelDocExt = swModel.Extension;
-                        string valout;
-
-                        var swCustProp = swModelDocExt.CustomPropertyManager[configName];
-                        try
-                        {
-                            string val;
-                            swCustProp.Get4("Код", false, out val, out valout);
-                        }
-                        catch (Exception)
-                        {
-                            valout = null;
-                        }
-
-                        if (!string.IsNullOrEmpty(valout))
-                        {
-                            valout = "-" + valout;
-                        }
-
-                        var thikness = GetFromCutlist(swModel, "Толщина листового металла");
-                        try
-                        {
-                            Directory.CreateDirectory(@"C:\DXF\");
-                        }
-                        catch (Exception)
-                        {
-                            //
-                        }
-                        
-
-                        var swPart = (IPartDoc) swModel;
-                        var dataAlignment = new double[12];
-
-                        dataAlignment[0] = 0.0;
-                        dataAlignment[1] = 0.0;
-                        dataAlignment[2] = 0.0;
-                        dataAlignment[3] = 1.0;
-                        dataAlignment[4] = 0.0;
-                        dataAlignment[5] = 0.0;
-                        dataAlignment[6] = 0.0;
-                        dataAlignment[7] = 1.0;
-                        dataAlignment[8] = 0.0;
-                        dataAlignment[9] = 0.0;
-                        dataAlignment[10] = 0.0;
-                        dataAlignment[11] = 1.0;
-                        object varAlignment = dataAlignment;
-
-                        var sDxfName = swModel.GetTitle().Replace("ВНС-", "");
-                        sDxfName = sDxfName + "-" + configName + "-" + thikness + valout + ".dxf";
-                        
-                        var status = swPart.ExportToDWG(@"C:\DXF\" + sDxfName, swModel.GetPathName(),
-                            //(int)swExportFlatPatternViewOptions_e swExportToDWG_e.swExportToDWG_ExportSheetMetal, 
-                            1, true, varAlignment, false, false, 1, null);
-                        if (!status)
-                        {
-                            //MessageBox.Show("Ощибка преоразования файла в DXF");
-                        }
-                    }
-                    swApp.CloseDoc(new FileInfo(filePath).Name);
-                }
-            }
-            catch (Exception){}
-        }
         
-
-        static string GetFromCutlist(IModelDoc2 swModel, string property)
-        {
-            var propertyValue = "";
-
-            try
-            {
-                Feature swFeat2 = swModel.FirstFeature();
-                while (swFeat2 != null)
-                {
-                    if (swFeat2.GetTypeName2() == "SolidBodyFolder")
-                    {
-                        BodyFolder swBodyFolder = swFeat2.GetSpecificFeature2();
-                        swFeat2.Select2(false, -1);
-                        swBodyFolder.SetAutomaticCutList(true);
-                        swBodyFolder.UpdateCutList();
-
-                        Feature swSubFeat = swFeat2.GetFirstSubFeature();
-                        while (swSubFeat != null)
-                        {
-                            if (swSubFeat.GetTypeName2() == "CutListFolder")
-                            {
-                                BodyFolder bodyFolder = swSubFeat.GetSpecificFeature2();
-                                swSubFeat.Select2(false, -1);
-                                bodyFolder.SetAutomaticCutList(true);
-                                bodyFolder.UpdateCutList();
-                                var swCustPrpMgr = swSubFeat.CustomPropertyManager;
-                                string valOut;
-                                swCustPrpMgr.Get4(property, true, out valOut, out propertyValue);
-                            }
-                            swSubFeat = swSubFeat.GetNextFeature();
-                        }
-                    }
-                    swFeat2 = swFeat2.GetNextFeature();
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-
-            return propertyValue;
-        }
     }
 
 }

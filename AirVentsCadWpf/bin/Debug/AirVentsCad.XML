@@ -1757,11 +1757,6 @@
             <param name="filePath"></param>
             <param name="inPdm"></param>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CreateFlattPatternUpdateCutlistAndEdrawing(System.String,System.String,System.Boolean)">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:AirVentsCadWpf.DataControls.AirVentsUnits50Uc">
             <summary>
             Interaction logic for AirVentsUnits50Uc.xaml

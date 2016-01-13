@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>83</ApplicationRevision>
+    <ApplicationRevision>84</ApplicationRevision>
     <ApplicationVersion>2.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -79,8 +79,8 @@
     <Reference Include="BomPartList">
       <HintPath>..\..\BomPartList\BomPartList\bin\Debug\BomPartList.dll</HintPath>
     </Reference>
-    <Reference Include="FixBends">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2015\Projects\FixBends\FixBends\bin\Debug\FixBends.dll</HintPath>
+    <Reference Include="ExportPartData">
+      <HintPath>..\..\..\ExportPartData\ExportPartData\bin\Debug\ExportPartData.dll</HintPath>
     </Reference>
     <Reference Include="MakeDxfUpdatePartData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

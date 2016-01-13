@@ -17,11 +17,13 @@ using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 using AirVentsCadWpf.Properties;
 using BomPartList.Спецификации;
+using ExportPartData;
 using HostingWindowsForms.EPDM;
 using MakeDxfUpdatePartData;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
+
 
 namespace AirVentsCadWpf.DataControls.Specification
 {
@@ -364,7 +366,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                                 // Код документа
                                 myXml.WriteStartElement("attribute");
                                 myXml.WriteAttributeString("name", "Код документа");
-                                myXml.WriteAttributeString("value", "");// topLevel.КодДокумента);
+                                myXml.WriteAttributeString("value", "");
                                 myXml.WriteEndElement();
 
                                 // Кол. Материала
@@ -1379,11 +1381,12 @@ namespace AirVentsCadWpf.DataControls.Specification
             public string ЗаготовкаВысота { get; set; }
             public string Гибы { get; set; }
             public string Толщина { get; set; }
+
             //public string ПокараскаX { get; set; }
             //public string ПокараскаY { get; set; }
             //public string ПокараскаZ { get; set; }
-            public string ПлощадьПокрытия { get; set; }
 
+            public string ПлощадьПокрытия { get; set; }
 
             public string Материал { get; set; }
 
@@ -1785,7 +1788,12 @@ namespace AirVentsCadWpf.DataControls.Specification
             {
                 if (!newComponent.Xml)
                 {
-                    modelSw.PartInfoToXml(newComponent.Путь);
+                    //var exportXmlSql = new ExportXmlSql();
+                    ExportXmlSql.Export(newComponent.Путь);
+
+                    //exportXmlSql.Export(newComponent.Путь);
+
+                    //modelSw.PartInfoToXml(newComponent.Путь);
                 }
             }
         }
@@ -1845,15 +1853,18 @@ namespace AirVentsCadWpf.DataControls.Specification
         }
         void DxfParts1_Click(object sender, RoutedEventArgs e)
         {
-            var modelSw = new ModelSw();
 
             var list = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
 
+            if (list.Count == 0) return;
+            
             foreach (var newComponent in list)
             {
-                modelSw.CreateFlattPatternUpdateCutlistAndEdrawing(newComponent.Путь, checkBox.IsChecked == true ? newComponent.Конфигурация : null, true);
+                Dxf.Save(newComponent.Путь, checkBox.IsChecked == true ? newComponent.Конфигурация : null);
             }
         }
+
+        
 
         void button_Click_4(object sender, RoutedEventArgs e)
         {
