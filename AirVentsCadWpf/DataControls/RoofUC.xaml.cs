@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
 
 namespace AirVentsCadWpf.DataControls
@@ -55,12 +54,6 @@ namespace AirVentsCadWpf.DataControls
             }
         }
 
-        void Grid_Loaded_1(object sender, RoutedEventArgs e)
-        {
-            //var sw = new ModelSw();
-            //sw.CreateDistDirectory(string.Format(@"{0}\{1}", @Properties.Settings.Default.DestinationFolder, sw.RoofDestinationFolder));
-        }
-
         void TypeOfRoof_LayoutUpdated(object sender, EventArgs e)
         {
             const string picturePath = @"\DataControls\Pictures\Крыша\";
@@ -77,11 +70,7 @@ namespace AirVentsCadWpf.DataControls
                     pictureName = "15-04-800-1100.JPG";
                     break;
             }
-            var mapLoader = new BitmapImage();
-            mapLoader.BeginInit();
-            mapLoader.UriSource = new Uri(picturePath + pictureName, UriKind.RelativeOrAbsolute);
-            mapLoader.EndInit();
-            if (PictureRoof != null) PictureRoof.Source = mapLoader;
+            App.ElementVisibility.SetImage(picturePath + pictureName, PictureRoof);
         }
     }
 }

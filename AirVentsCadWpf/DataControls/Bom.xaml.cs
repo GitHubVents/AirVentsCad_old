@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using BomPartList;
-using EdmLib;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
@@ -68,7 +67,6 @@ namespace AirVentsCadWpf.DataControls
                 //{
                 //    _mVault.Login(User, Password, PdmBaseName);
                 //}
-
 
                 
                 //_mVault.CreateSearch();
@@ -767,7 +765,7 @@ namespace AirVentsCadWpf.DataControls
                                 bodyFolder.SetAutomaticCutList(true);
                                 bodyFolder.UpdateCutList();
                                 var swCustPrpMgr = swSubFeat.CustomPropertyManager;
-                                swCustPrpMgr.Add("Площадь поверхности", "Текст", "\"SW-SurfaceArea@@@Элемент списка вырезов1@"+Path.GetFileName(swModel.GetPathName())+"\"");
+                                swCustPrpMgr.Add("Площадь поверхности", "Текст", "\"SW-SurfaceArea@@@Элемент списка вырезов1@" + Path.GetFileName(swModel.GetPathName())+"\"");
 
                                 string длинаГраничнойРамки;
                                 swCustPrpMgr.Get4(длинаГраничнойРамкиName, true, out valOut, out длинаГраничнойРамки);

@@ -56,7 +56,8 @@
             </ComboBox>
         </Grid>
         <Grid HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Margin="0" Height="15"/>
-        <Button Grid.Row="0" x:Name="Build" Content="Построить" HorizontalAlignment="Right" Height="30" Margin="0,0,90,50" VerticalAlignment="Bottom" Width="100" Click="BUILDING_Click" Background="{x:Null}"/>
+        <Button Grid.Row="0" x:Name="Build" Content="Построить" HorizontalAlignment="Right" Height="30" Margin="0,0,90,50" VerticalAlignment="Bottom" Width="100" 
+                Click="BUILDING_Click" Background="{x:Null}"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Margin="0" Height="15"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="6" VerticalAlignment="Stretch" Margin="0" Height="15"/>
         <Grid HorizontalAlignment="Left" Margin="0" Grid.Row="7" VerticalAlignment="Top">

@@ -51,16 +51,12 @@ namespace HostingWindowsForms.EPDM
         }
 
      
-        public List<BomCells> BomList(string filePath, string config)
+        public List<BomCells> BomList(string filePath, string config, bool asBuild , out Exception exception)
         {
-            Getbom(BomId, filePath,  config);
+            var bomFlag = asBuild ? EdmBomFlag.EdmBf_AsBuilt : EdmBomFlag.EdmBf_ShowSelected;
+            Getbom(BomId, filePath,  config, bomFlag, out exception);
             return _bomList;
         }
-
-        //public List<BomCells> BomListAsm()
-        //{
-        //    return BomList().Where(x => x.ТипФайла == "sldasm" & x.Уровень != "0" & x.Раздел == "Сборочные единицы").OrderBy(x => x.Обозначение).ToList();
-        //}
 
         #endregion
 
@@ -165,63 +161,73 @@ namespace HostingWindowsForms.EPDM
             return namedoc;
         }
 
-        void Getbom(int bomId, string filePath,  string bomConfiguration)
+        void Getbom(int bomId, string filePath,  string bomConfiguration, EdmBomFlag bomFlag, out Exception exception)
         {
-            IEdmFolder5 oFolder;
-            CheckPdmVault();
-            EdmFile7 = (IEdmFile7)_edmVault5.GetFileFromPath(filePath, out oFolder);
-            
-            var bomView = EdmFile7.GetComputedBOM(Convert.ToInt32(bomId), Convert.ToInt32(-1), bomConfiguration, (int)EdmBomFlag.EdmBf_ShowSelected);
+            exception = null;
 
-            if (bomView == null) return;
-            Array bomRows;
-            Array bomColumns;
-            bomView.GetRows(out bomRows);
-            bomView.GetColumns(out bomColumns);
-
-            var bomTable = new DataTable();
-
-            foreach (EdmBomColumn bomColumn in bomColumns)
+            try
             {
-                bomTable.Columns.Add(new DataColumn { ColumnName = bomColumn.mbsCaption });
-            }
+                IEdmFolder5 oFolder;
+                CheckPdmVault();
+                EdmFile7 = (IEdmFile7) _edmVault5.GetFileFromPath(filePath, out oFolder);
 
-            //bomTable.Columns.Add(new DataColumn { ColumnName = "Путь" });
-            bomTable.Columns.Add(new DataColumn { ColumnName = "Уровень" });
-            bomTable.Columns.Add(new DataColumn { ColumnName = "КонфГлавнойСборки" });
+                var bomView = EdmFile7.GetComputedBOM(Convert.ToInt32(bomId), Convert.ToInt32(-1), bomConfiguration,
+                    (int) bomFlag); //(int)EdmBomFlag.EdmBf_ShowSelected);
 
-            for (var i = 0; i < bomRows.Length; i++)
-            {
-                var cell = (IEdmBomCell)bomRows.GetValue(i);
+                if (bomView == null) return;
+                Array bomRows;
+                Array bomColumns;
+                bomView.GetRows(out bomRows);
+                bomView.GetColumns(out bomColumns);
 
-                bomTable.Rows.Add();
+                var bomTable = new DataTable();
 
-                for (var j = 0; j < bomColumns.Length; j++)
+                foreach (EdmBomColumn bomColumn in bomColumns)
                 {
-                    var column = (EdmBomColumn)bomColumns.GetValue(j);
-                    object value;
-                    object computedValue;
-                    string config;
-                    bool readOnly;
-                    cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config,
-                        out readOnly);
-                    if (value != null)
-                    {
-                        bomTable.Rows[i][j] = value;
-                    }
-                    else
-                    {
-                        bomTable.Rows[i][j] = null;
-                    }
-                    //bomTable.Rows[i][j + 1] = cell.GetPathName();
-                    bomTable.Rows[i][j + 1] = cell.GetTreeLevel();
-
-                    bomTable.Rows[i][j + 2] = bomConfiguration;
+                    bomTable.Columns.Add(new DataColumn {ColumnName = bomColumn.mbsCaption});
                 }
+
+                //bomTable.Columns.Add(new DataColumn { ColumnName = "Путь" });
+                bomTable.Columns.Add(new DataColumn {ColumnName = "Уровень"});
+                bomTable.Columns.Add(new DataColumn {ColumnName = "КонфГлавнойСборки"});
+
+                for (var i = 0; i < bomRows.Length; i++)
+                {
+                    var cell = (IEdmBomCell) bomRows.GetValue(i);
+
+                    bomTable.Rows.Add();
+
+                    for (var j = 0; j < bomColumns.Length; j++)
+                    {
+                        var column = (EdmBomColumn) bomColumns.GetValue(j);
+                        object value;
+                        object computedValue;
+                        string config;
+                        bool readOnly;
+                        cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config,
+                            out readOnly);
+                        if (value != null)
+                        {
+                            bomTable.Rows[i][j] = value;
+                        }
+                        else
+                        {
+                            bomTable.Rows[i][j] = null;
+                        }
+                        //bomTable.Rows[i][j + 1] = cell.GetPathName();
+                        bomTable.Rows[i][j + 1] = cell.GetTreeLevel();
+
+                        bomTable.Rows[i][j + 2] = bomConfiguration;
+                    }
+                }
+
+                _bomList = BomTableToBomList(bomTable);
+                exception = null;
             }
-
-            _bomList = BomTableToBomList(bomTable);
-
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
         }
 
         #endregion

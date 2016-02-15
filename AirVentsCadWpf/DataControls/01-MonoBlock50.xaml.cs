@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AirVentsCadWpf.AirVentsClasses;
-using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
+using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -106,7 +106,7 @@ namespace AirVentsCadWpf.DataControls
             #endregion
         }
 
-        private void SelectHeaters(string sizeOfUnit)
+        private static void SelectHeaters(string sizeOfUnit)
         {
             var sqlBaseData = new SqlBaseData();
             //if (sizeOfUnit == "")

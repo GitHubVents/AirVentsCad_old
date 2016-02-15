@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 using AirVentsCadWpf.Properties;
 
 namespace AirVentsCadWpf
@@ -93,6 +96,47 @@ namespace AirVentsCadWpf
                 };
                 
                 return builder.ConnectionString;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class ElementVisibility
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="picturePath"></param>
+            /// <param name="imageUi"></param>
+            public static void SetImage(string picturePath, Image imageUi)
+            {
+                var mapLoader = new BitmapImage();
+                mapLoader.BeginInit();
+                mapLoader.UriSource = new Uri(picturePath, UriKind.RelativeOrAbsolute);
+                mapLoader.EndInit();
+                if (imageUi != null) imageUi.Source = mapLoader;
+            }
+
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="list"></param>
+            /// <param name="visibility"></param>
+            public static void ForUiElementsList(IEnumerable<UIElement> list, Visibility visibility)
+            {
+                foreach (var uiElement in list)
+                {
+                    try
+                    {
+                        uiElement.Visibility = visibility;
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+                }
             }
         }
     }

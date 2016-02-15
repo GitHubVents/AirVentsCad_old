@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" VerticalContentAlignment="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible"
              d:DataContext="{d:DesignData }">
-    <Grid Loaded="Grid_Loaded_3" >
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -19,7 +19,8 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" x:Name="TitleUnit" Content="Блок бескаркасной установки" HorizontalAlignment="Left" Margin="50,10,0,10" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="42" Foreground="Black"/>
+        <Label Grid.Row="0" x:Name="TitleUnit" Content="Блок бескаркасной установки" HorizontalAlignment="Left" Margin="50,10,0,10" VerticalAlignment="Center"
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="42" Foreground="Black"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Margin="0" Height="15"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Margin="0" Height="15"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="6" VerticalAlignment="Stretch" Margin="0" Height="15"/>
@@ -62,7 +63,8 @@
                             <TextBox x:Name="ТипВерхнейПанели" TabIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True" Grid.Column="1" Margin="1" Width="30"/>
                             <CheckBox x:Name="PanelUpChk" Content="Усиленная" Grid.Column="3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center"  ToolTip="Усиленная"/>
                             <Label Content="Верхняя" HorizontalAlignment="Center" Margin="0" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="60"/>
-                            <CheckBox x:Name="DubleUpChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center"  ToolTip="Усиленная" IsEnabled="False"/>
+                            <CheckBox x:Name="DubleUpChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center" 
+                                      ToolTip="Усиленная" IsEnabled="False"/>
                         </Grid>
                         <Grid  HorizontalAlignment="Left"  Margin="2,3,2,0" VerticalAlignment="Top" Grid.Row="1"
                                Grid.Column="0">
@@ -78,11 +80,13 @@
                             </Grid.ColumnDefinitions>
                             <CheckBox x:Name="PanelUnremChk" Content="Усиленная" Grid.Column="3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center"  ToolTip="Усиленная"/>
                             <Label Content="Задняя" HorizontalAlignment="Center" Margin="0" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <CheckBox x:Name="DubleUnremChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center"  ToolTip="Усиленная" IsEnabled="False"/>
-                            <ComboBox x:Name="ТипНесъемнойПанели" TabIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" IsReadOnly="True" Grid.Column="1" Margin="2"  />
+                            <CheckBox x:Name="DubleUnremChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center"
+                                      ToolTip="Усиленная" IsEnabled="False"/>
+                            <ComboBox x:Name="ТипНесъемнойПанели" TabIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" 
+                                      IsReadOnly="True" Grid.Column="1" Margin="2"  />
 
                         </Grid>
-                        <Grid HorizontalAlignment="Left"  Margin="2,3,2,0" VerticalAlignment="Top" Grid.Row="2"
+                        <Grid HorizontalAlignment="Left"  Margin="2" VerticalAlignment="Top" Grid.Row="2"
                               Grid.Column="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -97,8 +101,8 @@
                             <TextBox x:Name="ТипПанелиНижней" TabIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True" Grid.Column="1" Margin="1" Width="30" />
                             <CheckBox x:Name="PanelDownChk" Content="Усиленная" Grid.Column="3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center"  ToolTip="Усиленная"/>
                             <Label Content="Нижняя" HorizontalAlignment="Center" Margin="0" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="60"/>
-                            <CheckBox x:Name="DubleDownChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center"  ToolTip="Усиленная" IsEnabled="False"/>
-
+                            <CheckBox x:Name="DubleDownChk" Content="Двойная" Grid.Column="4" HorizontalAlignment="Left" Margin="10,6,-4,8" VerticalAlignment="Center" 
+                                      ToolTip="Усиленная" IsEnabled="False"/>
                         </Grid>
                     </Grid>
                 </GroupBox>
@@ -212,15 +216,20 @@
                                 <ComboBoxItem Content="Без скотча" ToolTip=""/>
                             </ComboBox>
                             <Label Content="Материал: внешней - " Grid.Column="1" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Padding="2"/>
-                            <Label Content=" внутренней - " Grid.Column="3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="2"/>
-                            <ComboBox x:Name="МатериалВнешней" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" IsReadOnly="True" Grid.Column="2" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" TabIndex="2" Padding="2">
+                            <Label Content=" внутренней - " Grid.Column="3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" VerticalContentAlignment="Center" 
+                                   HorizontalContentAlignment="Center" Padding="2"/>
+                            <ComboBox x:Name="МатериалВнешней" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" IsReadOnly="True"
+                                      Grid.Column="2" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                      Margin="2" TabIndex="2" Padding="2">
                                 <ComboBoxItem Content="Az" ToolTip="Алюмоцинк AZ150 0.7"/>
                                 <ComboBoxItem Content="Oz" ToolTip="Лист ОЦ" />
                                 <ComboBoxItem Content="2В" ToolTip="Лист А 304 2В" />
                                 <ComboBoxItem Content="ВА" ToolTip="Лист А 304 ВА" />
                                 <ComboBoxItem Content="САТ" ToolTip="Лист А 304 САТ" />
                             </ComboBox>
-                            <ComboBox x:Name="МатериалВнутренней" HorizontalAlignment="Center" SelectedIndex="0" IsReadOnly="True" Grid.Column="4" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" VerticalAlignment="Center" TabIndex="3" Padding="2">
+                            <ComboBox x:Name="МатериалВнутренней" HorizontalAlignment="Center" SelectedIndex="0" IsReadOnly="True" Grid.Column="4"
+                                      SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2"
+                                      VerticalAlignment="Center" TabIndex="3" Padding="2">
                                 <ComboBoxItem Content="Az" ToolTip="Алюмоцинк AZ150 0.7"/>
                                 <ComboBoxItem Content="Oz" ToolTip="Лист ОЦ" />
                                 <ComboBoxItem Content="2В" ToolTip="Лист А 304 2В" />
@@ -250,19 +259,23 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox x:Name="ВысотаПанели" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="3" Text="" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown"/>
+                                <TextBox x:Name="ВысотаПанели" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                         VerticalAlignment="Center" Grid.Column="3" Text="" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown"/>
                                 <Label x:Name="HeightLabel1" Content="Высота" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2" Margin="3,0,0,0" Padding="2"/>
-                                <TextBox x:Name="ШиринаПанели" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Text="" Grid.Column="1"  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown" SelectionChanged="ШиринаПанели_SelectionChanged"/>
+                                <TextBox x:Name="ШиринаПанели" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Text="" Grid.Column="1" 
+                                         HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown" SelectionChanged="ШиринаПанели_SelectionChanged"/>
                                 <Label x:Name="WidthLabel1" Grid.Column="0" Content="Ширина" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="2"/>
                             </Grid>
                             <Label Content="Толщина" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 				Grid.Row="0" Grid.Column="3" Padding="2"/>
                             <ComboBox x:Name="ГлубинаПанели" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" HorizontalContentAlignment="Center"
-                				Grid.Row="0" Grid.Column="4" Margin="2" Text="1000" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7" SelectedIndex="0" MaxDropDownHeight="100" Padding="2" >
+                				Grid.Row="0" Grid.Column="4" Margin="2" Text="1000" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7"
+                                      SelectedIndex="0" MaxDropDownHeight="100" Padding="2" >
                                 <ComboBoxItem Content="40"/>
                                 <ComboBoxItem Content="50"/>
                             </ComboBox>
-                            <CheckBox x:Name="УсилениеПанели" Content="Усиленная" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" ToolTip="Усиленная" RenderTransformOrigin="3.667,0.312" Grid.Column="5"/>
+                            <CheckBox x:Name="УсилениеПанели" Content="Усиленная" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center"
+                                      ToolTip="Усиленная" RenderTransformOrigin="3.667,0.312" Grid.Column="5"/>
                         </Grid>
                         <Button x:Name="ПостроитьПанель" Content="Построить панель" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" Background="{x:Null}" TabIndex="15"
                 			Grid.Row="0" Click="ПостроитьПанель_Click" Grid.Column="1" Grid.RowSpan="2" Height="54"/>
@@ -291,7 +304,8 @@
                                     </Grid.ColumnDefinitions>
                                     <Label x:Name="КолвоПанелей2" Content="Кол-во панелей" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="2,5"/>
                                     <ComboBox x:Name="КолвоПанелей" HorizontalAlignment="Center" SelectedIndex="0" IsReadOnly="True"
-                						Grid.Row="0" Grid.Column="1" SelectionChanged="КолвоПанелейS" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" TabIndex="3" Padding="4,3" VerticalAlignment="Center" LayoutUpdated="КолвоПанелей_LayoutUpdated"/>
+                						Grid.Row="0" Grid.Column="1" SelectionChanged="КолвоПанелейS" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" 
+                                              TabIndex="3" Padding="4,3" VerticalAlignment="Center" LayoutUpdated="КолвоПанелей_LayoutUpdated"/>
                                     <Grid VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="2">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
@@ -299,15 +313,19 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ШиринаПанели2" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="3" Text="" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged"/>
+                                        <TextBox x:Name="ШиринаПанели2" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                                 VerticalAlignment="Center" Grid.Column="3" Text="" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged"/>
                                         <Label x:Name="Ширина2" Content="Ширина2" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2" Margin="3,0,0,0" Padding="2"/>
-                                        <TextBox x:Name="ШиринаПанели1" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Text="" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown" SelectionChanged="ШиринаПанели1_SelectionChanged"/>
+                                        <TextBox x:Name="ШиринаПанели1" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                                 VerticalAlignment="Center" Text="" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown" 
+                                                 SelectionChanged="ШиринаПанели1_SelectionChanged"/>
                                         <Label x:Name="Ширина1" Grid.Column="0" Content="Ширина1" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="2"/>
                                     </Grid>
                                     <Label x:Name="Ширина3" Content="Ширина3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 						Grid.Row="0" Grid.Column="3" Padding="2"/>
                                     <TextBox x:Name="ШиринаПанели3" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" HorizontalContentAlignment="Center"
-                						Grid.Row="0" Grid.Column="4" Margin="2" Text="" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7"  Padding="2" SelectionChanged="ШиринаПанели3_SelectionChanged" MinWidth="40" />
+                						Grid.Row="0" Grid.Column="4" Margin="2" Text="" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7" Padding="2"
+                                             SelectionChanged="ШиринаПанели3_SelectionChanged" MinWidth="40" />
                                 </Grid>
                                 <Button x:Name="ПостроитьПанель1" Content="Строка" HorizontalAlignment="Center" Margin="2" Background="{x:Null}" TabIndex="15"
                 					Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Click="ПостроитьПанель1_Click"/>
@@ -325,7 +343,8 @@
                                     </Grid.ColumnDefinitions>
                                     <Label x:Name="КолвоПанелей11" Content="Кол-во панелей" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="2,5"/>
                                     <ComboBox x:Name="КолвоПанелей1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" IsReadOnly="True"
-                						Grid.Row="0" Grid.Column="1" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" TabIndex="3" Padding="2">
+                						Grid.Row="0" Grid.Column="1" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center"
+                                              VerticalContentAlignment="Center" Margin="2" TabIndex="3" Padding="2">
                                         <ComboBoxItem Content="1"/>
                                         <ComboBoxItem Content="2"/>
                                         <ComboBoxItem Content="3"/>
@@ -337,7 +356,8 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <ComboBox x:Name="Отступ2" SelectedIndex="0"  HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="3"  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown" IsEditable="True">
+                                        <ComboBox x:Name="Отступ2" SelectedIndex="0"  HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                                  VerticalAlignment="Center" Grid.Column="3"  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown" IsEditable="True">
                                             <ComboBoxItem Content="132" ToolTip="Стандартный зазор" Tag="132"/>
                                             <ComboBoxItem Content="182" ToolTip="Профиль 1"/>
                                             <ComboBoxItem Content="212" ToolTip="Профиль 2"/>
@@ -346,7 +366,7 @@
                                         <Label x:Name="Отступ2L" Content="Отступ2" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2" Margin="3,0,0,0" Padding="2"/>
                                         <ComboBox x:Name="Отступ1" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                                   VerticalAlignment="Center" Grid.Column="1"
-                                                  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown" IsEditable="True">
+                                                  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown" IsEditable="True">
                                             <ComboBoxItem Content="46" ToolTip="Стандартный зазор" Tag="46"/>
                                             <ComboBoxItem Content="150" ToolTip="Профиль 1" Tag="110"/>
                                             <ComboBoxItem Content="180" ToolTip="Профиль 2" Tag="130"/>
@@ -354,9 +374,11 @@
                                         </ComboBox>
                                         <Label x:Name="WidthLabel4" Grid.Column="0" Content="Отступ1" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="2"/>
                                     </Grid>
-                                    <Label   x:Name="Отступ3L"  Content="Отступ3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    <Label   x:Name="Отступ3L"  Content="Отступ3" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" 
+                                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 						Grid.Row="0" Grid.Column="3" Padding="2"/>
-                                    <ComboBox x:Name="Отступ3" SelectedIndex="0"  HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="5"  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown" IsEditable="True">
+                                    <ComboBox x:Name="Отступ3" SelectedIndex="0"  HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
+                                              VerticalAlignment="Center" Grid.Column="5"  HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown" IsEditable="True">
                                         <ComboBoxItem Content="132" ToolTip="Стандартный зазор" Tag="132"/>
                                         <ComboBoxItem Content="136" ToolTip="Профиль 1"/>
                                         <ComboBoxItem Content="185" ToolTip="Профиль 2"/>
@@ -396,12 +418,14 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ШиринаПрофиля1" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="2" TextChanged="ШиринаПрофиля1_TextChanged"/>
+                                        <TextBox x:Name="ШиринаПрофиля1" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
+                                                 VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown" 
+                                                 SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="2" TextChanged="ШиринаПрофиля1_TextChanged"/>
                                         <Label x:Name="ШирПос1" Content="Ширина" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="2" Padding="2" Grid.Row="2" Grid.Column="0" />
                                         <Label x:Name="WidthLabel3" Grid.Row="1" Grid.Column="0" Content="ТипП" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                         <ComboBox x:Name="ТипПроф1" SelectedIndex="0" ToolTip="Промежуточная стойка" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                         	VerticalAlignment="Center"
-                                        	HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                        	HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="EnterKeyDown"
                                                   Grid.Row="1" Grid.Column="1" Margin="2" Background="{x:Null}">
                                             <ComboBoxItem Content="-" ToolTip="Отсутствует" Tag="130"/>
                                             <ComboBoxItem Content="02" ToolTip="Профиль стандартный" Tag="130"/>
@@ -418,7 +442,7 @@
                                             <Label x:Name="WidthLabel9" Grid.Row="0" Grid.Column="0" Content="Тип" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                             <ComboBox x:Name="ТипУсилПанели1" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                         		VerticalAlignment="Bottom"
-                                        		HorizontalContentAlignment="Center" MinWidth="40" ToolTip="Усиливающая панель" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                        		HorizontalContentAlignment="Center" MinWidth="40" ToolTip="Усиливающая панель" TabIndex="5" KeyDown="EnterKeyDown"
                                         		Grid.Row="0" Grid.Column="1" Margin="2,0,2,2" IsVisibleChanged="ТипУсилПанели1_IsVisibleChanged">
                                                 <ComboBox.Background>
                                                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -428,12 +452,12 @@
                                                         <GradientStop Color="#FFF6F6F6" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </ComboBox.Background>
-                                                <ComboBoxItem Content="10" ToolTip="Панель усиливающая 1" Tag="EE"/>
+                                                <!--<ComboBoxItem Content="10" ToolTip="Панель усиливающая 1" Tag="EE"/>
                                                 <ComboBoxItem Content="11" ToolTip="Панель усиливающая 2" Tag="ED"/>
                                                 <ComboBoxItem Content="12" ToolTip="Панель усиливающая 3" Tag="EZ"/>
                                                 <ComboBoxItem Content="13" ToolTip="Панель усиливающая 4" Tag="TE"/>
                                                 <ComboBoxItem Content="14" ToolTip="Панель усиливающая 5" Tag="TD"/>
-                                                <ComboBoxItem Content="15" ToolTip="Панель усиливающая 6" Tag="TZ"/>
+                                                <ComboBoxItem Content="15" ToolTip="Панель усиливающая 6" Tag="TZ"/>-->
                                             </ComboBox>
                                         </Grid>
                                     </Grid>
@@ -446,12 +470,14 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ШиринаПрофиля2" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="1" TextChanged="ШиринаПрофиля2_TextChanged"/>
+                                        <TextBox x:Name="ШиринаПрофиля2" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                                 VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown"
+                                                 SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="1" TextChanged="ШиринаПрофиля2_TextChanged"/>
                                         <Label x:Name="ШирПос2" Content="Ширина" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="2" Padding="2" Grid.Row="1" Grid.Column="0" />
                                         <Label x:Name="WidthLabel5" Grid.Row="0" Grid.Column="0" Content="Тип" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                         <ComboBox x:Name="ТипПроф2" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                     		VerticalAlignment="Center" ToolTip="Промежуточная стойка"
-                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="EnterKeyDown"
                                     		Grid.Row="0" Grid.Column="1" Margin="2" Background="{x:Null}">
                                             <ComboBoxItem Content="-" ToolTip="Отсутствует" Tag="130"/>
                                             <ComboBoxItem Content="00" ToolTip="Профиль 00" Tag="90"/>
@@ -469,12 +495,14 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ШиринаПрофиля3" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="1" TextChanged="ШиринаПрофиля3_TextChanged"/>
+                                        <TextBox x:Name="ШиринаПрофиля3" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
+                                                 VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown"
+                                                 SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="1" TextChanged="ШиринаПрофиля3_TextChanged"/>
                                         <Label x:Name="ШирПос3" Content="Ширина" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1,0,3,0" Padding="2" Grid.Row="1" Grid.Column="0" />
                                         <Label x:Name="WidthLabel6" Grid.Row="0" Grid.Column="0" Content="Тип" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                         <ComboBox x:Name="ТипПроф3" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                     		VerticalAlignment="Center"  ToolTip="Промежуточная стойка"
-                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="EnterKeyDown"
                                     		Grid.Row="0" Grid.Column="1" Margin="2" Background="{x:Null}">
                                             <ComboBoxItem Content="-" ToolTip="Отсутствует" Tag="130"/>
                                             <ComboBoxItem Content="00" ToolTip="Профиль 00" Tag="90"/>
@@ -493,12 +521,13 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ШиринаПрофиля4" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="ВысотаПанели_KeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="2" TextChanged="ШиринаПрофиля4_TextChanged"/>
+                                        <TextBox x:Name="ШиринаПрофиля4" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox" 
+                                                 VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" MinWidth="40" TabIndex="6" KeyDown="EnterKeyDown" SelectionChanged="ШиринаПанели2_SelectionChanged" Margin="2" Grid.Row="2" TextChanged="ШиринаПрофиля4_TextChanged"/>
                                         <Label x:Name="ШирПос4" Content="Ширина" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1,0,3,0" Padding="2" Grid.Row="2" Grid.Column="0" />
                                         <Label x:Name="WidthLabel7" Grid.Row="1" Grid.Column="0" Content="ТипП" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                         <ComboBox x:Name="ТипПроф4" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                     		VerticalAlignment="Center" ToolTip="Промежуточная стойка"
-                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                    		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="EnterKeyDown"
                                     		Grid.Row="1" Grid.Column="1" Margin="2" Background="{x:Null}">
                                             <ComboBoxItem Content="-" ToolTip="Отсутствует" Tag="130"/>
                                             <ComboBoxItem Content="02" ToolTip="Профиль стандартный" Tag="130"/>
@@ -516,14 +545,14 @@
                                             <Label x:Name="WidthLabel8" Grid.Row="0" Grid.Column="0" Content="Тип" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2" Margin="2"/>
                                             <ComboBox x:Name="ТипУсилПанели2" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                         		VerticalAlignment="Center" ToolTip="Усиливающая панель"
-                                        		HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="ШиринаПанели_KeyDown"
+                                        		HorizontalContentAlignment="Center" MinWidth="40" TabIndex="5" KeyDown="EnterKeyDown"
                                         		Grid.Row="0" Grid.Column="1" Margin="2" IsVisibleChanged="ТипУсилПанели2_IsVisibleChanged">
-                                                <ComboBoxItem Content="10" ToolTip="Панель усиливающая 1" Tag="EE"/>
+                                                <!--<ComboBoxItem Content="10" ToolTip="Панель усиливающая 1" Tag="EE"/>
                                                 <ComboBoxItem Content="11" ToolTip="Панель усиливающая 2" Tag="ED"/>
                                                 <ComboBoxItem Content="12" ToolTip="Панель усиливающая 3" Tag="EZ"/>
                                                 <ComboBoxItem Content="13" ToolTip="Панель усиливающая 4" Tag="TE"/>
                                                 <ComboBoxItem Content="14" ToolTip="Панель усиливающая 5" Tag="TD"/>
-                                                <ComboBoxItem Content="15" ToolTip="Панель усиливающая 6" Tag="TZ"/>
+                                                <ComboBoxItem Content="15" ToolTip="Панель усиливающая 6" Tag="TZ"/>-->
                                             </ComboBox>
                                         </Grid>
                                     </Grid>
@@ -574,9 +603,11 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="SectionTextBox" Height="23" TabIndex="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="LenghtRoof_KeyDown" MinWidth="40" SelectedIndex="0" MaxDropDownHeight="77" />
+                    <ComboBox x:Name="SectionTextBox" Height="23" TabIndex="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3"
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="EnterKeyDown" MinWidth="40" SelectedIndex="0" MaxDropDownHeight="77" />
                     <Label x:Name="HeightLabel2" Content="Секция" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2"/>
-                    <TextBox x:Name="OrderTextBox" Text="000001" TabIndex="1" PreviewTextInput="NumberValidationTextBox" MaxLength ="8" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="WidthRoof_KeyDown" MinWidth="40" />
+                    <TextBox x:Name="OrderTextBox" Text="000001" TabIndex="1" PreviewTextInput="NumberValidationTextBox" MaxLength ="8" HorizontalAlignment="Center"
+                             VerticalAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="EnterKeyDown" MinWidth="40" />
                     <Label x:Name="WidthLabel2" Grid.Column="0"  Content="Заказ" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid VerticalAlignment="Center" Height="Auto" Margin="2" Grid.Row="1" HorizontalAlignment="Left">
@@ -591,8 +622,11 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Типоразмер" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="2" Padding="2"/>
-                    <ComboBox x:Name="SizeOfUnit" Height="23" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0" IsReadOnly="True" Grid.Column="1" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" TabIndex="3"/>
-                    <CheckBox x:Name="Nonstandard" Content="Нестандарт" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="nonstandard_Checked"  Unchecked="nonstandard_Unchecked" Margin="10,5" TabIndex="4"/>
+                    <ComboBox x:Name="SizeOfUnit" Height="23" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="0"
+                              IsReadOnly="True" Grid.Column="1" SelectionChanged="SizeOfUnit_SelectionChanged" HorizontalContentAlignment="Center" 
+                              VerticalContentAlignment="Center" Margin="2" TabIndex="3"/>
+                    <CheckBox x:Name="Nonstandard" Content="Нестандарт" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Checked="nonstandard_Checked"  Unchecked="nonstandard_Unchecked" Margin="10,5" TabIndex="4"/>
                 </Grid>
                 <Grid HorizontalAlignment="Left" Height="Auto" Margin="2" Grid.Row="3" VerticalAlignment="Center" Width="Auto">
                     <Grid.ColumnDefinitions>
@@ -606,9 +640,11 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="HeightU" Width="40" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Grid.Column="3" Text="650" HorizontalContentAlignment="Center" MinWidth="40"  KeyDown="HeightU_KeyDown" TabIndex="6"/>
+                        <TextBox x:Name="HeightU" Width="40" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" 
+                                 Grid.Column="3" Text="650" HorizontalContentAlignment="Center" MinWidth="40"  KeyDown="EnterKeyDown" TabIndex="6"/>
                         <Label x:Name="HeightLabel" Content="Высота" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="2" Margin="2"/>
-                        <TextBox x:Name="WidthU" Width="40" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" Text="870" Grid.Column="1"  HorizontalContentAlignment="Center" MinWidth="40" KeyDown="WidthU_KeyDown" TabIndex="5"/>
+                        <TextBox x:Name="WidthU" Width="40" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center"
+                                 Text="870" Grid.Column="1"  HorizontalContentAlignment="Center" MinWidth="40" KeyDown="EnterKeyDown" TabIndex="5"/>
                         <Label x:Name="WidthLabel" Grid.Column="0" Margin="0" Content="Ширина" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Grid>
                     <Grid Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="2" VerticalAlignment="Top" Width="Auto">
@@ -616,8 +652,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="ДлинаLabel" Content="Длина" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Padding="4,3,5,3"/>
-                        <TextBox x:Name="Lenght" Width="40" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" HorizontalContentAlignment="Center" KeyDown="Lenght_KeyDown" Grid.Column="1" Margin="2" Text="1000" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7" SelectionChanged="Lenght_SelectionChanged" Background="{x:Null}" />
+                        <Label x:Name="ДлинаLabel" Content="Длина" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" HorizontalContentAlignment="Center" 
+                               VerticalContentAlignment="Center" Margin="2" Padding="4,3,5,3"/>
+                        <TextBox x:Name="Lenght" Width="40" PreviewTextInput="NumberValidationTextBox"  VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                                 KeyDown="EnterKeyDown" Grid.Column="1" Margin="2" Text="1000" HorizontalAlignment="Center" VerticalContentAlignment="Center" TabIndex="7" SelectionChanged="Lenght_SelectionChanged" Background="{x:Null}" />
                     </Grid>
                 </Grid>
                 <Grid HorizontalAlignment="Left" Height="32" Margin="2" Grid.Row="2" VerticalAlignment="Center" Width="Auto">
@@ -627,7 +665,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Сторона обслуживания" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center"/>
-                    <RadioButton x:Name="Правая" Content="левая" Grid.Column="1" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center" Checked="Правая_Checked"/>
+                    <RadioButton x:Name="Правая" Content="левая" Grid.Column="1" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center" />
                     <RadioButton x:Name="Левая" Content="правая" Grid.Column="2" Margin="2" VerticalAlignment="Center" Checked="Левая_Checked"/>
                 </Grid>
             </Grid>
@@ -656,7 +694,8 @@
                     <ColumnDefinition MinWidth="20" Width="Auto"/>
                     <ColumnDefinition MinWidth="20" Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Border BorderThickness="1" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" MaxHeight="200" Height="Auto" MinWidth="50" MinHeight="50" Grid.ColumnSpan="10" Grid.RowSpan="10">
+                <Border BorderThickness="1" HorizontalAlignment="Center" Margin="2" VerticalAlignment="Center" MaxHeight="200" 
+                        Height="Auto" MinWidth="50" MinHeight="50" Grid.ColumnSpan="10" Grid.RowSpan="10">
                     <Image x:Name="PicturePanel"/>
                 </Border>
             </Grid>
@@ -667,7 +706,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CheckBox x:Name="PartsGenerationChk" Content="Попанельно" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Grid.Row="2" Checked="PartsGenerationChk_Checked" Unchecked="PartsGenerationChk_Unchecked"/>
+                <CheckBox x:Name="PartsGenerationChk" Content="Попанельно" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top"
+                          Grid.Row="2" Checked="PartsGenerationChk_Checked" Unchecked="PartsGenerationChk_Unchecked"/>
                 <Grid x:Name="PartsGeneration" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Width="Auto" Height="Auto" Grid.Row="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -714,7 +754,7 @@
                 </Grid.RowDefinitions>
                 <CheckBox x:Name="checkBox" Content="Отладка" HorizontalAlignment="Left" Margin="2" Grid.Row="1" VerticalAlignment="Top" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
                 <DataGrid x:Name="PartsPdmTable" HorizontalAlignment="Right" ItemsSource="{Binding ExistingAsmsAndParts}" AutoGenerateColumns="False"
-                	VerticalAlignment="Top" Height="Auto" MaxHeight="300" MinWidth="250" MaxWidth="600" Width="Auto"
+                	VerticalAlignment="Top" Height="Auto" MaxHeight="700" MinWidth="250" MaxWidth="800" Width="Auto"
                 	CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Grid.Row="0" SelectionChanged="ExistingParts_SelectionChanged" LoadingRow="ExistingParts_LoadingRow" Margin="2" >
                     <DataGrid.ContextMenu>
                         <ContextMenu >

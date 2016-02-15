@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,25 +25,17 @@ using MakeDxfUpdatePartData;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
-
+using Timer = System.Threading.Timer;
 
 namespace AirVentsCadWpf.DataControls.Specification
 {
-
     /// <summary>
     /// 
     /// </summary>
     public partial class SpecificationUc
     {
-        List<string> AsmsNames { get; set; }
-        
-        #region Основные поля
-
-        string _путьКСборке;
-        
-        private readonly СпецификацияДляВыгрузкиСборки _работаСоСпецификацией;
-
-        #endregion
+        string ПутьКСборке { get; set; }
+        string CurrentPath { get; set; }
 
         #region Конструктор класса
 
@@ -50,161 +44,130 @@ namespace AirVentsCadWpf.DataControls.Specification
         /// </summary>
         public SpecificationUc()
         {
-
             InitializeComponent();
-
-
-            IncludeAsms.Visibility = Visibility.Collapsed;
-            ВыгрузитьВXml.Visibility = Visibility.Collapsed;
-
-
-            button.Visibility = Visibility.Collapsed;
-
-            ТаблицаСпецификации.Visibility = Visibility.Collapsed;
-            СпецификацияТаблица.Visibility = Visibility.Collapsed;
-            Exp1.Visibility = Visibility.Collapsed;
-            Exp2.Visibility = Visibility.Collapsed;
-            Exp3.Visibility = Visibility.Collapsed;
-
-            Grid11.Visibility = Visibility.Collapsed;
-
-
-            ДобавитьТаблицу.Visibility = Visibility.Collapsed;
-
-            ВыгрузитьВXml.IsEnabled = false;
-
-            ПереченьДеталей.Visibility = Visibility.Hidden;
-
             ПереченьДеталей_Copy.Visibility = Visibility.Hidden;
-
-            PartsList.Visibility = Visibility.Hidden;
-            XmlParts.Visibility = Visibility.Hidden;
-
-            _работаСоСпецификацией = new СпецификацияДляВыгрузкиСборки
-            {
-                ИмяХранилища = Settings.Default.PdmBaseName,
-                ИмяПользователя = Settings.Default.UserName,
-                ПарольПользователя = Settings.Default.Password,
-            };
         }
 
         void НайтиПолучитьСборкуЕеКонфигурацииПоИмени()
         {
-            var emdpService = new Epdm();
-            var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text + ".SLDASM");
-            var configs = emdpService.GetConfiguration(path[0].FilePath);
-            var itemsSource = configs as IList<string> ?? configs.ToList();
-            Конфигурация.ItemsSource = itemsSource;
+            try
+            {
+                var emdpService = new Epdm();
+                var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text);
 
-            _путьКСборке = path[0].FilePath;
+                if (path == null) return;
 
-            var bomClass = new Epdm
-                    {
-                        BomId = 8,
-                        AssemblyPath = path[0].FilePath
-                    };
+                var configs = emdpService.GetConfiguration(path[0].FilePath);
 
-            _specBomCells = bomClass.BomList(path[0].FilePath, itemsSource[0]).ToArray();
-            
+                if (configs == null) return;
+
+                var itemsSource = configs as IList<string> ?? configs.ToList();
+
+                ПутьКСборке = path[0].FilePath;
+
+                var bomClass = new Epdm
+                {
+                    BomId = 8,
+                    AssemblyPath = path[0].FilePath
+                };
+                Exception exception;
+
+                SpecBomCells = bomClass.BomList(path[0].FilePath, itemsSource[0], true, out exception).ToArray();
+
+                if (exception != null)
+                {
+                   // MessageBox.Show(exception.StackTrace);
+                }
+            }
+            catch (Exception exception)
+            {
+              //  MessageBox.Show(exception.StackTrace);
+
+            }
         }
 
         #endregion
 
-
         #region ВыгрузитьВXml
-        
-        void ВыгрузитьВXml_Click(object sender, RoutedEventArgs args)
-        {
-            try
-            {
-                НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
-                ВыгрузкаСборкиВxml(Convert.ToBoolean(IncludeAsms.IsChecked));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-        }
-
 
         static void ВыгрузитьСборку(string путьКСборке)
         {
             var имяСборки = new FileInfo(путьКСборке).Name.Replace(new FileInfo(путьКСборке).Extension, "");
 
-            var emdpService = new Epdm(); 
-            var path = emdpService.SearchDoc(имяСборки + ".SLDASM");
+            var emdpService = new Epdm();
+
+            //var path = emdpService.SearchDoc(имяСборки + ".SLDASM");
 
             IEnumerable<string> списокКонфигурацийСборки = null;
 
             try
             {
-                списокКонфигурацийСборки = emdpService.GetConfiguration(path[0].FilePath);
+                списокКонфигурацийСборки = emdpService.GetConfiguration(путьКСборке);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-               // MessageBox.Show(args.Message + "\n" + "89779\n" + (path == null) + "\n" + имяСборки + ".SLDASM" + "\n" );
+                MessageBox.Show(exception.Message);
             }
-           
+
             try
             {
                 const string xmlPath = @"\\srvkb\SolidWorks Admin\XML\";
 
                 int? lastVerOfAsm = null;
-                //string partPath = null;
-                //string name = null;
+
                 try
                 {
                     var bomClassGetLastVersion = new Epdm
                     {
                         BomId = 8,
-                        AssemblyPath = path[0].FilePath
+                        AssemblyPath = путьКСборке//path[0].FilePath
                     };
-                    var spec = bomClassGetLastVersion.BomList(path[0].FilePath, "00");
+                    Exception exception;
+                    var spec = bomClassGetLastVersion.BomList(путьКСборке, "00", false, out exception);
                     lastVerOfAsm = spec[0].ПоследняяВерсия;
-                    //partPath = spec[0].FilePath;
-                    //name = spec[0].FileName;
+                    if (exception != null)
+                    {
+                        MessageBox.Show(exception.StackTrace);
+                    }
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    //MessageBox.Show(args.ToString(), "списокКонфигурацийСборки");
-                }
-
-                if (lastVerOfAsm != null)
-                {
-                   // MessageBox.Show($"{lastVerOfAsm}\n{path[0].FilePath}\n{ExistLastXml(path[0].FilePath, (int)lastVerOfAsm)}\n{name}");
+                    MessageBox.Show(exception.StackTrace);
                 }
 
                 var exist = false;
 
                 try
                 {
-                    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int) lastVerOfAsm);
+                    if (lastVerOfAsm != null) exist = ExistLastXml(путьКСборке//path[0].FilePath
+                        , (int)lastVerOfAsm);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.ToString());}
+                    MessageBox.Show(e.ToString());
+                }
 
                 if (exist) return;
 
                 var myXml = new XmlTextWriter(xmlPath + имяСборки + ".xml", Encoding.UTF8);
-                 
-                 myXml.WriteStartDocument();
-                 myXml.Formatting = Formatting.Indented;
-                 myXml.Indentation = 2;
-                 
-                 // создаем элементы
-                 myXml.WriteStartElement("xml");
-                 myXml.WriteStartElement("transactions");
-                 myXml.WriteStartElement("transaction");
 
-                 myXml.WriteAttributeString("vaultName", "Vents-PDM");
-                 myXml.WriteAttributeString("type", "wf_export_document_attributes");
-                 myXml.WriteAttributeString("date", "1416475021");
+                myXml.WriteStartDocument();
+                myXml.Formatting = Formatting.Indented;
+                myXml.Indentation = 2;
 
-                 // document
-                 myXml.WriteStartElement("document");
-                 myXml.WriteAttributeString("pdmweid", "73592");
-                 myXml.WriteAttributeString("aliasset", "Export To ERP");
+                // создаем элементы
+                myXml.WriteStartElement("xml");
+                myXml.WriteStartElement("transactions");
+                myXml.WriteStartElement("transaction");
+
+                myXml.WriteAttributeString("vaultName", "Vents-PDM");
+                myXml.WriteAttributeString("type", "wf_export_document_attributes");
+                myXml.WriteAttributeString("date", "1416475021");
+
+                // document
+                myXml.WriteStartElement("document");
+                myXml.WriteAttributeString("pdmweid", "73592");
+                myXml.WriteAttributeString("aliasset", "Export To ERP");
 
                 if (списокКонфигурацийСборки != null)
                     foreach (var config in списокКонфигурацийСборки)
@@ -212,12 +175,15 @@ namespace AirVentsCadWpf.DataControls.Specification
                         var bomClass = new Epdm
                         {
                             BomId = 8,
-                            AssemblyPath = path[0].FilePath
+                            AssemblyPath = путьКСборке// path[0].FilePath
                         };
-                    
-                        var спецификация = bomClass.BomList(path[0].FilePath, config);
-
-                        //спецификация.Where(x => x.ТипФайла.ToLower() == "sldprt").Where(x => x.Раздел == "Детали" || x.Раздел == ""
+                        Exception exception;
+                        var спецификация = bomClass.BomList(путьКСборке//  path[0].FilePath
+                            , config, false, out exception);
+                        if (exception != null)
+                        {
+                            MessageBox.Show(exception.StackTrace);
+                        }
 
                         foreach (var topAsm in спецификация.Where(x => x.Уровень == 0))
                         {
@@ -232,7 +198,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                             myXml.WriteAttributeString("name", "Версия");
                             myXml.WriteAttributeString("value", topAsm.ПоследняяВерсия.ToString());
                             myXml.WriteEndElement();
-                        
+
                             // Масса
                             myXml.WriteStartElement("attribute");
                             myXml.WriteAttributeString("name", "Масса");
@@ -248,7 +214,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                             // Обозначение
                             myXml.WriteStartElement("attribute");
                             myXml.WriteAttributeString("name", "Обозначение");
-                            myXml.WriteAttributeString("value", topAsm.Обозначение);
+                            myXml.WriteAttributeString("value", topAsm.Раздел == "Материалы" ? "" : topAsm.Обозначение);
                             myXml.WriteEndElement();
 
                             // Раздел
@@ -342,7 +308,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                                 // Обозначение
                                 myXml.WriteStartElement("attribute");
                                 myXml.WriteAttributeString("name", "Обозначение");
-                                myXml.WriteAttributeString("value", topLevel.Обозначение);
+                                myXml.WriteAttributeString("value", topAsm.Раздел == "Материалы" ? "" : topAsm.Обозначение);
                                 myXml.WriteEndElement();
 
                                 // Раздел
@@ -374,7 +340,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                                 myXml.WriteAttributeString("name", "Кол. Материала");
                                 myXml.WriteAttributeString("value", topLevel.SummMaterial);
                                 myXml.WriteEndElement();
-                            
+
                                 // Состояние
                                 myXml.WriteStartElement("attribute");
                                 myXml.WriteAttributeString("name", "Состояние");
@@ -405,32 +371,30 @@ namespace AirVentsCadWpf.DataControls.Specification
                             }
 
                             myXml.WriteEndElement(); // document
-
                             myXml.WriteEndElement(); // элемент references
-
                             myXml.WriteEndElement(); // configuration
 
                             #endregion
                         }
-                  
+
                     }
 
                 myXml.WriteEndElement(); // ' элемент DOCUMENT
-                 myXml.WriteEndElement(); // ' элемент TRANSACTION
-                 myXml.WriteEndElement(); // ' элемент TRANSACTIONS
-                 myXml.WriteEndElement(); // ' элемент XML
-                 // заносим данные в myMemoryStream
-                 myXml.Flush();
+                myXml.WriteEndElement(); // ' элемент TRANSACTION
+                myXml.WriteEndElement(); // ' элемент TRANSACTIONS
+                myXml.WriteEndElement(); // ' элемент XML
+                                         
+                myXml.Flush();
 
-                 Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
-                 myXml.Close();
-             }
-             catch (Exception e)
-             {
-                 MessageBox.Show(e.Message);
-             }
-         }
+                myXml.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
 
         static void ВыгрузитьСборкуПеречень(string путьКСборке)
         {
@@ -455,7 +419,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                 const string xmlPath = @"\\srvkb\SolidWorks Admin\XML\";
 
                 int? lastVerOfAsm = null;
-                string name = null;
+
                 try
                 {
                     var bomClassGetLastVersion = new Epdm
@@ -463,21 +427,29 @@ namespace AirVentsCadWpf.DataControls.Specification
                         BomId = 8,
                         AssemblyPath = path[0].FilePath
                     };
-                    var spec = bomClassGetLastVersion.BomList(path[0].FilePath, "00");
+                    Exception exception;
+                    var spec = bomClassGetLastVersion.BomList(path[0].FilePath, "00", false, out exception);
+                    if (exception != null)
+                    {
+                        MessageBox.Show(exception.StackTrace);
+                    }
                     lastVerOfAsm = spec[0].ПоследняяВерсия;
                 }
-                catch (Exception){}
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.StackTrace);
+                }
               
-                var exist = false;
-                try
-                {
-                    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int)lastVerOfAsm);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString(), "Try to find if exist XML");
-                }
-                if (!exist) return;
+                //var exist = false;
+                //try
+                //{
+                //    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int)lastVerOfAsm);
+                //}
+                //catch (Exception e)
+                //{
+                //    MessageBox.Show(e.ToString(), "Try to find if exist XML");
+                //}
+                //if (!exist) return;
 
                 var myXml = new XmlTextWriter(xmlPath + имяСборки + " Parts.xml", Encoding.UTF8);
 
@@ -506,15 +478,16 @@ namespace AirVentsCadWpf.DataControls.Specification
                         BomId = 8,
                         AssemblyPath = path[0].FilePath
                     };
-
-                    var спецификация = bomClass.BomList(path[0].FilePath, config);
+                    Exception exception;
+                    var спецификация = bomClass.BomList(path[0].FilePath, config, false, out exception);
+                    if (exception != null)
+                    {
+                        MessageBox.Show(exception.StackTrace);
+                    }
                     
                     var allParts =
                         спецификация.Where(x => x.ТипФайла.ToLower() == "sldprt")
                             .Where(x => x.Раздел == "Детали" || x.Раздел == "").OrderBy(x=>x.FileName).ToList();
-
-                    //MessageBox.Show(allParts.Count().ToString());
-                    //foreach (var cells in allParts){MessageBox.Show(cells.FileName);}
 
                     foreach (var topAsm in спецификация.Where(x => x.Уровень == 0))
                     {
@@ -545,7 +518,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                         // Обозначение
                         myXml.WriteStartElement("attribute");
                         myXml.WriteAttributeString("name", "Обозначение");
-                        myXml.WriteAttributeString("value", topAsm.Обозначение);
+                        myXml.WriteAttributeString("value", topAsm.Раздел == "Материалы" ? "" : topAsm.Обозначение);  // 1C Для раздела "материалов" вставляем ПУСТО в обозначение из-за конфликта с 1С 
                         myXml.WriteEndElement();
 
                         // Раздел
@@ -639,7 +612,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                             // Обозначение
                             myXml.WriteStartElement("attribute");
                             myXml.WriteAttributeString("name", "Обозначение");
-                            myXml.WriteAttributeString("value", part.Обозначение);
+                            myXml.WriteAttributeString("value", part.Раздел == "Материалы" ? "" : part.Обозначение);
                             myXml.WriteEndElement();
 
                             // Раздел
@@ -702,14 +675,11 @@ namespace AirVentsCadWpf.DataControls.Specification
                         }
 
                         myXml.WriteEndElement(); // document
-
                         myXml.WriteEndElement(); // элемент references
-
                         myXml.WriteEndElement(); // configuration
 
                         #endregion
                     }
-
                 }
 
                 myXml.WriteEndElement(); // ' элемент DOCUMENT
@@ -728,650 +698,125 @@ namespace AirVentsCadWpf.DataControls.Specification
                 MessageBox.Show(e.Message);
             }
         }
-
-        static void ВыгрузитьСборкуПереченьДеталей(string путьКСборке)
+    
+        void ВыгрузкаСборкиВXml()
         {
-            var имяСборки = new FileInfo(путьКСборке).Name.Replace(new FileInfo(путьКСборке).Extension, "");
+            if (ПутьКСборке == null) return;
 
-            var emdpService = new Epdm();
-            var path = emdpService.SearchDoc(имяСборки + ".SLDASM");
+            ModelSw.GetAsBuild(ПутьКСборке, Settings.Default.PdmBaseName);
 
-            var списокКонфигурацийСборки = emdpService.GetConfiguration(path[0].FilePath);
+            #region Выгрузка Главной Сборки
 
             try
             {
-                const string xmlPath = @"\\srvkb\SolidWorks Admin\XML\";
-
-                var myXml = new XmlTextWriter(xmlPath + имяСборки + " Перечень деталей.xml", Encoding.UTF8);
-
-                myXml.WriteStartDocument();
-                myXml.Formatting = Formatting.Indented;
-                myXml.Indentation = 2;
-
-                // создаем элементы
-                myXml.WriteStartElement("xml");
-                myXml.WriteStartElement("transactions");
-                myXml.WriteStartElement("transaction");
-
-                myXml.WriteAttributeString("vaultName", "Vents-PDM");
-                myXml.WriteAttributeString("type", "wf_export_document_attributes");
-                myXml.WriteAttributeString("date", "1416475021");
-
-                // document
-                myXml.WriteStartElement("document");
-                myXml.WriteAttributeString("pdmweid", "73592");
-                myXml.WriteAttributeString("aliasset", "Export To ERP");
-
-                //List<Epdm.BomCells> спецификация = new List<Epdm.BomCells>();
-
-                foreach (var config in списокКонфигурацийСборки)
-                {
-
-                    //for (int i = 0; i < 30; i++)
-                    //{
-                    //    try
-                    //    {
-                    //        var bomClass = new Epdm
-                    //        {
-                    //            BomId = i,
-                    //            AssemblyPath = path[0].FilePath
-                    //        };
-
-                    //        спецификация = bomClass.BomList(path[0].FilePath, config);
-                    //        if (спецификация != null)
-                    //        {
-                    //            MessageBox.Show(спецификация.Count.ToString(), i.ToString());
-                    //        }
-                    //    }
-                    //    catch (Exception args)
-                    //    {
-                    //        MessageBox.Show(args.Message, i.ToString());
-                    //    }
-                    //}
-
-
-                    var bomClass = new Epdm
-                    {
-                        BomId = 8,
-                        AssemblyPath = path[0].FilePath
-                    };
-
-                    var спецификация = bomClass.BomList(path[0].FilePath, config);
-
-
-                    foreach (var bomCellse in спецификация)
-                    {
-                  //      MessageBox.Show(bomCellse.FileName);
-                    }
-                    
-
-                    foreach (var topAsm in спецификация.Where(x => x.Раздел == "" || x.Раздел == "Детали"))
-                    {
-                        #region XML
-
-                        // Конфигурация
-                        myXml.WriteStartElement("configuration");
-                        myXml.WriteAttributeString("name", topAsm.Конфигурация);
-
-                        // Версия
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Версия");
-                        myXml.WriteAttributeString("value", topAsm.ПоследняяВерсия.ToString());
-                        myXml.WriteEndElement();
-
-                        // Масса
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Масса");
-                        myXml.WriteAttributeString("value", topAsm.Weight);
-                        myXml.WriteEndElement();
-
-                        // Наименование
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Наименование");
-                        myXml.WriteAttributeString("value", topAsm.Наименование);
-                        myXml.WriteEndElement();
-
-                        // Обозначение
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Обозначение");
-                        myXml.WriteAttributeString("value", topAsm.Обозначение);
-                        myXml.WriteEndElement();
-
-                        // Раздел
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Раздел");
-                        myXml.WriteAttributeString("value", topAsm.Раздел);
-                        myXml.WriteEndElement();
-
-                        // ERP code
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "ERP code");
-                        myXml.WriteAttributeString("value", topAsm.ErpCode);
-                        myXml.WriteEndElement();
-
-                        // Код_Материала
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Код_Материала");
-                        myXml.WriteAttributeString("value", topAsm.CodeMaterial);
-                        myXml.WriteEndElement();
-
-                        // Код документа
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Код документа");
-                        myXml.WriteAttributeString("value", "");//topAsm..КодДокумента);
-                        myXml.WriteEndElement();
-
-                        // Кол. Материала
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Кол. Материала");
-                        myXml.WriteAttributeString("value", topAsm.SummMaterial);
-                        myXml.WriteEndElement();
-
-                        // Состояние
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Состояние");
-                        myXml.WriteAttributeString("value", topAsm.Состояние);
-                        myXml.WriteEndElement();
-
-                        // Подсчет ссылок
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Подсчет ссылок");
-                        myXml.WriteAttributeString("value", topAsm.Количество.ToString());
-                        myXml.WriteEndElement();
-
-                        // Конфигурация
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Конфигурация");
-                        myXml.WriteAttributeString("value", topAsm.Конфигурация);
-                        myXml.WriteEndElement();
-
-                        // Идентификатор
-                        myXml.WriteStartElement("attribute");
-                        myXml.WriteAttributeString("name", "Идентификатор");
-                        myXml.WriteAttributeString("value", "");
-                        myXml.WriteEndElement();
-
-                        // references
-                        myXml.WriteStartElement("references");
-
-                        // document
-                        myXml.WriteStartElement("document");
-                        myXml.WriteAttributeString("pdmweid", "73592");
-                        myXml.WriteAttributeString("aliasset", "Export To ERP");
-
-                        foreach (var topLevel in спецификация.Where(x => x.Уровень == 1))
-                        {
-                            #region XML
-
-                            // Конфигурация
-                            myXml.WriteStartElement("configuration");
-                            myXml.WriteAttributeString("name", topLevel.Конфигурация);
-
-                            // Версия
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Версия");
-                            myXml.WriteAttributeString("value", topLevel.ПоследняяВерсия.ToString());
-                            myXml.WriteEndElement();
-
-                            // Масса
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Масса");
-                            myXml.WriteAttributeString("value", topLevel.Weight);
-                            myXml.WriteEndElement();
-
-                            // Наименование
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Наименование");
-                            myXml.WriteAttributeString("value", topLevel.Наименование);
-                            myXml.WriteEndElement();
-
-                            // Обозначение
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Обозначение");
-                            myXml.WriteAttributeString("value", topLevel.Обозначение);
-                            myXml.WriteEndElement();
-
-                            // Раздел
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Раздел");
-                            myXml.WriteAttributeString("value", topLevel.Раздел);
-                            myXml.WriteEndElement();
-
-                            // ERP code
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "ERP code");
-                            myXml.WriteAttributeString("value", topLevel.ErpCode);
-                            myXml.WriteEndElement();
-
-                            // Код_Материала
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Код_Материала");
-                            myXml.WriteAttributeString("value", topLevel.CodeMaterial);
-                            myXml.WriteEndElement();
-
-                            // Код документа
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Код документа");
-                            myXml.WriteAttributeString("value", "");// topLevel.КодДокумента);
-                            myXml.WriteEndElement();
-
-                            // Кол. Материала
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Кол. Материала");
-                            myXml.WriteAttributeString("value", topLevel.SummMaterial);
-                            myXml.WriteEndElement();
-
-                            // Состояние
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Состояние");
-                            myXml.WriteAttributeString("value", topLevel.Состояние);
-                            myXml.WriteEndElement();
-
-                            // Подсчет ссылок
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Подсчет ссылок");
-                            myXml.WriteAttributeString("value", topLevel.Количество.ToString());
-                            myXml.WriteEndElement();
-
-                            // Конфигурация
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Конфигурация");
-                            myXml.WriteAttributeString("value", topLevel.Конфигурация);
-                            myXml.WriteEndElement();
-
-                            // Идентификатор
-                            myXml.WriteStartElement("attribute");
-                            myXml.WriteAttributeString("name", "Идентификатор");
-                            myXml.WriteAttributeString("value", "");
-                            myXml.WriteEndElement();
-
-                            myXml.WriteEndElement(); //configuration
-
-                            #endregion
-                        }
-
-                        myXml.WriteEndElement(); // document
-
-                        myXml.WriteEndElement(); // элемент references
-
-                        myXml.WriteEndElement(); // configuration
-
-                        #endregion
-                    }
-
-                }
-
-                myXml.WriteEndElement(); // ' элемент DOCUMENT
-                myXml.WriteEndElement(); // ' элемент TRANSACTION
-                myXml.WriteEndElement(); // ' элемент TRANSACTIONS
-                myXml.WriteEndElement(); // ' элемент XML
-                                         // заносим данные в myMemoryStream
-                myXml.Flush();
-
-                Thread.Sleep(1000);
-
-                myXml.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
-
-        void ВыгрузкаСборкиВxml(bool включаяПодсборки)
-        {
-            
-            var имяСборки = new FileInfo(_путьКСборке).Name.Replace(new FileInfo(_путьКСборке).Extension, "");
-            
-            var включаяВсеПодсборки = "";
-
-            if (включаяПодсборки)
-            {
-                включаяВсеПодсборки = "(включая все подсборки)";
-            }
-
-            if (имяСборки == "")
-            {
-                MessageBox.Show("Сборка не найдена!");
-                return;
-            }
-
-            try
-            {
-                var wew =
-                _specBomCells.Where(x => x.Раздел == "" || x.Раздел == "Сборочные единицы").Where(x => x.Уровень == 0)
-                    .Select(x => x.FilePath + "\\" + x.FileName).Distinct().ToList();
-                //MessageBox.Show(wew[0]);
-                ВыгрузитьСборкуПеречень(wew[0]);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-
-            if (включаяПодсборки)
-            {
-                foreach (var путьКСборке in _specBomCells.Where(x =>
-                {
-                    var extension = Path.GetExtension(x.FilePath + "\\" + x.FileName);
-                    return extension.ToLower() == ".sldasm";
-                }).Where(x => x.Раздел == "" || x.Раздел == "Сборочные единицы").Select(x => x.FilePath + "\\" + x.FileName).Distinct())
-                {
-                    try
-                    {
-                        //ВыгрузитьСборкуПереченьДеталей(путьКСборке);
-                        //ВыгрузитьСборкуПеречень(путьКСборке);
-                        ВыгрузитьСборку(путьКСборке);
-                    }
-                    catch (Exception)
-                    {
-                      //MessageBox.Show(args.StackTrace, "ВыгрузкаСборкиВxml(bool включаяПодсборки)");
-                    }
-                }
-            }
-            else
-            {
-                ВыгрузитьСборку(_путьКСборке);
-            }
-          //  MessageBox.Show($"Выгрузка сборки {имяСборки}{включаяВсеПодсборки} выполнена.", "Процесс завершен", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
-        }
-
-        #endregion
-        
-        #region ВыгрузитьСпецификацию
-      
-        void Конфигурации_LayoutUpdated(object sender, EventArgs e)
-        {
-            ВыгрузитьСпецификацию.IsEnabled = !Конфигурации.Items.IsEmpty;
-        }
-
-        void Поиск_Click(object sender, RoutedEventArgs e)
-        {
-            НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
-        }
-        
-        void ИмяСборки1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Поиск_Click(this, new RoutedEventArgs());
-            }
-        }
-
-        private void ИмяСборки1_LayoutUpdated(object sender, EventArgs e)
-        {
-            if (_путьКСборке != null && ИмяСборки1.Text != new FileInfo(_путьКСборке).Name.Replace(new FileInfo(_путьКСборке).Extension, ""))
-            {
-                Конфигурации.ItemsSource = null;
-            }
-        }
-
-        readonly List<СпецификацияДляВыгрузкиСборки.ДанныеДляВыгрузки> _bomListSelectedPrts = new List<СпецификацияДляВыгрузкиСборки.ДанныеДляВыгрузки>();
-
-        readonly SolidColorBrush _orangeColorBrush = new SolidColorBrush(Colors.LavenderBlush);
-        readonly SolidColorBrush _whiteColorBrush = new SolidColorBrush(Colors.White);
-        readonly SolidColorBrush _lightCyanColorBrush = new SolidColorBrush(Colors.LightCyan);
-
-        private void Table_LoadingRow(object sender, DataGridRowEventArgs e)
-        {
-            var bomCells = (СпецификацияДляВыгрузкиСборки.ДанныеДляВыгрузки)e.Row.DataContext;
-
-            if (bomCells.Errors == "")
-            {
-                e.Row.Background = e.Row.GetIndex() % 2 == 1 ? _lightCyanColorBrush : _whiteColorBrush;
-            }
-            else
-            {
-                e.Row.Background = _orangeColorBrush;
-            }
-        }
-
-        private void TablePrt_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (BomTablePrt.SelectedValue == null) return;
-            var row = ((СпецификацияДляВыгрузкиСборки.ДанныеДляВыгрузки)(BomTablePrt.SelectedValue));
-            if (_bomListSelectedPrts.Any(bomListSelectedPrt => row.Обозначение == bomListSelectedPrt.Обозначение)) return;
-            _bomListSelectedPrts.Add(row);
-            BomTableSelectedPrt.ItemsSource = _bomListSelectedPrts.OrderBy(x => x.Обозначение);
-        }
-       
-        #endregion
-
-        #region Выгрузка eDrawing
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var fileName = PartFile.Text;
-            var extension = Path.GetExtension(fileName);
-            if (extension == null || extension.ToLower() != ".sldprt") return;
-            var cutlistClass = new MakeDxfExportPartDataClass
-            {
-                PdmBaseName = Settings.Default.PdmBaseName
-            };
-            string file;
-            bool isErrors;
-            cutlistClass.CreateFlattPatternUpdateCutlistAndEdrawing(fileName, out file, out isErrors, false, false, false, false);
-        }
-
-        #endregion
-
-        void Registration(object sender, RoutedEventArgs args)
-        {
-            var fileName = PartFile.Text;
-            var extension = Path.GetExtension(fileName);
-            if (extension == null || extension.ToLower() != ".sldprt") return;
-            var cutlistClass = new MakeDxfExportPartDataClass
-            {
-                PdmBaseName = Settings.Default.PdmBaseName
-            };
-            cutlistClass.RegistrationPdm(fileName);
-        }
-
-        void Выгрузить_PDF(object sender, RoutedEventArgs args)
-        {
-            var cutlistClass = new MakeDxfExportPartDataClass()
-            {
-                PdmBaseName = Settings.Default.PdmBaseName
-            };
-            try
-            {
-                string file;
-                cutlistClass.SaveDrwAsPdf(@"E:\Vents-PDM\Заказы AirVents Frameless\AV02 E:\Vents-PDM\Заказы AirVents Frameless\AV02 001002\AV02 001002 Section A.slddrw", out file);
-                MessageBox.Show(file);
+                //var parentAsm = SpecBomCells.Where(x => x.Раздел == "" || x.Раздел == "Сборочные единицы").Where(x => x.Уровень == 0)
+                //    .Select(x => x.FilePath + "\\" + x.FileName).Distinct().ToList();
+                //BomData.ItemsSource = SpecBomCells;
+                //MessageBox.Show((parentAsm.Count).ToString(), SpecBomCells.Count().ToString());
+        //        MessageBox.Show(ПутьКСборке);
+                ВыгрузитьСборкуПеречень(ПутьКСборке);
+                ВыгрузитьСборку(ПутьКСборке);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.StackTrace);
             }
-        }
 
-        void AddToPdm(object sender, RoutedEventArgs e)
-        {
-            const string file = @"C:\Tets_debag\ВНС-900.98.0087.pdf";
-            AddToPdmByPath(file, Settings.Default.PdmBaseName);
-        }
+            #endregion
 
-        static void AddToPdmByPath(string path, string pdmBase)
-        {
-            try
+            #region Выгрузка подсборок
+
+            foreach (var путьКСборке in SpecBomCells.Where(x =>
             {
-                VaultSystem.AddToPdmByPath(path, pdmBase);
-
-                #region To Delete
-
-                //var vault1 = new EdmVault5Class();
-                //if (!vault1.IsLoggedIn)
-                //{
-                //    vault1.LoginAuto(pdmBase, 0);
-                //}
-                //var fileDirectory = new FileInfo(path).DirectoryName;
-
-                //var fileFolder = vault1.GetFolderFromPath(fileDirectory);
-                //fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
-
-                #endregion
-
-            }
-            catch (Exception)
+                var extension = Path.GetExtension(x.FilePath + "\\" + x.FileName);
+                return extension.ToLower() == ".sldasm";
+            })
+                .Where(x => x.Раздел == "" || x.Раздел == "Сборочные единицы")
+                .Select(x => x.FilePath + "\\" + x.FileName)
+                .Distinct())
             {
-                //
+                try
+                {
+                    ВыгрузитьСборку(путьКСборке);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.StackTrace);
+                }
             }
+
+            #endregion
+
         }
 
-        void ПоискEpdm(object sender, RoutedEventArgs e)
-        {
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Start();
-
-            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
-            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
-            //epdmSearch.SearchDoc("901.30.1.", EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
-            //if (найденныеФайлы == null) return;
-
-            //var newNames = найденныеФайлы.Select(findedDocumentse => findedDocumentse.Path).ToList();
-
-            //СписокНайденныхФайлов.ItemsSource = newNames.ConvertAll(FileName);
-            //stopwatch.Stop();
-            //MessageBox.Show(string.Format(" Поиск {1} файлов {0} мс ", stopwatch.Elapsed, найденныеФайлы.Count));
-        }
-
+        #endregion
+      
         static string FileName(string filePath)
         {
             var fileName = new FileInfo(filePath).Name;
             return fileName;
         }
-        static string FileNameWithoutExt(string filePath)
-        {
-            var fileName = new FileInfo(filePath).Name.Replace(new FileInfo(filePath).Extension, "");
-            return fileName;
-        }
     
-        string FileType { get; set; }
-
         private void AutoCompleteTextBox1Reload()
         {
-            List< VaultSystem.SearchInVault.FindedDocuments> найденныеФайлы;
-            VaultSystem.SearchInVault.SearchDoc(AutoCompleteTextBox1.Text, VaultSystem.SearchInVault.SwDocType.SwDocAssembly, out найденныеФайлы, Settings.Default.PdmBaseName);
-            
-            if (найденныеФайлы == null)
-            {
-                VaultSystem.SearchInVault.SearchDoc(AutoCompleteTextBox1.Text, VaultSystem.SearchInVault.SwDocType.SwDocPart, out найденныеФайлы, Settings.Default.PdmBaseName);
-                if (найденныеФайлы == null) return;
-                FileType = "prt";
-            }
+            List< SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
+            List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы1;
 
+            VaultSystem.SearchInVault.SearchDoc(
+                AutoCompleteTextBox1.Text,
+                SwEpdm.EpdmSearch.SwDocType.SwDocAssembly,
+                out найденныеФайлы, 
+                Settings.Default.PdmBaseName);
 
+            //FileType = "asm";
 
-            //var epdmSearch = new EpdmSearch { VaultName = Settings.Default.PdmBaseName };
+            VaultSystem.SearchInVault.SearchDoc(
+                AutoCompleteTextBox1.Text,
+                SwEpdm.EpdmSearch.SwDocType.SwDocPart,
+                out найденныеФайлы1,
+                Settings.Default.PdmBaseName);
 
-            //List<EpdmSearch.FindedDocuments> найденныеФайлы;
-            //epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы);
-            //if (найденныеФайлы == null)
-            //{
-            //    epdmSearch.SearchDoc(AutoCompleteTextBox1.Text, EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы);
-            //    if (найденныеФайлы == null) return;
-            //    FileType = "prt";
-            //}
-            else FileType = "asm";
+           // FileType = "prt";
+
+            if (найденныеФайлы == null & найденныеФайлы1 == null) return;
+
+            if (найденныеФайлы1 != null & найденныеФайлы != null) найденныеФайлы.AddRange(найденныеФайлы1);
+            if (найденныеФайлы1 != null & найденныеФайлы == null) найденныеФайлы = найденныеФайлы1;
 
             var newNames = найденныеФайлы.Select(findedDocumentse => findedDocumentse.Path).ToList();
-            AsmsNames = newNames.ConvertAll(FileNameWithoutExt);
-            AutoCompleteTextBox1.ItemsSource = AsmsNames;
+                FilePath = newNames.ConvertAll(FileName);
+            
+            AutoCompleteTextBox1.ItemsSource = FilePath;
            
             AutoCompleteTextBox1.FilterMode = AutoCompleteFilterMode.Contains;
         }
 
-        private void AutoCompleteTextBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Button_Click_3(this, new RoutedEventArgs());
-            }
-        }
+        private List<string> FilePath { get; set; }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             AutoCompleteTextBox1Reload();
-        }
-        
+        }        
 
-        private void AutoCompleteTextBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void EnabledExport()
         {
-            ВыгрузитьВXml.IsEnabled = AsmsNames.Contains(AutoCompleteTextBox1.Text);
-        }
+            //var currentPath = AutoCompleteTextBox1.Text == CurrentPath;
+            //ПолучитьПереченьДеталей.IsChecked = currentPath;
+            //XmlParts1.IsEnabled = currentPath;
+            //PartsListXml2sDataGrid.IsEnabled = currentPath;
 
-        void AutoCompleteTextBox1_TextChanged(object sender, RoutedEventArgs e)
-        {
             Найти.IsEnabled = AutoCompleteTextBox1.Text.Length != 0;
         }
-  
-        void ДобавитьТаблицу_Click(object sender, RoutedEventArgs e)
-        {
-            var swApp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
-
-            var swModel = (IModelDoc2)swApp.IActiveDoc;
-            var обозначения = new[] { "AV 0989897", "-01", "-02", "-03", "-04" };
-
-            InsertTableРис(swModel, обозначения);
-
-            swModel.Extension.SelectByID2("Общая таблица7", "GENERALTABLEFEAT", 0, 0, 0, false, 0, null, 0);
-            swModel.SelectedFeatureProperties(0, 0, 0, 0, 0, 0, 0, true, true, "Общая таблица4_15");
-      
-            var myModelView = ((ModelView)(swModel.ActiveView));
-            myModelView.TranslateBy(-0.00040965517241379308, 0.00040965517241379308);
-        }
-
-        static void InsertTableРис(IModelDoc2 swModel, string[] обозначения)
-        {
-            var swDrawing = ((DrawingDoc)(swModel));
-            var enumerable = обозначения ?? обозначения.ToArray();
-            var myTable = swDrawing.InsertTableAnnotation(0.417, 0.292, 2, enumerable.Count()+1, 2);
-            if ((myTable == null)) return;
-            myTable.Title = "Таблица видов";
-            myTable.BorderLineWeight = 2;
-            myTable.GridLineWeight = 1;
-            myTable.Text[0, 0] = "Обозначение";
-           
-            myTable.SetColumnWidth(0, 0.05, 0);
-            myTable.Text[0, 1] = "Рис.";
-            myTable.SetColumnWidth(1, 0.02, 0);
-            
-            for (var i = 1; i < обозначения.Count()+1; i++)
-            {
-                myTable.Text[i, 0] = обозначения[i-1];
-                if (i>1)
-                {
-                    myTable.set_CellTextHorizontalJustification(i, 0, (int)swTextJustification_e.swTextJustificationRight);    
-                }
-                myTable.Text[i, 1] = (i).ToString();
-            }
-        }
-
-        void AutoCompleteTextBox1_DropDownClosed(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        {
-            if (ВыгрузитьВXml.IsEnabled)
-            {
-                ИмяСборки1.Text = AutoCompleteTextBox1.Text;
-            }
-        }
         
-        class PartsListXml
-        {
-            public bool Xml { get; set; }
-            public int CurrentVersion { get; set; }
-            public string Путь {  get; set; }
-            public string Наименование => Path.GetFileNameWithoutExtension(Путь);
-        }
-
-
         class PartsListXml2
         {
+            public bool Dxf { get; set; }
+
             public bool Xml { get; set; }
             public int CurrentVersion { get; set; }
             public int? IdPmd { get; set; }
             public string Наименование { get; set; }
             public string Путь { get; set; }
-
 
             public string НаименованиеБезРасширения { get; set; }
 
@@ -1395,7 +840,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 get {
                     try
                     {
-                        return ((Math.Round(Convert.ToDouble(ЗаготовкаШирина)*Convert.ToDouble(ЗаготовкаВысота)*2/10000))/100).ToString();
+                        return
+                            ((Math.Round(Convert.ToDouble(ЗаготовкаШирина)*Convert.ToDouble(ЗаготовкаВысота)*2/10000))/
+                             100).ToString();
                     }
                     catch (Exception)
                     {
@@ -1420,143 +867,27 @@ namespace AirVentsCadWpf.DataControls.Specification
             }
 
         }
+        
+        Epdm.BomCells[] SpecBomCells { get; set; }
 
-        void ВыгрузитьВXml_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (ВыгрузитьВXml.IsEnabled)
-            {
-                ПолучитьПереченьДеталей.IsEnabled = true;
-            }
-            else
-            {
-                ПолучитьПереченьДеталей.IsEnabled = false;
-                ПолучитьПереченьДеталей.IsChecked = false;
-            }
-        }
-
-        void Конфигурация_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var partsListXml = new List<PartsListXml>();
-
-            foreach (var данныеДляВыгрузки in _работаСоСпецификацией.Спецификация(_путьКСборке, 10, Конфигурация.Text).Where(x => x.Путь.ToLower().EndsWith("prt")).Where(x => x.Раздел == "Детали" || x.Раздел == "").GroupBy(x => new { x.Путь, x.Версия }))
-            {
-                partsListXml.Add(new PartsListXml
-                {
-                    Путь = Convert.ToString(данныеДляВыгрузки.Key.Путь),
-                    CurrentVersion = Convert.ToInt32(данныеДляВыгрузки.Key.Версия)
-                });
-            }
-
-            foreach (var listXml in partsListXml)
-            {
-                listXml.Xml = ExistLastXml(listXml.Путь, listXml.CurrentVersion);
-            }
-         
-            PartsList.ItemsSource = partsListXml.OrderBy(x => x.Xml).ThenBy(x => x.Наименование);
-        }
-
-        static bool ExistLastXml(string partPath, int currentVersion)
+        void ПолучитьПереченьДеталей()
         {
             try
             {
-                var xmlPartPath =
-                new FileInfo(@"\\srvkb\SolidWorks Admin\XML\" + Path.GetFileNameWithoutExtension(partPath) + ".xml");
-
-                if (!xmlPartPath.Exists) return false;
-
-                var xmlPartVersion = Version(xmlPartPath.FullName);
-
-                return Equals(xmlPartVersion, currentVersion);
-            }
-            catch (Exception )
-            {
-                return false;
-            }
-            
-        }
-
-        void PartsList_LoadingRow(object sender, DataGridRowEventArgs e)
-        {
-            var partsListXml = (PartsListXml)e.Row.DataContext;
-
-            if (partsListXml.Xml)
-            {
-                e.Row.Background = e.Row.GetIndex() % 2 == 1 ? _lightCyanColorBrush : _whiteColorBrush;
-            }
-            else
-            {
-                e.Row.Background = _orangeColorBrush;
-            }
-        }
-
-        void XMLParts_Click(object sender, RoutedEventArgs e)
-        {
-            var modelSw = new ModelSw();
-
-            var list = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
-
-            foreach (var newComponent in list.Where(newComponent => !newComponent.Xml))
-            {
-                MessageBox.Show(newComponent.Путь, newComponent.Наименование);
-                modelSw.PartInfoToXml(newComponent.Путь);
-            }
-        }
-
-        void Конфигурация_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (Конфигурация.Visibility == Visibility.Visible )
-            {
-                PartsList.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                PartsList.Visibility = Visibility.Hidden;
-                PartsList.ItemsSource = null;
-            }
-        }
-
-        void PartsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            XmlParts.Visibility = PartsList.HasItems ? Visibility.Visible : Visibility.Hidden;
-        }
-
-        void ПолучитьПереченьДеталей_Unchecked(object sender, RoutedEventArgs e)
-        {
-            Конфигурация.Text = "";
-            Конфигурация.IsEnabled = false;
-            PartsList.ItemsSource = null;
-            ПереченьДеталей.Visibility = Visibility.Hidden;
-
-
-            if (PartsList.HasItems)
-            {
-                XmlParts.Visibility = Visibility.Visible;
-                PartsList.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                XmlParts.Visibility = Visibility.Hidden;
-                PartsList.Visibility = Visibility.Hidden;
-            }
-        }
-        
-        Epdm.BomCells[] _specBomCells;
-        
-        void ПолучитьПереченьДеталей_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (FileType == "prt")
+                if (AutoCompleteTextBox1.Text.ToLower().EndsWith("prt"))
                 {
                     var emdpService = new Epdm();
-                    var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text + ".SLDPRT");
-
+                    var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text);
+                    var filePath = path[0].FilePath;
+                    var lastVersion = SwEpdm.GetVersionOfFile(filePath, Settings.Default.PdmBaseName);
                     var partsListXml2S = new List<PartsListXml2>
                     {
                         new PartsListXml2
                         {
-                            Наименование = Path.GetFileNameWithoutExtension(path[0].FilePath),
-                            Путь = path[0].FilePath
+                            Наименование = Path.GetFileNameWithoutExtension(filePath),
+                            Путь = filePath,
+                            Xml = ExistLastXml(filePath, lastVersion),
+                            Dxf = ExistLastDxf(filePath, lastVersion)
                         }
                     };
 
@@ -1572,22 +903,25 @@ namespace AirVentsCadWpf.DataControls.Specification
                 }
                 else
                 {
-                    var emdpService = new Epdm(); 
-                    var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text + ".SLDASM");
+                    var emdpService = new Epdm();
+                    var path = emdpService.SearchDoc(AutoCompleteTextBox1.Text);
                     var configs = emdpService.GetConfiguration(path[0].FilePath);
                     var itemsSource = configs as IList<string> ?? configs.ToList();
-                    Конфигурация.ItemsSource = itemsSource;
 
                     var bomClass = new Epdm
                     {
                         BomId = 8,
                         AssemblyPath = path[0].FilePath
                     };
-                    
-                    var спецификация = bomClass.BomList(path[0].FilePath, itemsSource[0]);
+                    Exception exception;
+                    var спецификация = bomClass.BomList(path[0].FilePath, itemsSource[0], false, out exception);
+                    if (exception != null)
+                    {
+                        MessageBox.Show(exception.StackTrace);
+                    }
 
                     //MessageBox.Show(спецификация.Where(x=>x.ТипФайла.ToLower() == "sldprt").Where(x => x.Раздел == "Детали" || x.Раздел == "").Count().ToString());
-                    
+
                     var partsListXml2S = new List<PartsListXml2>();
 
                     foreach (var item in спецификация)
@@ -1612,30 +946,31 @@ namespace AirVentsCadWpf.DataControls.Specification
                     foreach (var listXml in partsListXml2S)
                     {
                         listXml.Xml = ExistLastXml(listXml.Путь, listXml.CurrentVersion);
+                        listXml.Dxf = ExistLastXml(listXml.Путь, listXml.CurrentVersion);
                         listXml.НаименованиеБезРасширения = listXml.Наименование.ToUpper().Replace(".SLDPRT", "");
                     }
 
                     var list = InnerPartsList();
 
                     var newList = from partsListXml2 in partsListXml2S
-                                  join listXml2 in list
-                                  on partsListXml2.НаименованиеБезРасширения.ToLower() equals
-                                  listXml2.PartNumber.ToLower()
-                                  select new
-                                  {
-                                      partsListXml2.НаименованиеБезРасширения,
-                                      listXml2.PartNumber,
+                        join listXml2 in list
+                            on partsListXml2.НаименованиеБезРасширения.ToLower() equals
+                            listXml2.PartNumber.ToLower()
+                        select new
+                        {
+                            partsListXml2.НаименованиеБезРасширения,
+                            listXml2.PartNumber,
 
-                                      listXml2.ЗаготовкаВысота,
-                                      listXml2.Толщина,
-                                      listXml2.ЗаготовкаШирина,
-                                      listXml2.Гибы,
-                                      listXml2.ПлощадьПокрытия,
-                                      listXml2.Конфигурация,
-                                      listXml2.ПлощадьS,
-                                      listXml2.МассаS,
-                                      partsListXml2.Материал
-                                  };
+                            listXml2.ЗаготовкаВысота,
+                            listXml2.Толщина,
+                            listXml2.ЗаготовкаШирина,
+                            listXml2.Гибы,
+                            listXml2.ПлощадьПокрытия,
+                            listXml2.Конфигурация,
+                            listXml2.ПлощадьS,
+                            listXml2.МассаS,
+                            partsListXml2.Материал
+                        };
 
 
                     var newList2 = newList.Select(variable => new PartsListXml2
@@ -1658,14 +993,19 @@ namespace AirVentsCadWpf.DataControls.Specification
                         try
                         {
                             var selectedItem =
-                            newList2.Where(x => string.Equals(x.НаименованиеБезРасширения.ToLower(), partsListXml2.Наименование.Replace(".SLDPRT", "").ToLower(), StringComparison.CurrentCultureIgnoreCase) && x.Конфигурация == partsListXml2.Конфигурация);
+                                newList2.Where(
+                                    x =>
+                                        string.Equals(x.НаименованиеБезРасширения.ToLower(),
+                                            partsListXml2.Наименование.Replace(".SLDPRT", "").ToLower(),
+                                            StringComparison.CurrentCultureIgnoreCase) &&
+                                        x.Конфигурация == partsListXml2.Конфигурация);
 
                             foreach (var listXml2 in selectedItem)
                             {
                                 if (newListOrder.Any(x => string.Equals(x.НаименованиеБезРасширения,
-                                                listXml2.НаименованиеБезРасширения,
-                                                StringComparison.CurrentCultureIgnoreCase) &&
-                                            x.Конфигурация == listXml2.Конфигурация)) continue;
+                                    listXml2.НаименованиеБезРасширения,
+                                    StringComparison.CurrentCultureIgnoreCase) &&
+                                                          x.Конфигурация == listXml2.Конфигурация)) continue;
 
                                 newListOrder.Add(new PartsListXml2
                                 {
@@ -1683,7 +1023,10 @@ namespace AirVentsCadWpf.DataControls.Specification
                                 });
                             }
                         }
-                        catch (Exception){}
+                        catch (Exception exceptio)
+                        {
+                            MessageBox.Show(exceptio.StackTrace);
+                        }
                     }
 
                     PartsListXml2sDataGrid.ItemsSource = null;
@@ -1696,22 +1039,21 @@ namespace AirVentsCadWpf.DataControls.Specification
                     PartsListXml2sDataGrid_Copy.Visibility = Visibility.Visible;
                     XmlParts1_Copy.Visibility = Visibility.Visible;
 
-                    PartsListXml2sDataGrid_Copy.ItemsSource = newListOrder.OrderBy(x=>x.НаименованиеБезРасширения).ThenBy(x => x.Конфигурация); 
-                    
+                    PartsListXml2sDataGrid_Copy.ItemsSource =
+                        newListOrder.OrderBy(x => x.НаименованиеБезРасширения).ThenBy(x => x.Конфигурация);
                 }
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.ToString());
             }
+            finally
+            {
+                CurrentPath = AutoCompleteTextBox1.Text;
+                ПереченьДеталей_Copy.Header = CurrentPath.ToLower().EndsWith("prt") ? $"Деталь {CurrentPath}" : $"Перечень деталей для сборки {CurrentPath} (Всего деталей: {PartsListXml2sDataGrid.Items.Count}шт.)";
+            }
         }
-
-        void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var item = (PartsListXml2)PartsList.SelectedItem;
-            MessageBox.Show(item?.Путь, item?.PartNumber);
-        }
-
+        
         #region XML File Version
 
         static int? Version(string xmlPath)
@@ -1749,80 +1091,97 @@ namespace AirVentsCadWpf.DataControls.Specification
             return version;
         }
 
-        #endregion
-
-        void OpenFile(object sender, RoutedEventArgs e)
+        static bool ExistLastXml(string partPath, int currentVersion)
         {
-            var item = (PartsListXml2)PartsList.SelectedItem;
             try
             {
-                Process.Start(@item.Путь);
+                var xmlPartPath =
+                new FileInfo(@"\\srvkb\SolidWorks Admin\XML\" + Path.GetFileNameWithoutExtension(partPath) + ".xml");
+
+                if (!xmlPartPath.Exists) return false;
+
+                var xmlPartVersion = Version(xmlPartPath.FullName);
+
+                return Equals(xmlPartVersion, currentVersion);
             }
             catch (Exception)
             {
-                // ignored
+                return false;
             }
         }
 
-        void PartsList_LayoutUpdated(object sender, EventArgs e)
+        static bool ExistLastDxf(string partPath, int currentVersion)
         {
-            if (PartsList.ItemsSource == null) return;
-            var list = PartsList.ItemsSource.OfType<PartsListXml>().ToList();
-            Total.Content = "Всего: " + list.Count();
-            Ready.Content = "Выгружено: " + list.Count(x => x.Xml);
+            return true;
+            try
+            {
+                var xmlPartPath =
+                new FileInfo(@"\\srvkb\SolidWorks Admin\XML\" + Path.GetFileNameWithoutExtension(partPath) + ".xml");
+
+                if (!xmlPartPath.Exists) return false;
+
+                var xmlPartVersion = Version(xmlPartPath.FullName);
+
+                return Equals(xmlPartVersion, currentVersion);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
-        
+
+        #endregion
         
         void XmlParts1_Click(object sender, RoutedEventArgs e)
         {
-            ВыгрузитьВXml_Click(sender, e);
-
-            //MessageBox.Show("Done");
-            //return;
-
-            var modelSw = new ModelSw();
-
-            var list = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
-
-            foreach (var newComponent in list)
-            {
-                if (!newComponent.Xml)
-                {
-                    //var exportXmlSql = new ExportXmlSql();
-                    ExportXmlSql.Export(newComponent.Путь);
-
-                    //exportXmlSql.Export(newComponent.Путь);
-
-                    //modelSw.PartInfoToXml(newComponent.Путь);
-                }
-            }
-        }
-
-        static void PartInfoToXml(string путь)
-        {
             try
             {
-                var modelSw = new ModelSw();
-                modelSw.PartInfoToXml(путь);
+                НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
+                ВыгрузкаСборкиВXml();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(exception.StackTrace);
             }
+
+            ListToRun = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
+            ExportTask();
         }
 
-        EnumerableRowCollection<DataRow> PartNumberData(string partName)
+        private List<PartsListXml2> ListToRun { get; set; }
+
+        private Task Export { get; set; }
+
+        void ExportTask()
         {
-            var sqlBaseData = new SqlBaseData();
-            var table = sqlBaseData.PartTechParams();
-            var results = from myRow in table.AsEnumerable()
-                          where myRow.Field<string>("PartNumber") == partName
-                          select myRow;
-
-            return results;
+            Export = new Task(ExportPartsToXml);
+            Export.Start();
         }
 
+        void ExportPartsToXml()
+        {
+            CurrentPath = Path.GetFileNameWithoutExtension(ПутьКСборке);
+            try
+            {
+                foreach (var newComponent in ListToRun.Where(newComponent => !newComponent.Xml))
+                {
+                    using (var modelSw = new ModelSw())
+                    {
+                        ExportXmlSql.Export(modelSw.GetSwWithPart(newComponent.Путь), newComponent.CurrentVersion, (int)newComponent.IdPmd);
+                        modelSw.ExitSw();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.StackTrace);
+            }
 
+            MessageBox.Show($"Выгрузка {Path.GetFileNameWithoutExtension(ПутьКСборке)} завершена");
+            CurrentPath = null;
+            
+        }
+        
         static IEnumerable<PartsListXml2> InnerPartsList()
         {
             var sqlBaseData = new SqlBaseData();
@@ -1841,48 +1200,67 @@ namespace AirVentsCadWpf.DataControls.Specification
             return list;
         }
 
-
         void XmlParts1_Copy_Click(object sender, RoutedEventArgs e)
         {
             PartsListXml2sDataGrid_Copy.SelectAllCells();
         }
-        
-        void buttonParttoxml_Click(object sender, RoutedEventArgs e)
-        {
-            PartInfoToXml(textBoxPath.Text);
-        }
+
         void DxfParts1_Click(object sender, RoutedEventArgs e)
         {
 
             var list = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
-
-            if (list.Count == 0) return;
             
+            if (list.Count == 0) return;
+
+            НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
+
+            ModelSw.GetAsBuild(ПутьКСборке, Settings.Default.PdmBaseName);
+
+            var listOfFiles = "";
+
             foreach (var newComponent in list)
             {
-                Dxf.Save(newComponent.Путь, checkBox.IsChecked == true ? newComponent.Конфигурация : null);
+                    try
+                    {
+                        Dxf.Save(Path.GetFullPath(newComponent.Путь), checkBox.IsChecked == true ? newComponent.Конфигурация : null);
+                     
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+            
+                listOfFiles = listOfFiles + newComponent .Наименование + "-" +  "\n";
             }
+
+           // MessageBox.Show(listOfFiles);
+        }
+        
+        private void AutoCompleteTextBox1_TextChanged(object sender, RoutedEventArgs e)
+        {
+            EnabledExport();
+
+            var items = AutoCompleteTextBox1.ItemsSource as List<string>;
+            if (items == null) return;
+
+            GetList.IsEnabled = items.Contains(AutoCompleteTextBox1.Text);
         }
 
-        
-
-        void button_Click_4(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var dir = new DirectoryInfo(@"C:\DXF\Parts");
-            var modelSw = new ModelSw();
+            ПолучитьПереченьДеталей();
 
-            foreach (var fileInfo in dir.GetFiles())
+            if (PartsListXml2sDataGrid_Copy.Items.Count == 0)
             {
-                try
-                {
-                    modelSw.CreateEprt(fileInfo.FullName, true);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
+                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Collapsed;
+                XmlParts1_Copy.Visibility = Visibility.Collapsed;
             }
-            MessageBox.Show("Process finished");
+            else
+            {
+                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Visible;
+                XmlParts1_Copy.Visibility = Visibility.Visible;
+            }
+
         }
     }
 }

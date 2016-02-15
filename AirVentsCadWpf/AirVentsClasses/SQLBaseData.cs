@@ -11,7 +11,6 @@ namespace AirVentsCadWpf.AirVentsClasses
     /// </summary>
     public partial class SqlBaseData
     {
-
         /// <summary>
         /// 
         /// </summary>
@@ -33,9 +32,9 @@ namespace AirVentsCadWpf.AirVentsClasses
 
                     sqlCommand.ExecuteNonQuery();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                  //  MessageBox.Show(e.Message + "\n" + e, " AirVents_SetPDMID ");                    
+                  //
                 }
                 finally
                 {
@@ -77,6 +76,7 @@ namespace AirVentsCadWpf.AirVentsClasses
             return panelTypeId;
         }
         
+
         /// <summary>
         /// 
         /// </summary>
@@ -138,9 +138,7 @@ namespace AirVentsCadWpf.AirVentsClasses
         /// <param name="stickyTape">if set to <c>true</c> [sticky tape].</param>
         /// <param name="airHole"></param>
         /// <returns></returns>
-        public int AirVents_AddPartOfPanel
-            (
-            //int? pdmId,
+        public int AirVents_AddPartOfPanel(
             int panelTypeId,
             int elementType,
             int? width,
@@ -148,18 +146,18 @@ namespace AirVentsCadWpf.AirVentsClasses
             int partThick,
             int? partMat,
             double? partMatThick,
-
+            #region to delete
+            //int? pdmId,
             //string ral,
             //string coatingType,
             //int? coatingClass,
-
+        #endregion
             bool? mirror,
             string step,
             string stepInsertion,
             bool reinforcing,
             bool stickyTape,
-            string airHole
-            )
+            string airHole)
         {
             var partId = 0;
             using (var con = new SqlConnection(Properties.Settings.Default.ConnectionToSQL))
@@ -434,8 +432,7 @@ namespace AirVentsCadWpf.AirVentsClasses
         /// <param name="airHole"></param>
         /// <param name="panelNumber">The panel number.</param>
         /// <returns></returns>
-        public int AirVents_AddPanel
-            (
+        public int AirVents_AddPanel(
             int partId,
             int panelTypeId,
             int? width,
@@ -445,14 +442,14 @@ namespace AirVentsCadWpf.AirVentsClasses
             int panelThick,
             double? panelMatThickOut,
             double? panelMatThickIn,
-
+            #region to delete
             //string ralOut,
             //string ralIn,
             //string coatingTypeOut,
             //string coatingTypeIn,
             //int? coatingClassOut,
             //int? coatingClassIn,
-
+        #endregion
             bool? mirror,
             string step,
             string stepInsertion,
@@ -460,10 +457,7 @@ namespace AirVentsCadWpf.AirVentsClasses
             bool stickyTape,
 
             string airHole,
-
-
-            int panelNumber
-            )
+            int panelNumber)
         {
             var id = 0;
             using (var con = new SqlConnection(Properties.Settings.Default.ConnectionToSQL))
@@ -867,8 +861,8 @@ namespace AirVentsCadWpf.AirVentsClasses
             int panelTypeId,
             int elementType, 
             int? width,
-            int? height,  // 880
-            int thickness,  //40 50 
+            int? height,  
+            int thickness,  
             int? matOut,  
             int? matInt,
             double? thicknessOut,
@@ -1181,7 +1175,62 @@ namespace AirVentsCadWpf.AirVentsClasses
             return panelsTable;
         }
 
-        public int PanelsTypeId(string panelTypeCode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="panelGroup"></param>
+        /// <returns></returns>
+        public DataTable PanelsTable2(string panelGroup)
+        {
+            var panelsTable = new DataTable();
+            var connectionString = @Properties.Settings.Default.ConnectionToSQL;
+            var query =
+                "SELECT [PanelTypeName] ,[PanelTypeCode]  FROM [AirVents].[PanelType] WHERE[PanelTypeGroup] = '" + panelGroup + "'";
+
+            var sqlConnection = new SqlConnection(connectionString);
+            var sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlConnection.Open();
+            var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+            sqlDataAdapter.Fill(panelsTable);
+            sqlConnection.Close();
+            sqlDataAdapter.Dispose();
+            //panelsTable.Columns[0].ColumnName = "Группа";
+            panelsTable.Columns.Add("OldIds");
+            foreach (DataRow row in panelsTable.Rows)
+            {
+                switch (row["PanelTypeCode"].ToString())
+                {
+                    case "24":
+                        row["OldIds"] = "10";
+                        break;
+                    case "25":
+                        row["OldIds"] = "11";
+                        break;
+                    case "26":
+                        row["OldIds"] = "12";
+                        break;
+                    case "27":
+                        row["OldIds"] = "13";
+                        break;
+                    case "28":
+                        row["OldIds"] = "14";
+                        break;
+                    case "29":
+                        row["OldIds"] = "15";
+                        break;
+                }
+            }
+            return panelsTable;
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="panelTypeCode"></param>
+        /// <returns></returns>
+        public static int PanelsTypeId(string panelTypeCode)
         {
             var panelsTable = new DataTable();
             var connectionString = @Properties.Settings.Default.ConnectionToSQL;
@@ -1194,7 +1243,6 @@ namespace AirVentsCadWpf.AirVentsClasses
             sqlDataAdapter.Fill(panelsTable);
             sqlConnection.Close();
             sqlDataAdapter.Dispose();
-            //MessageBox.Show(panelsTable.Rows[0][0].ToString());           
             return Convert.ToInt32(panelsTable.Rows[0][0].ToString());
         }
 
@@ -1532,18 +1580,18 @@ Order BY PanelTypeCode";
                     con.Open();
                     var sqlCommand =
                         new SqlCommand(@"SELECT
-AirVents.StandardSize.Type,
-AirVents.Profil.Description,
-AirVents.Dimension.Wight,
-AirVents.Dimension.Hight
-FROM AirVents.DimensionType
-INNER JOIN AirVents.Dimension
-  ON AirVents.DimensionType.DimensionID = AirVents.Dimension.DimensionID
-INNER JOIN AirVents.StandardSize
-  ON AirVents.DimensionType.SizeID = AirVents.StandardSize.SizeID
-INNER JOIN AirVents.Profil
-  ON AirVents.DimensionType.ProfilID = AirVents.Profil.ProfilID
-  WHERE AirVents.StandardSize.SizeID = " + sizeId + " AND  AirVents.Profil.ProfilID = " + profilId, con);
+                                            AirVents.StandardSize.Type,
+                                            AirVents.Profil.Description,
+                                            AirVents.Dimension.Wight,
+                                            AirVents.Dimension.Hight
+                                                FROM AirVents.DimensionType
+                                                    INNER JOIN AirVents.Dimension
+                                                               ON AirVents.DimensionType.DimensionID = AirVents.Dimension.DimensionID
+                                                                    INNER JOIN AirVents.StandardSize
+                                                                         ON AirVents.DimensionType.SizeID = AirVents.StandardSize.SizeID
+                                                                                INNER JOIN AirVents.Profil
+                                                                 ON AirVents.DimensionType.ProfilID = AirVents.Profil.ProfilID
+                                         WHERE AirVents.StandardSize.SizeID = " + sizeId + " AND  AirVents.Profil.ProfilID = " + profilId, con);
                     var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
                     var dataTable = new DataTable("StandartSize");
                     sqlDataAdapter.Fill(dataTable);

@@ -94,6 +94,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.PartProperty.BomListAsm">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.PartProperty.BomListPrt">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:AirVentsCadWpf.AirVentsClasses.SqlBaseData">
             <summary>
             Класс реализующий работу с базой данных
@@ -217,6 +229,20 @@
             Panelses the table.
             </summary>
             <param name="panelGroup">The panel group.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.SqlBaseData.PanelsTable2(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="panelGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.SqlBaseData.PanelsTypeId(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="panelTypeCode"></param>
             <returns></returns>
         </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.SqlBaseData.PanelsTable">
@@ -619,7 +645,7 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFrameless(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFrameless(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String[],System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
             <summary>
             Panelses the frameless.
             </summary>
@@ -634,7 +660,7 @@
             <param name="расположениеПанелей">The РАСПОЛОЖЕНИЕ ПАНЕЛЕЙ.</param>
             <param name="покрытие">The ПОКРЫТИЕ.</param>
             <param name="расположениеВставок">The РАСПОЛОЖЕНИЕ ВСТАВОК.</param>
-            <param name="типУсиливающей">The СОСТАВНАЯ.</param>
+            <param name="первыйТип">The СОСТАВНАЯ.</param>
             <param name="типТорцевой"></param>
             <param name="screws"></param>
             <param name="partsToDeleteList"></param>
@@ -705,7 +731,7 @@
             <param name="vaultName"></param>
             <returns></returns>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFramelessStr(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String,System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFramelessStr(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String[],System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
             <summary>
             Panelses the frameless string.
             </summary>
@@ -720,7 +746,7 @@
             <param name="расположениеПанелей">Расположение панелей</param>
             <param name="покрытие">ПОКРЫТИЕ</param>
             <param name="расположениеВставок">Расположение вставок</param>
-            <param name="типУсиливающей">СОСТАВНАЯ</param>
+            <param name="первыйТип">СОСТАВНАЯ</param>
             <param name="типТорцевой"></param>
             <param name="типДвойной"></param>
             <param name="screws"></param>
@@ -1236,6 +1262,18 @@
             Пользовательская база PDM.
             </summary>
         </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetSwWithPart(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="partPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExitSw">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.NewComponents">
             <summary>
             Список сгенерированных файлов при построении данной модели.
@@ -1693,6 +1731,20 @@
             <param name="vaultName">Имя базы PDM.</param>
             
         </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetLatestVersion(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="path"></param>
+            <param name="vaultName"></param>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetAsBuild(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="path"></param>
+            <param name="vaultName"></param>
+        </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetLastVersionPdm(System.String,System.String)">
             <summary>
             Gets the last version PDM.
@@ -1744,31 +1796,12 @@
             <param name="swDoc">Деталь</param>
             <param name="componentId">The component identifier.</param>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PartInfoToXml(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="filePath"></param>
-        </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.CreateEprt(System.String,System.Boolean)">
             <summary>
             
             </summary>
             <param name="filePath"></param>
             <param name="inPdm"></param>
-        </member>
-        <member name="T:AirVentsCadWpf.DataControls.AirVentsUnits50Uc">
-            <summary>
-            Interaction logic for AirVentsUnits50Uc.xaml
-            </summary>
-            <summary>
-            AirVentsUnits50Uc
-            </summary>
-        </member>
-        <member name="M:AirVentsCadWpf.DataControls.AirVentsUnits50Uc.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
         </member>
         <member name="T:AirVentsCadWpf.DataControls.MonoBlock01Uc50">
             <summary>
@@ -1784,6 +1817,19 @@
             </summary>
         </member>
         <member name="M:AirVentsCadWpf.DataControls.MonoBlock01Uc50.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AirVentsCadWpf.DataControls.AirVentsUnits50Uc">
+            <summary>
+            Interaction logic for AirVentsUnits50Uc.xaml
+            </summary>
+            <summary>
+            AirVentsUnits50Uc
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.AirVentsUnits50Uc.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -1867,6 +1913,53 @@
             LoggerUc
             </summary>
         </member>
+        <member name="T:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.#ctor(System.Collections.IList,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="innerList"></param>
+            <param name="itemsPerPage"></param>
+        </member>
+        <member name="P:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.Count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.CurrentPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.ItemsPerPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.PageCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.MoveToNextPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.MoveToPreviousPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.DataControls.Loggers.LoggerUc.PagingCollectionView.MoveToLastPage">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:AirVentsCadWpf.DataControls.Loggers.LoggerUc.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:AirVentsCadWpf.DataControls.Loggers.LoggerUc"/> class.
@@ -1879,6 +1972,11 @@
             <returns></returns>
         </member>
         <member name="T:AirVentsCadWpf.DataControls.Loggers.LoggerUc.SqlLogStucture">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AirVentsCadWpf.DataControls.Loggers.LoggerUc.SqlLogStucture.ErrorTime">
             <summary>
             
             </summary>
@@ -2295,6 +2393,25 @@
             <value>
             The SQL connection string.
             </value>
+        </member>
+        <member name="T:AirVentsCadWpf.App.ElementVisibility">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.App.ElementVisibility.SetImage(System.String,System.Windows.Controls.Image)">
+            <summary>
+            
+            </summary>
+            <param name="picturePath"></param>
+            <param name="imageUi"></param>
+        </member>
+        <member name="M:AirVentsCadWpf.App.ElementVisibility.ForUiElementsList(System.Collections.Generic.IEnumerable{System.Windows.UIElement},System.Windows.Visibility)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <param name="visibility"></param>
         </member>
         <member name="M:AirVentsCadWpf.App.InitializeComponent">
             <summary>

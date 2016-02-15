@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-//using EdmLib;
+
 
 namespace AirVentsCadWpf.AirVentsClasses
 {
@@ -75,11 +74,19 @@ namespace AirVentsCadWpf.AirVentsClasses
         //readonly IEdmVault10 _mVault = new EdmVault5Class();
         //IEdmFile7 _edmFile7;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<PartPropBomCells> BomListAsm()
         {
           return  BomList().OrderBy(x => x.Количество).ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<PartPropBomCells> BomListPrt()
         {
             return BomList().OrderBy(x => x.Количество).ToList();
@@ -92,18 +99,19 @@ namespace AirVentsCadWpf.AirVentsClasses
             {
                 try
                 {
-            //        _mVault.LoginAuto(PdmBaseName, 0);
+                    //_mVault.LoginAuto(PdmBaseName, 0);
                 }
                 catch (Exception)
                 {
-          //          _mVault.Login(UserName, UserPassword, PdmBaseName);
+                    //          _mVault.Login(UserName, UserPassword, PdmBaseName);
                 }
-               
-          //      _mVault.CreateSearch();
+                
+                //      _mVault.CreateSearch();
                 //if (_mVault.IsLoggedIn)
                 //{
                 //    Message = "Logged in " + PdmBaseName;
                 //}
+
             }
             catch (COMException ex)
             {
@@ -317,4 +325,5 @@ namespace AirVentsCadWpf.AirVentsClasses
 
         #endregion
     }
+
 }

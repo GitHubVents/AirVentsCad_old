@@ -19,3 +19,10 @@ D:\Projects VisualStudio\Source\CorPortalWcfService\ConnectorOneC\obj\Debug\Inte
 D:\Projects VisualStudio\Source\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.csproj.ResolveComReference.cache
 D:\Projects VisualStudio\Source\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.dll
 D:\Projects VisualStudio\Source\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\bin\Debug\ConnectorOneC.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\bin\Debug\ConnectorOneC.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.csprojResolveAssemblyReference.cache
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\obj\Debug\Interop.V83.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.csproj.ResolveComReference.cache
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\CorPortalWcfService\ConnectorOneC\obj\Debug\ConnectorOneC.pdb

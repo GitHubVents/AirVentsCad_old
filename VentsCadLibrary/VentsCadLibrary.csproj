@@ -67,14 +67,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Frame50.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="PdmBatch.cs" />
-    <Compile Include="SqlData.cs" />
-    <Compile Include="SwEpdm.cs" />
-    <Compile Include="UniversalSwMethods.cs" />
-    <Compile Include="Attachments.cs" />
-    <Compile Include="VaultSystem.cs" />
+    <Compile Include="Attachments\Dumper.cs" />
+    <Compile Include="Attachments\Panels.cs" />
+    <Compile Include="Attachments\Spigot.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="VaulSystem\PdmBatch.cs" />
+    <Compile Include="SqlData\SqlData.cs" />
+    <Compile Include="VaulSystem\SwEpdm.cs" />
+    <Compile Include="Functions\UniversalSwMethods.cs" />
+    <Compile Include="VaulSystem\VaultSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EdmLib">

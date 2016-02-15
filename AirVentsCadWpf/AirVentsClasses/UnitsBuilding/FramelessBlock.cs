@@ -661,22 +661,35 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             
             swDoc.Extension.SelectByID2("02-11-40-1-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-            swAsm.ReplaceComponents(панельНижняя, "", false, true);
-            try{CloseSldAsm(панельНижняя);}
+            try
+            {
+                swAsm.ReplaceComponents(панельНижняя, "", false, true);
+                CloseSldAsm(панельНижняя);
+            }
             catch (Exception e){MessageBox.Show(e.Message);}
 
             swDoc.Extension.SelectByID2("02-11-40-1-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-            swAsm.ReplaceComponents(панельВерхняя, "", false, true);
-            try { CloseSldAsm(панельВерхняя); }
+            try
+            {
+                swAsm.ReplaceComponents(панельВерхняя, "", false, true);
+                CloseSldAsm(панельВерхняя);
+            }
             catch (Exception e) { MessageBox.Show(e.Message); }
 
             swDoc.Extension.SelectByID2("02-11-40-1-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-            swAsm.ReplaceComponents(panelLeft1, "", false, true);
-            try { CloseSldAsm(panelLeft1); }
+            try
+            {
+                swAsm.ReplaceComponents(panelLeft1, "", false, true);
+                CloseSldAsm(panelLeft1);
+            }
             catch (Exception e) { MessageBox.Show(e.Message); }
+
             swDoc.Extension.SelectByID2("02-11-40-1-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-            swAsm.ReplaceComponents(panelRight1, "", false, true);
-            try { CloseSldAsm(panelRight1); }
+            try
+            {
+                swAsm.ReplaceComponents(panelRight1, "", false, true);
+                CloseSldAsm(panelRight1);
+            }
             catch (Exception e) { MessageBox.Show(e.Message); }
 
             if (side == "правая")
@@ -702,8 +715,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(panelLeft2, null, false, true);
-                    try { CloseSldAsm(panelLeft2); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(panelLeft2, null, false, true);
+                        CloseSldAsm(panelLeft2);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -713,8 +729,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(panelRight2, null, false, true);
-                    try { CloseSldAsm(panelRight2); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(panelRight2, null, false, true);
+                        CloseSldAsm(panelRight2);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -734,8 +753,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(panelLeft3, null, false, true);
-                    try { CloseSldAsm(panelLeft3); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(panelLeft3, null, false, true);
+                        CloseSldAsm(panelLeft3);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -743,8 +765,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(panelRight3, null, false, true);
-                    try { CloseSldAsm(panelRight3); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(panelRight3, null, false, true);
+                        CloseSldAsm(panelRight3);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -768,8 +793,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[0]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
+                        CloseSldAsm(промежуточныеСтойки[0]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -777,8 +805,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[0]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[0], null, false, true);
+                        CloseSldAsm(промежуточныеСтойки[0]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -804,8 +835,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[1]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[1]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -813,8 +847,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[1]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[1], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[1]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -844,8 +881,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[2]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[2]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -853,8 +893,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[2]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[2], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[2]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -884,8 +927,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[3]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[3]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -893,8 +939,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-08-40--8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
-                    try { CloseSldAsm(промежуточныеСтойки[3]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(промежуточныеСтойки[3], "", false, true);
+                        CloseSldAsm(промежуточныеСтойки[3]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
                 else { swDoc.EditDelete(); }
@@ -935,8 +984,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-9@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
-                    try { CloseSldAsm(панелиСъемные[4]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
+                        CloseSldAsm(панелиСъемные[4]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ9", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -973,8 +1025,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
-                    try { CloseSldAsm(панелиСъемные[4]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(панелиСъемные[4], "", false, true);
+                        CloseSldAsm(панелиСъемные[4]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1032,10 +1087,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.EditDelete();
                 swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-180@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
                 swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-145@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                swDoc.Extension.SelectByID2("ПУВ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditDelete();
-                swDoc.Extension.SelectByID2("ПУ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditDelete();
+                swDoc.Extension.SelectByID2("ПУВ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
+                swDoc.Extension.SelectByID2("ПУ11", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
 
                 swDoc.Extension.SelectByID2("МПУ9", "COMPPATTERN", 0, 0, 0, false, 0, null, 0); swDoc.EditSuppress2();
                 swDoc.Extension.SelectByID2("МПУВ9", "COMPPATTERN", 0, 0, 0, false, 0, null, 0); swDoc.EditSuppress2();
@@ -1048,8 +1101,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-10@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side == "правая")
                 {
-                    swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
-                    try { CloseSldAsm(панелиСъемные[5]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
+                        CloseSldAsm(панелиСъемные[5]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ10", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1086,8 +1142,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (side != "правая")
                 {
-                    swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
-                    try { CloseSldAsm(панелиСъемные[5]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(панелиСъемные[5], "", false, true);
+                        CloseSldAsm(панелиСъемные[5]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
 
                     swDoc.Extension.SelectByID2("ПУВ12", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1160,40 +1219,91 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #endregion
 
-            #region Ножки опорные
+            #region Крыша 
 
-            //try
+            //if (Path.GetFileNameWithoutExtension(панельВерхняя).Remove(5).Contains("22"))
             //{
-            //    swDoc.Extension.SelectByID2("ВНС-901.92.001-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Регулируемая ножка-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("ВНС-901.92.001-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Регулируемая ножка-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("ВНС-901.92.001-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Регулируемая ножка-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("ВНС-901.92.001-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Washer 11371_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-            //    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+            //    swDoc.Extension.SelectByID2("15-000-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            //    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
             //}
-            //catch (Exception){}
 
             #endregion
-            
+
+            #region Рама монтажная
+
+            //if (Path.GetFileNameWithoutExtension(панельНижняя).Remove(5).Contains("31"))
+            //{
+            //    swDoc.Extension.SelectByID2("10-3-980-700-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+            //    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+            //}
+
+            #endregion
+
+            #region Ножки опорные
+
+            if (Path.GetFileNameWithoutExtension(панельНижняя).Remove(5).Contains("32"))
+            {
+                try
+                {
+                    swDoc.Extension.SelectByID2("ВНС-901.92.001-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Регулируемая ножка-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("ВНС-901.92.001-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0,0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Регулируемая ножка-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("ВНС-901.92.001-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Регулируемая ножка-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("ВНС-901.92.001-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                }
+                catch (Exception)
+                {
+                    //
+                }
+            }
+
+            #endregion
+
             #region Торцевые панели
 
             if (троцевыеПанели != null)
@@ -1204,8 +1314,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-13@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                 if (!string.IsNullOrEmpty(троцевыеПанели[0]))
                 {
-                    swAsm.ReplaceComponents(троцевыеПанели[0], "", false, true);
-                    try { CloseSldAsm(троцевыеПанели[0]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(троцевыеПанели[0], "", false, true);
+                        CloseSldAsm(троцевыеПанели[0]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
 
@@ -1218,8 +1331,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 if (!string.IsNullOrEmpty(троцевыеПанели[1]))
                 {
-                    swAsm.ReplaceComponents(троцевыеПанели[1], "", false, true);
-                    try { CloseSldAsm(троцевыеПанели[1]); }
+                    try
+                    {
+                        swAsm.ReplaceComponents(троцевыеПанели[1], "", false, true);
+                        CloseSldAsm(троцевыеПанели[1]);
+                    }
                     catch (Exception e) { MessageBox.Show(e.Message); }
                 }
 

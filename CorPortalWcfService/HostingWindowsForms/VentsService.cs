@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using ConecctorOneC;
 using HostingWindowsForms.Authorization;
@@ -70,7 +71,12 @@ namespace HostingWindowsForms
 
             #endregion
 
-            public IEnumerable<string> GetConfiguration(string filePath)
+        public IList<Epdm.BomCells> Bom(string filePath, string config)
+        {
+            return null; // throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> GetConfiguration(string filePath)
             {
                 var epdmClass = new Epdm();
 
@@ -87,14 +93,15 @@ namespace HostingWindowsForms
                 return searchList;
             }
 
-            public IList<Epdm.BomCells> Bom(string filePath, string config)
+            public IList<Epdm.BomCells> Bom(string filePath, string config, bool asBuild)
             {
                 var bomClass = new Epdm
                 {
                     BomId = BomId,
                     AssemblyPath = filePath,
                 };
-                return bomClass.BomList(filePath, config);
+                Exception exception;
+                return bomClass.BomList(filePath, config, asBuild, out exception);
             }
             
             public string GetLink(string fileName)

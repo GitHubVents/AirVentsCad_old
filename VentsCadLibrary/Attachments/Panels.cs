@@ -7,7 +7,6 @@ using SolidWorks.Interop.swconst;
 
 namespace VentsCadLibrary
 {
-
     public partial class VentsCad
     {
 
@@ -261,7 +260,7 @@ namespace VentsCadLibrary
 
             var newPanel50Name = newModNumber + "-" + width + "-" + height + "-" + modelType;
 
-            LoggerInfo("Построение панели - " + newPanel50Name, "", "Panels50BuildStr");
+            Логгер.Информация("Построение панели - " + newPanel50Name, null, "", "Panels50BuildStr");
 
             var sourceFolder = LocalPath(VaultName);
             var destinationFolder = LocalPath(DestVaultName);
@@ -392,7 +391,7 @@ namespace VentsCadLibrary
 
                 var newName =
                     $"{modelName}-01-{width}-{height}-50-{materialP1[3]}{(materialP1[3] == "AZ" ? "" : materialP1[1])}";
-                
+
 
                 var newPartPath = $@"{destinationFolder}{DestinationFolder}\{newName}.SLDPRT";
 
@@ -456,7 +455,7 @@ namespace VentsCadLibrary
 
                 newName =
                     $"{modelnewname}-02-{width}-{height}-50-{materialP2[3]}{(materialP2[3] == "AZ" ? "" : materialP2[1])}";
-                
+
                 newPartPath = $@"{destinationFolder}{modelPath}\{newName}.SLDPRT";
                 if (File.Exists(newPartPath))
                 {
@@ -852,5 +851,4 @@ namespace VentsCadLibrary
         #endregion
 
     }
-
 }

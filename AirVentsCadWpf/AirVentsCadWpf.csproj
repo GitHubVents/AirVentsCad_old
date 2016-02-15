@@ -28,8 +28,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>84</ApplicationRevision>
-    <ApplicationVersion>2.0.3.%2a</ApplicationVersion>
+    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationVersion>2.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -79,7 +79,8 @@
     <Reference Include="BomPartList">
       <HintPath>..\..\BomPartList\BomPartList\bin\Debug\BomPartList.dll</HintPath>
     </Reference>
-    <Reference Include="ExportPartData">
+    <Reference Include="ExportPartData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\ExportPartData\ExportPartData\bin\Debug\ExportPartData.dll</HintPath>
     </Reference>
     <Reference Include="MakeDxfUpdatePartData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -155,7 +156,6 @@
     <Compile Include="AdminkaWindows\SettingsW.xaml.cs">
       <DependentUpon>SettingsW.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AirVentsClasses\EpdmSearch.cs" />
     <Compile Include="AirVentsClasses\PartProperty.cs" />
     <Compile Include="AirVentsClasses\SQLBaseData2.cs" />
     <Compile Include="AirVentsClasses\GenerateUnitNames.cs" />
@@ -165,11 +165,11 @@
     <Compile Include="AirVentsClasses\UnitsBuilding\FramelessBlock.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\FrameLessPanel.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\GenerateUnit50.cs" />
+    <Compile Include="DataControls\01-MonoBlock50.xaml.cs">
+      <DependentUpon>01-MonoBlock50.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataControls\AirVentsUnits50Uc.xaml.cs">
       <DependentUpon>AirVentsUnits50Uc.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DataControls\Specification\01-MonoBlock50.xaml.cs">
-      <DependentUpon>01-MonoBlock50.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataControls\Bom.xaml.cs">
       <DependentUpon>Bom.xaml</DependentUpon>
@@ -256,13 +256,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DataControls\01-MonoBlock50.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DataControls\AirVentsUnits50Uc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DataControls\Specification\01-MonoBlock50.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="DataControls\Bom.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -447,13 +447,6 @@
     <Resource Include="AHU Selection\topmenu_icon1.png" />
     <Resource Include="AHU Selection\topmenu_icon2.png" />
     <Resource Include="AHU Selection\topmenu_icon3.png" />
-    <Content Include="NLog.config">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

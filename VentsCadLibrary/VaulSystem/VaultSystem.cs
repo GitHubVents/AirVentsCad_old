@@ -74,6 +74,11 @@ namespace VentsCadLibrary
             SwEpdm.GetLastVersionOfFile(path, vaultName);
         }
 
+        public static void GetAsmFilesAsBuild(string path, string vaultName)
+        {
+            SwEpdm.GetAsmFilesAsBuild(path, vaultName);
+        }
+
         /// <summary>
         /// 
         /// </summary>

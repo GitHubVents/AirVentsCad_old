@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows;
-using AirVentsCadWpf.Properties;
+using System.Windows.Forms;
 
-
-namespace AirVentsCadWpf.Логирование
+// ReSharper disable once CheckNamespace
+namespace VentsCadLibrary
 {
     static class Логгер
-   {
-       #region Логгер
+    {
+        #region Логгер
 
         public static void Отладка(string logText, string код, string функция, string className)
         {
@@ -71,7 +70,7 @@ namespace AirVentsCadWpf.Логирование
 
             static void WriteToBase(string описание, string тип, string код, string модуль, string функция)
             {
-                using (var con = new SqlConnection(Settings.Default.ConnectionToSQL))
+                using (var con = new SqlConnection(VentsCad.ConnectionToSql))
                 {
                     try
                     {
@@ -93,7 +92,6 @@ namespace AirVentsCadWpf.Логирование
                         }
                         sqlParameter.AddWithValue("@ErrorTime", DateTime.Now);
                         sqlParameter.AddWithValue("@ErrorState", тип);
-
                         if (string.IsNullOrEmpty(код))
                         {
                             sqlParameter.AddWithValue("@ErrorFunction", DBNull.Value);
@@ -117,6 +115,5 @@ namespace AirVentsCadWpf.Логирование
         }
 
         #endregion
-   }
-
+    }
 }

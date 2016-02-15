@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.Properties;
 using VentsMaterials;
@@ -163,11 +162,7 @@ namespace AirVentsCadWpf.DataControls
                     pictureName = "10-4-800-1000-03.PNG";
                     break;
             }
-            var mapLoader = new BitmapImage();
-            mapLoader.BeginInit();
-            mapLoader.UriSource = new Uri(picturePath + pictureName, UriKind.RelativeOrAbsolute);
-            mapLoader.EndInit();
-            if (PictureMf != null) PictureMf.Source = mapLoader;
+            App.ElementVisibility.SetImage(picturePath + pictureName, PictureMf);
         }
 
         void MaterialMontageFrame_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

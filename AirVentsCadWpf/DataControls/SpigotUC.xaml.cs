@@ -23,9 +23,11 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
+                VentsCadLibrary.VentsCad.ConnectionToSql = Settings.Default.ConnectionToSQL;
+
                 var vcad = new VentsCadLibrary.VentsCad
                 {
-                    ConnectionToSql = Settings.Default.ConnectionToSQL,
+                    //ConnectionToSql = Settings.Default.ConnectionToSQL,
                     DestVaultName = Settings.Default.TestPdmBaseName,
                     VaultName = Settings.Default.PdmBaseName
                 };

@@ -37,7 +37,8 @@
                  Background="{x:Null}" LayoutUpdated="VaultsComboBox_LayoutUpdated"/>
                 <Label Grid.Column="0" Content="Рабочее хранилище" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top"/>
             </Grid>
-            <Button x:Name="ФайлЛоггера" Content="Лог файл" HorizontalAlignment="Left" Height="24" Margin="3" VerticalAlignment="Center" Width="75" Grid.Row="7" Background="{x:Null}" Click="ФайлЛоггера_Click"/>
+            <Button x:Name="ФайлЛоггера" Content="Лог файл" HorizontalAlignment="Left" Height="24" Margin="3" VerticalAlignment="Center"
+                    Width="75" Grid.Row="7" Background="{x:Null}" Click="ФайлЛоггера_Click"/>
         </Grid>
 
     </Grid>

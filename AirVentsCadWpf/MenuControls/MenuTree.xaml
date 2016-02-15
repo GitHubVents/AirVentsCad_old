@@ -5,9 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="205">
-    <Grid HorizontalAlignment="Left" Width="205" VerticalAlignment="Top">
 
-        <TreeView x:Name="MenuTree1" HorizontalAlignment="Right" Width="205" Margin="0,10,0,-202" Background="{x:Null}" SelectedItemChanged="MenuTree1_SelectedItemChanged" Loaded="MenuTree1_Loaded" BorderBrush="{x:Null}"  >
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="DarkGray"></Setter>
+                    <!--<Setter Property="BorderBrush" Value="Firebrick"></Setter>-->
+                    <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                    <Setter Property="FontSize" Value="13"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Left" Width="205" VerticalAlignment="Top">
+        <TreeView x:Name="MenuTree1" HorizontalAlignment="Right" Width="205" Margin="0,10,0,-202" Background="{x:Null}"
+                  SelectedItemChanged="MenuTree1_SelectedItemChanged" Loaded="MenuTree1_Loaded" BorderBrush="{x:Null}"  >
             <TreeView.Resources>
                 <SolidColorBrush
         x:Key="{x:Static SystemColors.ControlBrushKey}" 
@@ -59,7 +73,6 @@
                 <!--     <TreeViewItem Header="Перечень деталей"/> 
                 <TreeViewItem Header="Заказы"/> -->
             </TreeViewItem>
-            
             <TreeViewItem >
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="0"  HorizontalAlignment="Left" ScrollViewer.CanContentScroll="True" >
@@ -67,22 +80,8 @@
                     </StackPanel>
                 </TreeViewItem.Header>
                 <TreeViewItem Header="Конструкторам"/>
-                <!--     <TreeViewItem Header="Перечень деталей"/> 
-                <TreeViewItem Header="Заказы"/> Background="#FFC1C1C1" Height="24"  -->
             </TreeViewItem>
-            
-            <!--
-            <TreeViewItem >
-                <TreeViewItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0" Background="#FFC1C1C1" Height="24" HorizontalAlignment="Left" ScrollViewer.CanContentScroll="True" >
-                        <Label Content="Сервисы"  Foreground="White" Width="154" Padding="0" RenderTransformOrigin="1,0" />
-                    </StackPanel>
-                </TreeViewItem.Header>
-                <TreeViewItem Header="Работа с деталями"/>
-            </TreeViewItem> -->
-
         </TreeView>
-
     </Grid>
 </UserControl>
 

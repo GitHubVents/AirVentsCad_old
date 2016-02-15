@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("nlog.config")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("libraries/ventspdm-dll.dll")]
 
 

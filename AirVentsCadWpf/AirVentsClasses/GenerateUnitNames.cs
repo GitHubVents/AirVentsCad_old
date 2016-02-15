@@ -38,8 +38,7 @@ namespace AirVentsCadWpf.AirVentsClasses
         {
             
             var con = new SqlConnection(Connect);
-            var cmd = new SqlCommand();
-            cmd.Connection = con;
+            var cmd = new SqlCommand {Connection = con};
 
             con.Open();
 

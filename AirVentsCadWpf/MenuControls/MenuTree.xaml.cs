@@ -137,7 +137,6 @@ namespace AirVentsCadWpf.MenuControls
                     }
                 }
             }
-
         }
 
         private void MenuTree1_Loaded(object sender, RoutedEventArgs e)

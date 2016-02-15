@@ -56,18 +56,18 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                         BomDataList.Add(new BomData
                         {
-                            Config = config == null ? "" : config.Value,
-                            PathNameComponent = pathNameComponent == null ? "" : pathNameComponent.Value,
-                            Row = row == null ? "" : row.Value,
-                            ItemNum = itemNum == null ? "" : itemNum.Value,
-                            Раздел = раздел == null ? "part" : раздел.Value,
-                            Обозначение = обозначение == null ? "" : обозначение.Value,
-                            Наименование = наименование == null ? "" : наименование.Value,
-                            Формат = формат == null ? "" : формат.Value,
-                            ErpCode = erpCode == null ? "" : erpCode.Value,
-                            КодМатериала = кодМатериала == null ? "" : кодМатериала.Value,
-                            Примечание = примечание == null ? "SK" : примечание.Value,
-                            Количество = количество == null ? "" : количество.Value
+                            Config = config?.Value ?? "",
+                            PathNameComponent = pathNameComponent?.Value ?? "",
+                            Row = row?.Value ?? "",
+                            ItemNum = itemNum?.Value ?? "",
+                            Раздел = раздел?.Value ?? "part",
+                            Обозначение = обозначение?.Value ?? "",
+                            Наименование = наименование?.Value ?? "",
+                            Формат = формат?.Value ?? "",
+                            ErpCode = erpCode?.Value ?? "",
+                            КодМатериала = кодМатериала?.Value ?? "",
+                            Примечание = примечание?.Value ?? "SK",
+                            Количество = количество?.Value ?? ""
                         });
                     }
                 }
@@ -95,18 +95,18 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                     BomDataList.Add(new BomData
                     {
-                        Config = config == null ? "" : config.Value,
-                        PathNameComponent = pathNameComponent == null ? "" : pathNameComponent.Value,
-                        Row = row == null ? "" : row.Value,
-                        ItemNum = itemNum == null ? "" : itemNum.Value,
-                        Раздел = раздел == null ? "" : раздел.Value,
-                        Обозначение = обозначение == null ? "" : обозначение.Value,
-                        Наименование = наименование == null ? "" : наименование.Value,
-                        Формат = формат == null ? "" : формат.Value,
-                        ErpCode = erpCode == null ? "" : erpCode.Value,
-                        КодМатериала = кодМатериала == null ? "" : кодМатериала.Value,
-                        Примечание = примечание == null ? "" : примечание.Value,
-                        Количество = количество == null ? "" : количество.Value
+                        Config = config?.Value ?? "",
+                        PathNameComponent = pathNameComponent?.Value ?? "",
+                        Row = row?.Value ?? "",
+                        ItemNum = itemNum?.Value ?? "",
+                        Раздел = раздел?.Value ?? "",
+                        Обозначение = обозначение?.Value ?? "",
+                        Наименование = наименование?.Value ?? "",
+                        Формат = формат?.Value ?? "",
+                        ErpCode = erpCode?.Value ?? "",
+                        КодМатериала = кодМатериала?.Value ?? "",
+                        Примечание = примечание?.Value ?? "",
+                        Количество = количество?.Value ?? ""
                     });
                 }
 
@@ -116,21 +116,16 @@ namespace AirVentsCadWpf.DataControls.Specification
         public void InsertBomTable()
         {
             var swApp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
-            if (swApp == null) return;
-            if (swApp.IActiveDoc != null) AddSpecification1((IModelDoc2)swApp.IActiveDoc, BomListFormatted);
+            if (swApp?.IActiveDoc != null) AddSpecification1((IModelDoc2)swApp.IActiveDoc, BomListFormatted);
         }
 
         public static class BomSettings
          {
-            public static int КоличествоСтрокНаПервомЛистеА4 { get { return _количествоСтрокНаПервомЛистеА4; } set { _количествоСтрокНаПервомЛистеА4 = value; } }
-            public static int КоличествоСтрокНаВторомЛистеА4 { get { return _количествоСтрокНаВторомЛистеА4; } set { _количествоСтрокНаВторомЛистеА4 = value; } }
-            static int _количествоСтрокНаПервомЛистеА4 = 26;
-            static int _количествоСтрокНаВторомЛистеА4 = 30;
+            public static int КоличествоСтрокНаПервомЛистеА4 { get; set; } = 26;
+            public static int КоличествоСтрокНаВторомЛистеА4 { get; set; } = 30;
 
-            public static string Sp1 { get { return _sp1; } set { _sp1 = value; } }
-            private static string _sp1 = "SP-1.slddrt";
-            public static string Sp2 { get { return _sp2; } set { _sp2 = value; } }
-            private static string _sp2 = "SP-2.slddrt";
+            public static string Sp1 { get; set; } = "SP-1.slddrt";
+            public static string Sp2 { get; set; } = "SP-2.slddrt";
          }
 
         public static List<List<BomData>> BomDataLists(IList<BomData> bomDataList)
@@ -340,7 +335,6 @@ namespace AirVentsCadWpf.DataControls.Specification
             public string КодМатериала { get; set; }
             public string Примечание { get; set; }
             public string Количество { get; set; }
-
             public bool Заголовок { get; set; }
             public bool ЗанимаетСтрок { get; set; }
         }

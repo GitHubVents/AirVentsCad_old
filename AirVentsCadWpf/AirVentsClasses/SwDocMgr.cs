@@ -6,7 +6,6 @@ using SolidWorks.Interop.swdocumentmgr;
 
 namespace AirVentsCadWpf.AirVentsClasses
 {
-
     class SwDocMgr
     {
         private const string SLicenseKey = "82EC0E04A67C7A48A3AB757A947C507A8210C1E87738B58E";
@@ -207,8 +206,8 @@ namespace AirVentsCadWpf.AirVentsClasses
         public class PartProperties
         {
             public string PropName { get; set; }
-            public string NType;
-            public string LinkedTo;
+            private string _nType;
+            private string _linkedTo;
         }
 
         private SwDmDocumentType SwDocMgrDocType()

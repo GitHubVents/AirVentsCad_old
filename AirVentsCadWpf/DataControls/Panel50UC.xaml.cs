@@ -31,6 +31,10 @@ namespace AirVentsCadWpf.DataControls
         {
             InitializeComponent();
 
+            _backgroundWorker.DoWork += BackgroundWorkerOnDoWork ;
+           // _backgroundWorker += _backgroundWorker.ReportProgress(100);
+           // _backgroundWorker += _backgroundWorker.RunWorkerCompleted;
+
             ToSQL.Conn = Settings.Default.ConnectionToSQL;
 
             ТолщинаВнешней.ItemsSource = new List<ComboBoxItem>
@@ -95,25 +99,36 @@ namespace AirVentsCadWpf.DataControls
             CoatingClass2.ItemsSource = _setMaterials.CoatingListClass();
         }
 
+        private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            BuildPanel();
+        }
+
         void BUILDING_Click(object sender, RoutedEventArgs e)
         {
-            
+            BackgroundWorkerOnDoWork(sender, null);
+            //BuildPanel();
+        }
+
+        readonly BackgroundWorker _backgroundWorker = new BackgroundWorker();
+        private void BuildPanel()
+        {
             var mat1Code = "";
             var mat2Code = "";
 
-            var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
+            var viewRowMat1 = (DataRowView) MaterialP1.SelectedItem;
             var row1 = viewRowMat1.Row;
             if (row1 != null)
                 mat1Code = row1.Field<string>("CodeMaterial");
-            var viewRowMat2 = (DataRowView)MaterialP2.SelectedItem;
+            var viewRowMat2 = (DataRowView) MaterialP2.SelectedItem;
             var row2 = viewRowMat2.Row;
             if (row2 != null)
                 mat2Code = row2.Field<string>("CodeMaterial");
-            
-            var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
-            var materialP2 = new[] { MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code };
 
-            var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
+            var materialP1 = new[] {MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code};
+            var materialP2 = new[] {MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code};
+
+            var thicknessOfPanel = ((ComboBoxItem) TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
 
             //MessageBox.Show(thicknessOfPanel);
 
@@ -151,7 +166,7 @@ namespace AirVentsCadWpf.DataControls
             //    onlyPath: false);
 
             #endregion
-            
+
             var sw = new ModelSw();
 
             switch (thicknessOfPanel)
@@ -177,18 +192,18 @@ namespace AirVentsCadWpf.DataControls
                 case "50":
                 case "70":
                     sw.Panels50Build(
-               typeOfPanel: new[] { TypeOfPanel50.SelectedValue.ToString(), TypeOfPanel50.Text, thicknessOfPanel },
-               width: WidthPanel.Text,
-               height: HeightPanel.Text,
-               materialP1: materialP1,
-               meterialP2: materialP2,
-               покрытие: new[]
-               {
-                    Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                    Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                    Ral1.SelectedValue?.ToString() ?? "",
-                    Ral2.SelectedValue?.ToString() ?? ""
-               });
+                        typeOfPanel: new[] {TypeOfPanel50.SelectedValue.ToString(), TypeOfPanel50.Text, thicknessOfPanel},
+                        width: WidthPanel.Text,
+                        height: HeightPanel.Text,
+                        materialP1: materialP1,
+                        meterialP2: materialP2,
+                        покрытие: new[]
+                        {
+                            Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                            Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                            Ral1.SelectedValue?.ToString() ?? "",
+                            Ral2.SelectedValue?.ToString() ?? ""
+                        });
                     break;
             }
         }
@@ -237,11 +252,7 @@ namespace AirVentsCadWpf.DataControls
                     pictureName = "02-01-1000-750-50-Az-Az-MW.JPG";
                     break;
             }
-            var mapLoader = new BitmapImage();
-            mapLoader.BeginInit();
-            mapLoader.UriSource = new Uri(picturePath + pictureName, UriKind.RelativeOrAbsolute);
-            mapLoader.EndInit();
-            if (PicturePanel != null) PicturePanel.Source = mapLoader;
+            App.ElementVisibility.SetImage(picturePath + pictureName, PicturePanel);
         }
        
 
