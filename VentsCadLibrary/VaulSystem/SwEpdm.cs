@@ -219,13 +219,15 @@ namespace VentsCadLibrary
                     vaultSource.LoginAuto(vaultName, 0);
                 }
                 var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
-               // MessageBox.Show(path, vaultName);
-                edmFile5.GetFileCopy(1, 0, oFolder.ID, (int) EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing);
-                //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
+                MessageBox.Show(path, vaultName);
+                edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing + (int)EdmGetFlag.EdmGet_RefsOverwriteLocked);
+                MessageBox.Show("Get");
+                //(int)EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing);
+
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //
+                MessageBox.Show(exception.Message, "Не удалось получить последнюю версию файлов из хранилища");
             }
         }
 

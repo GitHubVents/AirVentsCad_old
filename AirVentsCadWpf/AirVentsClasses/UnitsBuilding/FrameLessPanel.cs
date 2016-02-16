@@ -444,7 +444,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (типДвойной == "00")
             {
-                partIds.Add(new KeyValuePair<int, int>(1, id));
+              //  partIds.Add(new KeyValuePair<int, int>(1, id));
             }
 
             панельВнешняя.NewName = "02-" + typeOfPanel[0] + "-1-" + id;
@@ -472,7 +472,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (типДвойной == "00")
             {
-                partIds.Add(new KeyValuePair<int, int>(2, id));
+             //   partIds.Add(new KeyValuePair<int, int>(2, id));
             }
 
             панельВнутренняя.NewName = "02-" + pType + "-2-" + id;
@@ -518,6 +518,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 панельВнешняяДвойная1.NewName = "02-" + pType + "-1-" + id;
                 имяДвойнойВерхней1 = панельВнешняяДвойная1.NewName;
 
+                панельВнешняяДвойная1.PartQuery =
+                $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "1")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {config.Contains("01")}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+
                 панельВнешняяДвойная2 =
                     new AddingPanel
                     {
@@ -541,6 +544,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 partIds.Add(new KeyValuePair<int, int>(Convert.ToInt32(типДвойной.Remove(1, 1) + "2"), id));
                 панельВнешняяДвойная2.NewName = "02-" + pType + "-1-" + id;
                 имяДвойнойВерхней2 = панельВнешняяДвойная2.NewName;
+                панельВнешняяДвойная2.PartQuery =
+                    $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "2")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {config.Contains("01")}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+
 
                 if (типДвойной.Remove(0, 1) != "0")
                 {
@@ -863,296 +869,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 idAsm =  сборка.Add();
             }
-
-            #endregion
-
-            #region Панель внешняя
-
-            //var панельВнешняя =
-            //   new AddingPanel
-            //   {
-            //       PanelTypeName = typeOfPanel[1],
-            //       ElementType = 1,
-            //       Width = Convert.ToInt32(width),
-            //       Height = Convert.ToInt32(lenght),
-
-            //       PartMat = Convert.ToInt32(materialP1[0]),
-            //       PartThick = 40,
-            //       PartMatThick = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //       Ral = покрытие[0],
-            //       CoatingType = покрытие[1],
-            //       CoatingClass = Convert.ToInt32(покрытие[2]),
-
-            //       PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //       PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //       PanelThick = 40,
-            //       PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //       PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //       RalOut = покрытие[0],
-            //       RalIn = покрытие[0],
-            //       CoatingTypeOut = покрытие[1],
-            //       CoatingTypeIn = покрытие[1],
-            //       CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //       CoatingClassIn = Convert.ToInt32(покрытие[2]),
-
-            //       Mirror = Config.Contains("01"),
-            //       Step = расположениеПанелей,
-            //       StepInsertion = расположениеВставок,
-            //       Reinforcing = усиление,
-
-            //       PanelNumber = newId
-            //   };
-            //панельВнешняя.Add();
-
-
-
-            //var панельВнутренняя =
-            //   new AddingPanel
-            //   {
-            //       PanelTypeName = typeOfPanel[1],
-            //       ElementType = 2,
-            //       Width = Convert.ToInt32(width),
-            //       Height = Convert.ToInt32(lenght),
-
-            //       PartMat = Convert.ToInt32(materialP2[0]),
-            //       PartThick = 40,
-            //       PartMatThick = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //       Ral = покрытие[3],
-            //       CoatingType = покрытие[4],
-            //       CoatingClass = Convert.ToInt32(покрытие[5]),
-
-            //       PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //       PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //       PanelThick = 40,
-            //       PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //       PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //       RalOut = покрытие[0],
-            //       RalIn = покрытие[3],
-            //       CoatingTypeOut = покрытие[1],
-            //       CoatingTypeIn = покрытие[4],
-            //       CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //       CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //       Mirror = Config.Contains("01"),
-            //       Step = расположениеПанелей,
-            //       StepInsertion = расположениеВставок,
-            //       Reinforcing = усиление,
-
-
-            //       PanelNumber = newId
-            //   };
-            //панельВнутренняя.Add();
-
-            //var теплоизоляция =
-            //  new AddingPanel
-            //  {
-            //      PanelTypeName = typeOfPanel[1],
-            //      ElementType = 3,
-            //      Width = Convert.ToInt32(width),
-            //      Height = Convert.ToInt32(lenght),
-
-            //      PartMat = 4900,
-            //      PartThick = 40,
-            //      PartMatThick = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      Ral = null,
-            //      CoatingType = null,
-            //      CoatingClass = null,
-
-            //      PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //      PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //      PanelThick = 40,
-            //      PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //      PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      RalOut = покрытие[0],
-            //      RalIn = покрытие[3],
-            //      CoatingTypeOut = покрытие[1],
-            //      CoatingTypeIn = покрытие[4],
-            //      CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //      CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //      Mirror = Config.Contains("01"),
-            //      Step = расположениеПанелей,
-            //      StepInsertion = расположениеВставок,
-            //      Reinforcing = усиление,
-
-            //      PanelNumber = newId
-            //  };
-            //теплоизоляция.Add();
-
-            //var котч =
-            //  new AddingPanel
-            //  {
-            //      PanelTypeName = typeOfPanel[1],
-            //      ElementType = 4,
-            //      Width = Convert.ToInt32(width),
-            //      Height = Convert.ToInt32(lenght),
-
-            //      PartMat = 14800,
-            //      PartThick = 40,
-            //      PartMatThick = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      Ral = null,
-            //      CoatingType = null,
-            //      CoatingClass = null,
-
-            //      PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //      PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //      PanelThick = 40,
-            //      PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //      PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      RalOut = покрытие[0],
-            //      RalIn = покрытие[3],
-            //      CoatingTypeOut = покрытие[1],
-            //      CoatingTypeIn = покрытие[4],
-            //      CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //      CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //      Mirror = Config.Contains("01"),
-            //      Step = расположениеПанелей,
-            //      StepInsertion = расположениеВставок,
-            //      Reinforcing = усиление,
-
-            //      PanelNumber = newId
-            //  };
-            //котч.Add();
-
-            //var pes =
-            //  new AddingPanel
-            //  {
-            //      PanelTypeName = typeOfPanel[1],
-            //      ElementType = 5,
-            //      Width = Convert.ToInt32(width),
-            //      Height = Convert.ToInt32(lenght),
-
-            //      PartMat = 6700,
-            //      PartThick = 40,
-            //      PartMatThick = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      Ral = null,
-            //      CoatingType = null,
-            //      CoatingClass = null,
-
-            //      PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //      PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //      PanelThick = 40,
-            //      PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //      PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      RalOut = покрытие[0],
-            //      RalIn = покрытие[3],
-            //      CoatingTypeOut = покрытие[1],
-            //      CoatingTypeIn = покрытие[4],
-            //      CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //      CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //      Mirror = Config.Contains("01"),
-            //      Step = расположениеПанелей,
-            //      StepInsertion = расположениеВставок,
-            //      Reinforcing = усиление,
-
-            //      PanelNumber = newId
-            //  };
-            //pes.Add();
-
-            //var усиливающаяРамкаПоШирине =
-            //  new AddingPanel
-            //  {
-            //      PanelTypeName = typeOfPanel[1],
-            //      ElementType = 6,
-            //      Width = Convert.ToInt32(width),
-            //      Height = Convert.ToInt32(lenght),
-
-            //      PartMat = 1800,
-            //      PartThick = 40,
-            //      PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-            //      Ral = null,
-            //      CoatingType = null,
-            //      CoatingClass = null,
-
-            //      PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //      PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //      PanelThick = 40,
-            //      PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //      PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //      RalOut = покрытие[0],
-            //      RalIn = покрытие[3],
-            //      CoatingTypeOut = покрытие[1],
-            //      CoatingTypeIn = покрытие[4],
-            //      CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //      CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //      Mirror = Config.Contains("01"),
-            //      Step = расположениеПанелей,
-            //      StepInsertion = расположениеВставок,
-            //      Reinforcing = усиление,
-
-            //      PanelNumber = newId
-            //  };
-            //усиливающаяРамкаПоШирине.Add();
-
-            //var усиливающаяРамкаПоВысоте =
-            //   new AddingPanel
-            //   {
-            //       PanelTypeName = typeOfPanel[1],
-            //       ElementType = 7,
-            //       Width = Convert.ToInt32(width),
-            //       Height = Convert.ToInt32(lenght),
-
-            //       PartMat = 1800,
-            //       PartThick = 40,
-            //       PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-            //       Ral = null,
-            //       CoatingType = null,
-            //       CoatingClass = null,
-
-            //       PanelMatOut = Convert.ToInt32(materialP1[0]),
-            //       PanelMatIn = Convert.ToInt32(materialP2[0]),
-            //       PanelThick = 40,
-            //       PanelMatThickOut = Convert.ToDouble(materialP1[1].Replace('.', ',')),
-            //       PanelMatThickIn = Convert.ToDouble(materialP2[1].Replace('.', ',')),
-            //       RalOut = покрытие[0],
-            //       RalIn = покрытие[3],
-            //       CoatingTypeOut = покрытие[1],
-            //       CoatingTypeIn = покрытие[4],
-            //       CoatingClassOut = Convert.ToInt32(покрытие[2]),
-            //       CoatingClassIn = Convert.ToInt32(покрытие[5]),
-
-
-            //       Mirror = Config.Contains("01"),
-            //       Step = расположениеПанелей,
-            //       StepInsertion = расположениеВставок,
-            //       Reinforcing = усиление,
-
-
-            //       PanelNumber = newId
-            //   };
-            //усиливающаяРамкаПоВысоте.Add();
-
-            //return "";
-
-            ////AddingPanels.Add(панельВнешняя);
-            ////AddingPanels.Add(панельВнутренняя);
-            ////AddingPanels.Add(теплоизоляция);
-            ////AddingPanels.Add(cкотч);
-            ////AddingPanels.Add(усиливающаяРамкаПоШирине);
-            ////AddingPanels.Add(усиливающаяРамкаПоВысоте);
-
-            ////partIdsInAsm.Add(панельВнешняя.PartId);
-            ////partIdsInAsm.Add(панельВнутренняя.PartId);
-            ////partIdsInAsm.Add(теплоизоляция.PartId);
-            ////partIdsInAsm.Add(cкотч.PartId);
-            ////partIdsInAsm.Add(усиливающаяРамкаПоШирине.PartId);
-            ////partIdsInAsm.Add(усиливающаяРамкаПоВысоте.PartId);
-
-            ////var asm = new AddingPanel
-            ////   {
-            ////       PartInAsmIds = partIdsInAsm
-            ////   };
-            //////asm.AddAsm();
-            //////MessageBox.Show(asm.NameById);
-            //////MessageBox.Show(partIdsInAsm.Aggregate("", (current, panel) => current + panel + "\n"));
 
             #endregion
 

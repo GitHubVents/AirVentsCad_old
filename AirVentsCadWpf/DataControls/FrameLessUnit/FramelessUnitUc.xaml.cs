@@ -456,7 +456,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
 
         void BUILDING_Click(object sender, RoutedEventArgs args)
         {
-           // MessageBox.Show(ProfilsConfig());return;
+            //MessageBox.Show(ProfilsConfig());return;
 
             PartsPdmTable.ItemsSource = null;
 
@@ -557,26 +557,24 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 var config = Левая.IsChecked == true ? "01" : "02";
                 var configDown = Левая.IsChecked == true ? "02" : "01";
                 var сторонаОбслуживания = Левая.IsChecked == true ? "левая" : "правая";
-
-                const string noBrush = "Без покрытия";
-
-                //var basedata = new SqlBaseData();
+                
+                
                 var addingConstructParameters = new AddingConstructParameters();
 
                 var typeOfDoubleКриша = (ComboBoxItem) КришаТипСдвоенойПанели.SelectedItem;
                 var typeOfDoubleStrКриша = КришаТипСдвоенойПанели.Visibility == Visibility.Visible
-                    ? typeOfDoubleКриша.Name.Replace("n", "")
-                    : "00";
+                    ? typeOfDoubleКриша.Name.Replace("n", "") : "00";
 
                 var typeOfDoubleОпорнаяЧасть = (ComboBoxItem) ОпорнаяЧастьТипСдвоенойПанели.SelectedItem;
                 var typeOfDoubleStrОпорнаяЧасть = ОпорнаяЧастьТипСдвоенойПанели.Visibility == Visibility.Visible
-                    ? typeOfDoubleОпорнаяЧасть.Name.Replace("n", "")
-                    : "00";
+                    ? typeOfDoubleОпорнаяЧасть.Name.Replace("n", "") : "00";
 
                 var typeOfDoubleНесъемнаяПанель = (ComboBoxItem) НесъемнаяПанельСдвоенойПанели.SelectedItem;
                 var typeOfDoubleStrНесъемнаяПанель = НесъемнаяПанельСдвоенойПанели.Visibility == Visibility.Visible
-                    ? typeOfDoubleНесъемнаяПанель.Name.Replace("n", "")
-                    : "00";
+                    ? typeOfDoubleНесъемнаяПанель.Name.Replace("n", "") : "00";
+
+                MessageBox.Show($"Криша - {typeOfDoubleStrКриша}\nОпорнаяЧасть - {typeOfDoubleStrОпорнаяЧасть}\nНесъемнаяПанель - {typeOfDoubleStrНесъемнаяПанель}");
+
 
                 var ironwares = new ModelSw.Ironwares
                 {
@@ -594,8 +592,8 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
 
                 List<string> partsToDeleteList;
                 var existingAsmsAndParts2 = new List<ModelSw.ExistingAsmsAndParts>();
-                
 
+                const string noBrush = "Без покрытия";
                 var покрытие = new[]
                 {
                     Ral1.Text, Ral1.Text != noBrush ? CoatingType1.Text : "0",
@@ -735,7 +733,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                             {
                                 ByWidth = ironwares.ScrewsByLenght,
                                 ByHeight = ironwares.ScrewsByWidth,
-
                                 ByWidthInner =
                                     typeOfDoubleStrНесъемнаяПанель.Contains("1")
                                         ? ironwares.ScrewsByLenght - 1000 > 2000

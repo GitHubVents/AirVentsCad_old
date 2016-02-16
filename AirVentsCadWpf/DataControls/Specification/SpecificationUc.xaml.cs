@@ -439,17 +439,17 @@ namespace AirVentsCadWpf.DataControls.Specification
                 {
                     MessageBox.Show(ex.StackTrace);
                 }
-              
-                //var exist = false;
-                //try
-                //{
-                //    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int)lastVerOfAsm);
-                //}
-                //catch (Exception e)
-                //{
-                //    MessageBox.Show(e.ToString(), "Try to find if exist XML");
-                //}
-                //if (!exist) return;
+
+                var exist = false;
+                try
+                {
+                    if (lastVerOfAsm != null) exist = ExistLastXml(path[0].FilePath, (int)lastVerOfAsm);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString(), "Try to find if exist XML");
+                }
+                if (!exist) return;
 
                 var myXml = new XmlTextWriter(xmlPath + имяСборки + " Parts.xml", Encoding.UTF8);
 
@@ -703,17 +703,13 @@ namespace AirVentsCadWpf.DataControls.Specification
         {
             if (ПутьКСборке == null) return;
 
-            ModelSw.GetAsBuild(ПутьКСборке, Settings.Default.PdmBaseName);
+              ModelSw.GetLatestVersion(ПутьКСборке, Settings.Default.PdmBaseName);
+            //ModelSw.GetAsBuild(ПутьКСборке, Settings.Default.PdmBaseName);
 
             #region Выгрузка Главной Сборки
 
             try
             {
-                //var parentAsm = SpecBomCells.Where(x => x.Раздел == "" || x.Раздел == "Сборочные единицы").Where(x => x.Уровень == 0)
-                //    .Select(x => x.FilePath + "\\" + x.FileName).Distinct().ToList();
-                //BomData.ItemsSource = SpecBomCells;
-                //MessageBox.Show((parentAsm.Count).ToString(), SpecBomCells.Count().ToString());
-        //        MessageBox.Show(ПутьКСборке);
                 ВыгрузитьСборкуПеречень(ПутьКСборке);
                 ВыгрузитьСборку(ПутьКСборке);
             }
@@ -746,7 +742,6 @@ namespace AirVentsCadWpf.DataControls.Specification
             }
 
             #endregion
-
         }
 
         #endregion
@@ -787,7 +782,6 @@ namespace AirVentsCadWpf.DataControls.Specification
                 FilePath = newNames.ConvertAll(FileName);
             
             AutoCompleteTextBox1.ItemsSource = FilePath;
-           
             AutoCompleteTextBox1.FilterMode = AutoCompleteFilterMode.Contains;
         }
 
@@ -804,22 +798,18 @@ namespace AirVentsCadWpf.DataControls.Specification
             //ПолучитьПереченьДеталей.IsChecked = currentPath;
             //XmlParts1.IsEnabled = currentPath;
             //PartsListXml2sDataGrid.IsEnabled = currentPath;
-
             Найти.IsEnabled = AutoCompleteTextBox1.Text.Length != 0;
         }
         
         class PartsListXml2
         {
             public bool Dxf { get; set; }
-
             public bool Xml { get; set; }
             public int CurrentVersion { get; set; }
             public int? IdPmd { get; set; }
             public string Наименование { get; set; }
             public string Путь { get; set; }
-
             public string НаименованиеБезРасширения { get; set; }
-
             public string PartNumber { get; set; }
             public string Конфигурация { get; set; }
             public string ЗаготовкаШирина { get; set; }
@@ -1134,15 +1124,15 @@ namespace AirVentsCadWpf.DataControls.Specification
         
         void XmlParts1_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
-                ВыгрузкаСборкиВXml();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.StackTrace);
-            }
+            //    ВыгрузкаСборкиВXml();
+            //}
+            //catch (Exception exception)
+            //{
+            //    MessageBox.Show(exception.StackTrace);
+            //}
 
             ListToRun = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
             ExportTask();
@@ -1223,7 +1213,6 @@ namespace AirVentsCadWpf.DataControls.Specification
                     try
                     {
                         Dxf.Save(Path.GetFullPath(newComponent.Путь), checkBox.IsChecked == true ? newComponent.Конфигурация : null);
-                     
                     }
                     catch (Exception)
                     {
