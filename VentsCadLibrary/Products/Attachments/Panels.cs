@@ -26,7 +26,7 @@ namespace VentsCadLibrary
 
         public string Panels50(string[] typeOfPanel, string width, string height, string[] materialP1, string[] materialP2, string[] покрытие, bool onlyPath)
         {
-            if (!IsConvertToInt(new[] { width, height })) return "";
+            if (!ConvertToInt(new[] { width, height })) return "";
 
             //Логгер.Отладка("Начало построения 50-й панели. ", "", "Panels50BuildStr", "Panels50BuildStr");
 

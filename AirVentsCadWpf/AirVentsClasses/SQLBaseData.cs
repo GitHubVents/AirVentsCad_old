@@ -49,6 +49,7 @@ namespace AirVentsCadWpf.AirVentsClasses
         /// </summary>
         /// <param name="panelTypeCode">The panel type code.</param>
         /// <returns></returns>
+        
         public int PanelTypeId(string panelTypeCode)
         {
             var panelTypeId = 1;
@@ -1251,7 +1252,7 @@ namespace AirVentsCadWpf.AirVentsClasses
         /// Panelses the table.
         /// </summary>
         /// <returns></returns>
-        public DataTable PanelsTable()
+        public static DataTable PanelsTable()
         {
             var panelsTable = new DataTable();
             var connectionString = @Properties.Settings.Default.ConnectionToSQL;
@@ -1273,7 +1274,7 @@ Order BY PanelTypeCode";
         /// Materialses the table.
         /// </summary>
         /// <returns></returns>
-        public DataTable MaterialsTable()
+        public static DataTable MaterialsTable()
         {
             var materialsTable = new DataTable();
             try
@@ -1302,7 +1303,7 @@ Order BY PanelTypeCode";
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataTable MaterialsForMontageFrame()
+        public static DataTable MaterialsForMontageFrame()
         {
             var materialsTable = new DataTable();
             var connectionString = @Properties.Settings.Default.ConnectionToSQL;
@@ -1562,7 +1563,6 @@ Order BY PanelTypeCode";
             return dataTable;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -1609,6 +1609,55 @@ Order BY PanelTypeCode";
             }
 
             return new[] { width, height };
+        }
+
+        public class Profils
+        {
+            public int ProfilID { get; set; }
+
+            public string Description { get; set; }
+
+            public static IList<Profils> GetList()
+            {                
+                var list = new List<Profils>();
+                using (var con = new SqlConnection(Properties.Settings.Default.ConnectionToSQL))
+                {
+                    try
+                    {
+                        con.Open();
+                        var sqlCommand =
+                            new SqlCommand(@"SELECT AirVents.Profil.ProfilID, AirVents.Profil.Description FROM AirVents.Profil", con);
+                        var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                        var dataTable = new DataTable("StandartSize");
+                        sqlDataAdapter.Fill(dataTable);
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            try
+                            {                              
+                                list.Add(new Profils
+                                {
+                                    ProfilID = Convert.ToInt32(dataTable.Rows[i]["ProfilID"]),
+                                    Description = dataTable.Rows[i]["Description"].ToString()
+                                });
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.StackTrace);
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        con.Close();
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                    return list;
+                }
+            }
+
         }
 
         /// <summary>
@@ -1917,7 +1966,6 @@ Order BY PanelTypeCode";
         }
 
         #endregion
-
 
         #region TOSql
 

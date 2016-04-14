@@ -37,7 +37,7 @@ namespace VentsCadLibrary
         public void DumperS(string typeOfFlange, string width, string height, bool isOutDoor, string[] material, out string newFile, bool unloadXml)
         {
             newFile = null;
-            if (!IsConvertToInt(new[] { width, height })) return;
+            if (!ConvertToInt(new[] { width, height })) return;
 
             var sourceFolder = LocalPath(VaultName);
             var destinationFolder = LocalPath(DestVaultName);
@@ -73,6 +73,9 @@ namespace VentsCadLibrary
             var newDamperName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O" : "");
             var newDamperPath = $@"{destinationFolder}\{DamperDestinationFolder}\{newDamperName}.SLDDRW";
 
+            //if (OpenIfExist(newDamperPath)) return;
+
+            // TODO Where to MOVE
             string path; int fileId; int projectId;
             if (GetExistingFile(Path.GetFileNameWithoutExtension(newDamperPath), out path, out fileId, out projectId))
             {
@@ -1074,7 +1077,7 @@ namespace VentsCadLibrary
         public void DumperS(string typeOfFlange, string width, string height, bool isOutDoor, out string newFile, bool unloadXml)
         {
             newFile = null;
-            if (IsConvertToInt(new[] { width, height }) == false) { return; }
+            if (ConvertToInt(new[] { width, height }) == false) { return; }
 
             string modelName;
             string modelDamperPath;

@@ -1083,7 +1083,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             try
             {
-                var profilName = profilOfCascet == "150" ? "01-P150-45-" : "01-P170-45-";
+                var profilName = profilOfCascet == "150" ? "01-P150-45-" : "01-P170-50-";
                 var deltaForProfil = profilOfCascet == "150" ? 140 : 180;
 
                 //Lenght
@@ -4139,12 +4139,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.StackTrace, e.Message);
+                    MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll");
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.StackTrace);
+                MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll 2");
             }
 
             GabaritsForPaintingCamera(_swApp.IActiveDoc2);
@@ -4853,71 +4853,41 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             // Погашение внутренней продольной балки
             if (internalLongitudinalBeam == false)
             {
-                swDocMontageFrame.Extension.SelectByID2("Hex Bolt 7805_gost-5@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Bolt 7805_gost-6@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Bolt 7805_gost-7@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Bolt 7805_gost-8@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-10@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-11@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-12@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-13@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 6402_gost-6@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 6402_gost-7@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 6402_gost-8@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 6402_gost-9@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-17@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-18@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-19@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-20@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-21@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-22@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-23@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
-                swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-24@10-4", "COMPONENT", 0, 0, 0, true, 0, null,
-                    0);
+                foreach (var s in new [] {"5", "6", "7", "8", "13"})
+                {
+                    swDocMontageFrame.Extension.SelectByID2("Hex Bolt 7805_gost-" + s + "@10-4", "COMPONENT", 0, 0, 0, true, 0, null,0);
+                    swDocMontageFrame.EditDelete();
+                }
+                foreach (var s in new[] { "6", "7", "8", "9", "37", "38", "39", "40" })
+                {
+                    swDocMontageFrame.Extension.SelectByID2("Washer 6402_gost-" + s + "@10-4", "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDocMontageFrame.EditDelete();
+                }
+                foreach (var s in new[] { "17", "18", "19", "20", "21", "22", "23", "24", "57", "58", "59", "60" })
+                {
+                    swDocMontageFrame.Extension.SelectByID2("Washer 11371_gost-" + s + "@10-4", "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDocMontageFrame.EditDelete();
+                }
+
                 swDocMontageFrame.Extension.SelectByID2("10-04-4-2@10-4", "COMPONENT", 0, 0, 0, true, 0, null, 0);
                 swDocMontageFrame.EditDelete();
 
-                const int deleteOption =
-                    (int) swDeleteSelectionOptions_e.swDelete_Absorbed +
-                    (int) swDeleteSelectionOptions_e.swDelete_Children;
+               
                 // Удаление ненужных элементов поперечной балки
-                swDocMontageFrame.Extension.SelectByID2("Регулируемая ножка-1@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
+                swDocMontageFrame.Extension.SelectByID2("Регулируемая ножка-10@10-4", "COMPONENT", 0, 0, 0, false, 0,null, 0);
                 swDocMontageFrame.EditDelete();
-                swDocMontageFrame.Extension.SelectByID2("Регулируемая ножка-2@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
+                swDocMontageFrame.Extension.SelectByID2("Регулируемая ножка-11@10-4", "COMPONENT", 0, 0, 0, false, 0,null, 0);
                 swDocMontageFrame.EditDelete();
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-23@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
-                swDocMontageFrame.EditDelete();
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-24@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
-                swDocMontageFrame.EditDelete();
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-25@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
-                swDocMontageFrame.EditDelete();
-                swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-26@10-4", "COMPONENT", 0, 0, 0, false, 0,
-                    null, 0);
-                swDocMontageFrame.EditDelete();
+
+                foreach (var s in new[] { "10", "11", "40", "41", "42", "43"})
+                {
+                    swDocMontageFrame.Extension.SelectByID2("Hex Nut 5915_gost-" + s + "@10-4", "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDocMontageFrame.EditDelete();
+                }
+                
+                const int deleteOption =
+                   (int)swDeleteSelectionOptions_e.swDelete_Absorbed +
+                   (int)swDeleteSelectionOptions_e.swDelete_Children;
                 swDocMontageFrame.Extension.SelectByID2("Вырез-Вытянуть5@10-03-01-4-2@10-4", "BODYFEATURE", 0, 0, 0,
                     false, 0, null, 0);
                 swDocMontageFrame.Extension.DeleteSelection2(deleteOption);
@@ -6082,6 +6052,20 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             new ModelSw().GetFilesAsBuild(path, vaultName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vaultName"></param>
+        /// <param name="list"></param>
+        /// <param name="pdmFilesAfterGet"></param>
+        /// <param name="getList"></param>
+        public static void BatchGet(string vaultName, List<VaultSystem.BatchGetParams> list, out List<VaultSystem.PdmFilesAfterGet> pdmFilesAfterGet)
+        {
+            pdmFilesAfterGet = null;
+            //Логгер.Информация($"Получение последней версии по пути {}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
+            VaultSystem.BatchGet(vaultName, list, out pdmFilesAfterGet);           
+        }
+
         internal void GetFilesAsBuild(string path, string vaultName)
         {
             try
@@ -6097,7 +6081,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     e.StackTrace, "GetLastVersionPdm");
             }
         }
-
 
         internal void GetLatestVersionAsmPdm(string path, string vaultName)
         {
@@ -6820,9 +6803,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //
+              //  MessageBox.Show($"{swmodel.GetTitle()}\n{ex.Message}\n{ex.StackTrace}", "GabaritsForPaintingCamera");
             }
         }
 
@@ -6860,8 +6843,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     kFactor = 0.367; bendRadius = 1.6; break;
             }
         }
-
-
 
         /// <summary>
         /// 
@@ -6966,23 +6947,22 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
         }
 
-       
-
+        #region DISPOSE CLASS
 
         public ModelSw(IntPtr handle)
         {
             this._handle = handle;
         }
 
-
         private IntPtr _handle;
         // Other managed resource this class uses.
-        private System.ComponentModel.Component component = new System.ComponentModel.Component();
+        private readonly System.ComponentModel.Component _component = new System.ComponentModel.Component();
         // Track whether Dispose has been called.
-        private bool disposed = false;
+        private bool disposed;
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -6994,7 +6974,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             GC.SuppressFinalize(this);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called.
@@ -7004,7 +6987,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (disposing)
             {
                 // Dispose managed resources.
-                component.Dispose();
+                _component.Dispose();
             }
 
             // Call the appropriate methods to clean up
@@ -7020,13 +7003,16 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         // Use interop to call the method necessary
         // to clean up the unmanaged resource.
         [System.Runtime.InteropServices.DllImport("Kernel32")]
-        private extern static Boolean CloseHandle(IntPtr handle);
+        private extern static bool CloseHandle(IntPtr handle);
 
         // Use C# destructor syntax for finalization code.
         // This destructor will run only if the Dispose method
         // does not get called.
         // It gives your base class the opportunity to finalize.
         // Do not provide destructors in types derived from this class.
+        /// <summary>
+        /// 
+        /// </summary>
         public ModelSw()
         {
             // do not re-create dispose clean-up code here.
@@ -7034,6 +7020,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             // readability and maintainability.
             Dispose(false);
         }
+
+        #endregion
+
     }
 
 }

@@ -193,23 +193,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             var path = FramelessBlockStr(size, order, side, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
             
             _swApp.ExitApp();
-            DeleteAllPartsToDelete();
+            DeleteAllPartsToDelete();          
 
-            if (path == "") return;
-            string asmPath;
-            int fileId;
-            int projectId;
-            var asmName = Path.GetFileNameWithoutExtension(path);
-            if (GetExistingFile(asmName, out asmPath, out fileId, out projectId, Settings.Default.PdmBaseName))
-            {
-                if (MessageBox.Show("Установка " + asmName + " уже есть в базе. Открыть?", // + "\n" + asmPath + "\n" + fileId + "\n" + projectId,
-                    "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    System.Diagnostics.Process.Start("conisio://" + Settings.Default.TestPdmBaseName + "/open?projectid=" + projectId +
-                                                     "&documentid=" + fileId + "&objecttype=1");
-                }
-                return;
-            }
+            if (OpenIfExist(path)) return;          
 
             try
             {
@@ -233,9 +219,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     MessageBox.Show(e.Message);
                 }               
             }
-
             FramelessBlockStr(size, order, side, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
-
             Логгер.Информация("Блок згенерирован", "" , "FramelessBlock", "FramelessBlock");
         }
 
@@ -308,7 +292,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #region Метизы
 
-            if ( троцевыеПанели != null)
+            if (троцевыеПанели != null)
             {
 
                 if (string.IsNullOrEmpty(троцевыеПанели[0]))

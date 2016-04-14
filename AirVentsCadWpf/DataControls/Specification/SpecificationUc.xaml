@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" Background="#FFFFFEFE" >
     <UserControl.Resources>
         <Style TargetType="{x:Type DataGridCell}">
@@ -15,8 +16,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-
-    <Grid  >
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="97*"/>
         </Grid.ColumnDefinitions>
@@ -25,17 +25,12 @@
             <RowDefinition Height="15"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="15"/>
-            <RowDefinition Height="65"/>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="67"/>
-            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="15"/>
         </Grid.RowDefinitions>
         <Grid HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Background="#FFF3E7E7" Grid.ColumnSpan="2"/>
 
         <Grid HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Background="#FFF3E7E7" Grid.ColumnSpan="2"/>
-        <Grid HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch" Background="#FFF3E7E7" Grid.ColumnSpan="2"/>
-        <Grid HorizontalAlignment="Stretch" Grid.Row="7" VerticalAlignment="Stretch" Background="#FFF3E7E7" Grid.ColumnSpan="2"/>
         <Grid Grid.Row="0" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -67,7 +62,6 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Button Name="GetList" Content="Получить перечень деталей" Grid.Column="3" Padding="3"
@@ -85,6 +79,14 @@
                                 VerticalAlignment="Center" Click="Button_Click_3" 
                                 Background="{x:Null}" Padding="3" Grid.Column="2" Height="Auto" IsEnabled="False"/>
                     </Grid>
+                    <Grid x:Name="COnf" HorizontalAlignment="Left" Height="Auto" Margin="2" Grid.Row="1" VerticalAlignment="Center" Width="255">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="label" Content="Конфигурация" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="ConfigsCombo" Grid.Column="1" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center" Width="Auto" Background="{x:Null}" SelectedIndex="0"/>
+                    </Grid>
                 </Grid>
             </GroupBox>
         </Grid>
@@ -95,39 +97,42 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <DataGrid x:Name="PartsListXml2sDataGrid" VirtualizingPanel.VirtualizationMode="Recycling" CanUserAddRows="False" MaxWidth="1200"
-        			ItemsSource="{Binding PartsListXml2}" Grid.Column="0" HorizontalAlignment="Left" Margin="2,4,0,0" 
+                <DataGrid x:Name="PartsListXml2sDataGrid" VirtualizingPanel.VirtualizationMode="Recycling" CanUserAddRows="False" MaxWidth="700"
+        			ItemsSource="{Binding PartsListXml2}" Grid.Column="0" HorizontalAlignment="Left" Margin="2" 
         			Grid.Row="0"  SelectionMode="Single" CanUserResizeRows="False" RowDetailsVisibilityMode="Visible" 
-        			AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" MaxHeight="250" Grid.ColumnSpan="2">
-                    <DataGrid.ContextMenu>
+        			AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" MaxHeight="250"  >
+                    <!--<DataGrid.ContextMenu>
                         <ContextMenu >
-                            <!--<MenuItem Header="Путь к файлу" Click="MenuItem_Click"/>
+                            -->
+                    <!--<MenuItem Header="Путь к файлу" Click="MenuItem_Click"/>
                             <MenuItem Header="Открыть" Click="OpenFile"/>-->
+                    <!--
                         </ContextMenu>
-                    </DataGrid.ContextMenu>
-
+                    </DataGrid.ContextMenu>-->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Наименование" IsReadOnly="True" Width="Auto" MinWidth="130" Binding="{Binding Наименование}"/>
-                        <DataGridTextColumn Header="Конфигурация" Width="Auto" MinWidth="50" Binding="{Binding Конфигурация}"/>
+                        <DataGridTextColumn Header="Конфигурация" Width="Auto" IsReadOnly="True" MinWidth="50" Binding="{Binding Конфигурация}"/>
                         <DataGridCheckBoxColumn Header="Xml" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding Xml}"/>
-                        <DataGridCheckBoxColumn Header="DXF" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding Dxf}"/>
+                        <DataGridTextColumn Header="Hash" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding Hash}"/>
+                        <DataGridTemplateColumn Header="DXF" Width="33"  IsReadOnly="True" CanUserSort="True">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Image Source="{Binding Path=ImageSrc}" MouseEnter="Image_MouseEnter" Height="20" MouseLeftButtonUp="DeleteDxf"/>
+                                    <!--<Image Source="C:\Users\kb81.VENTS\Desktop\87897.PNG"/>-->
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--<DataGridTextColumn Header="Ver" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding CurrentVersion}"/>
+                        <DataGridTextColumn Header="IdPmd" IsReadOnly="False" Width="60" MaxWidth="300" Binding="{Binding IdPmd}"/>
+                        <DataGridTextColumn Header="GetPathName" IsReadOnly="False" Width="40" MaxWidth="200" Binding="{Binding GetPathName}"/>-->
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button x:Name="XmlParts1" Content="Выгрузить в XML" HorizontalAlignment="Left" Height="25" Margin="2,2,0,0" Grid.Row="2" VerticalAlignment="Top" Width="108"
-        			Grid.Column="0" Background="{x:Null}" Click="XmlParts1_Click" />
-                <Button x:Name="DxfParts1" Content="Выгрузить DXF" HorizontalAlignment="Left" Height="25" Margin="0,2,0,0" Grid.Row="2" VerticalAlignment="Top" Width="108"
-        			Grid.Column="1" Background="{x:Null}" Click="DxfParts1_Click" />
-                <Grid Height="Auto" Margin="2,0" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" >
+                <Grid Height="Auto" Margin="2,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -137,11 +142,8 @@
                 	ItemsSource="{Binding PartsListXml2}" Grid.Column="2" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"
                 	SelectionMode="Extended"  CanUserResizeRows="False" RowDetailsVisibilityMode="Visible" 
                 	AutoGenerateColumns="False" SelectedIndex="0" Height="Auto" Width="Auto" MaxHeight="275" Grid.Row="0" Grid.ColumnSpan="3">
-                
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Наименование" IsReadOnly="True" Width="Auto" MinWidth="130" Binding="{Binding НаименованиеБезРасширения}"/>
-
-
                         <DataGridTextColumn Header="Конфиг." IsReadOnly="False" Width="60" MaxWidth="200" Binding="{Binding Конфигурация}"/>
                         <DataGridTextColumn Header="Ширина заг." IsReadOnly="False" Width="80" MaxWidth="200" Binding="{Binding ЗаготовкаШирина}"/>
                         <DataGridTextColumn Header="Высота заг." IsReadOnly="False" Width="70" MaxWidth="200" Binding="{Binding ЗаготовкаВысота}"/>
@@ -151,18 +153,67 @@
                         <DataGridTextColumn Header="Материал" IsReadOnly="False" Width="100" MaxWidth="200" Binding="{Binding Материал}"/>
 
                         <DataGridTextColumn Header="Площадь покрытия" IsReadOnly="False" Width="120" MaxWidth="200" Binding="{Binding ПлощадьПокрытия}"/>
-                        <DataGridTextColumn Header="Площадь (2хШхВ) " IsReadOnly="False" Width="120" MaxWidth="200" Binding="{Binding ПлощадьS}"/>
+                        <!--<DataGridTextColumn Header="Площадь (2хШхВ) " IsReadOnly="False" Width="120" MaxWidth="200" Binding="{Binding ПлощадьS}"/>-->
                         <DataGridTextColumn Header="Масса " IsReadOnly="False" Width="50" MaxWidth="200" Binding="{Binding МассаS}"/>
 
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button x:Name="XmlParts1_Copy" Content="Выделить все" HorizontalAlignment="Left" Height="25" Margin="2,5,0,0" Grid.Row="2" VerticalAlignment="Top" Width="108"
-                	Grid.Column="2" Background="{x:Null}" Click="XmlParts1_Copy_Click" />
-                <CheckBox x:Name="checkBox" Content="Выгрузка в DXF только конфигурации из сборки" HorizontalAlignment="Left" Margin="5" Grid.Row="3"
-                          Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" IsChecked="True"/>
+                        Grid.Column="2" Background="{x:Null}" Click="XmlParts1_Copy_Click" />
+                <GroupBox x:Name="groupBox" Header="Выгрузка" HorizontalAlignment="Left" Margin="2" Grid.Row="2" VerticalAlignment="Top" Height="Auto" Width="Auto" Grid.RowSpan="4">
+                    <Grid HorizontalAlignment="Stretch" Height="Auto" Margin="-1,2,5,2" VerticalAlignment="Stretch"  Width="Auto">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Expander x:Name="expander" IsExpanded="True" Header="Данные в 1С" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Left" Height="Auto" Margin="2" Width="Auto">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="checkBoxOnlyParts" Content="Выгрузка только деталей" HorizontalAlignment="Left" Margin="2"
+                					Grid.Column="0" VerticalAlignment="Top" IsChecked="False"/>
+                                <CheckBox x:Name="checkBoxOnlyAsms" Content="Выгрузка только сборок" HorizontalAlignment="Left" Margin="2" Grid.Row="1"
+                					Grid.Column="0" VerticalAlignment="Top" IsChecked="False"/>
+                                <Button x:Name="XmlParts1" Content="Выгрузить в 1С" HorizontalAlignment="Left" Height="25" Margin="2" VerticalAlignment="Center" Width="Auto"
+                					Grid.Column="1" Background="{x:Null}" Click="XmlParts1_Click" Grid.Row="0" Grid.RowSpan="2" />
+                            </Grid>
+                        </Expander>
+                        <Expander x:Name="expander_Copy" IsExpanded="True" Header="Развертки DXF" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Grid.Row="1" Background="{x:Null}">
+                            <Grid>
+                                <Grid HorizontalAlignment="Stretch" Height="Auto" Margin="2" VerticalAlignment="Stretch" Width="Auto">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox x:Name="checkBox" Content="Только конфигурации из сборки" HorizontalAlignment="Center" Margin="2"
+                						Grid.Column="0" VerticalAlignment="Center"  IsChecked="True" IsEnabled="False"/>
+                                    <Button x:Name="DxfParts1" Content="Выгрузить DXF" HorizontalAlignment="Left" Height="25" Margin="2" VerticalAlignment="Center" Width="Auto"
+                						Background="{x:Null}" Click="DxfParts1_Click" Grid.Column="2" />
+                                </Grid>
+                            </Grid>
+                        </Expander>
+                    </Grid>
+                </GroupBox>
                 <!--<Button x:Name="XmlParts1_Copy2" Content="Копировать выделенные ячейки в буфер" HorizontalAlignment="Left" Height="25" Margin="5" Grid.Row="2" VerticalAlignment="Top" Width="Auto" Grid.Column="2" Background="{x:Null}" Click="XmlParts1_Copy2_Click"  />-->
             </Grid>
         </GroupBox>
+        <DataGrid x:Name="dataGridAfterGet" AutoGenerateColumns="False" HorizontalAlignment="Left" Margin="0" Grid.Row="4" VerticalAlignment="Top" Height="350" Width="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Наименование" IsReadOnly="True" Width="Auto" MinWidth="130" Binding="{Binding FileName}"/>
+                <DataGridTextColumn Header="VersionBeforeGet" IsReadOnly="False" Width="Auto" MaxWidth="200" Binding="{Binding VersionBeforeGet}"/>
+                <DataGridTextColumn Header="VersionToGet" IsReadOnly="False" Width="Auto" MaxWidth="200" Binding="{Binding VersionToGet}"/>
+                <DataGridTextColumn Header="VersionAfterGet" IsReadOnly="False" Width="Auto" MaxWidth="200" Binding="{Binding VersionAfterGet}"/>
+                <DataGridTextColumn Header="Equal" IsReadOnly="False" Width="Auto" Binding="{Binding Equal}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <WindowsFormsHost x:Name="FormsHost" HorizontalAlignment="Left" Height="324" Margin="512,10,0,0" Grid.Row="4" VerticalAlignment="Top" Width="665"/>
     </Grid>
 
 </UserControl>

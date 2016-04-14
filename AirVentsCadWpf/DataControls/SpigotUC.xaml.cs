@@ -21,31 +21,30 @@ namespace AirVentsCadWpf.DataControls
 
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
+            VentsCadService.VentsCadServiceClient sdfb = new VentsCadService.VentsCadServiceClient();
+            MessageBox.Show(sdfb.GetData(8));
+            return;
+
             try
-            {
-                VentsCadLibrary.VentsCad.ConnectionToSql = Settings.Default.ConnectionToSQL;
-
-                var vcad = new VentsCadLibrary.VentsCad
+            {              
+                using (var server = new VentsCadLibrary.VentsCad())
                 {
-                    //ConnectionToSql = Settings.Default.ConnectionToSQL,
-                    DestVaultName = Settings.Default.TestPdmBaseName,
-                    VaultName = Settings.Default.PdmBaseName
-                };
+                    var newSpigot = new VentsCadLibrary.VentsCad.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);
+                    if (!newSpigot.Exist)
+                    {
+                        newSpigot.Build();
+                    }
+                    var place = newSpigot.GetPlace();
+                    MessageBox.Show(place.Path +"\n" +place.IdPdm + "\n" + place.ProjectId);
 
-                string unit;
-                vcad.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out unit);
+                    
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        void Grid_Loaded_1(object sender, RoutedEventArgs e)
-        {
-            //var sw = new ModelSw();
-            //sw.CreateDistDirectory(string.Format(@"{0}\{1}", @Properties.Settings.Default.DestinationFolder, sw.SpigotDestinationFolder));
-        }
+        }       
 
         void WidthSpigot_KeyDown(object sender, KeyEventArgs e)
         {

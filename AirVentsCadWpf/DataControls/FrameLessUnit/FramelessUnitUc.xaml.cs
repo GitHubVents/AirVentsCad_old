@@ -118,29 +118,9 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
 
             DataGrid1.ItemsSource = images;
 
-            КришаТипПанели.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {ToolTip = "0", Content = "Стандартная"},
-                new ComboBoxItem {ToolTip = "3", Content = "Сшитая"},
-                new ComboBoxItem {ToolTip = "1", Content = "Прямоугольный вырез"},
-                new ComboBoxItem {ToolTip = "2", Content = "Круглый вырез"}
-            };
-
-            ОпорнаяЧастьТипПанели.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {ToolTip = "0", Content = "Стандартная"},
-                new ComboBoxItem {ToolTip = "3", Content = "Сшитая"},
-                new ComboBoxItem {ToolTip = "1", Content = "Прямоугольный вырез"},
-                new ComboBoxItem {ToolTip = "2", Content = "Круглый вырез"}
-            };
-
-            НесъемнаяПанельТипПанели1.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {ToolTip = "0", Content = "Стандартная"},
-                new ComboBoxItem {ToolTip = "3", Content = "Сшитая"},
-                new ComboBoxItem {ToolTip = "1", Content = "Прямоугольный вырез"},
-                new ComboBoxItem {ToolTip = "2", Content = "Круглый вырез"}
-            };
+            КришаТипПанели.ItemsSource = Totals.TypeOfCutFramelessPanel;
+            ОпорнаяЧастьТипПанели.ItemsSource = Totals.TypeOfCutFramelessPanel;
+            НесъемнаяПанельТипПанели1.ItemsSource = Totals.TypeOfCutFramelessPanel;
 
             НаличиеТорцевойПанели.ItemsSource = new List<ComboBoxItem>
             {
@@ -253,38 +233,16 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 new ComboBoxItem {Content = "3"}
             };
 
-            ТолщинаВнешней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;                
             ТолщинаВнешней.SelectedIndex = 2;
 
-            ТолщинаВннутренней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВннутренней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВннутренней.SelectedIndex = 2;
 
             SectionTextBox.ItemsSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToList();
 
-            MaterialP1.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP1.DisplayMemberPath = "MaterialsName";
-            MaterialP1.SelectedValuePath = "LevelID";
-            MaterialP1.SelectedIndex = 0;
-
-            MaterialP2.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP2.DisplayMemberPath = "MaterialsName";
-            MaterialP2.SelectedValuePath = "LevelID";
-            MaterialP2.SelectedIndex = 0;
-            
+            Totals.SetMaterial(MaterialP1);
+            Totals.SetMaterial(MaterialP2);
 
             Ral1.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
             Ral1.DisplayMemberPath = "RAL";
@@ -459,47 +417,11 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             //MessageBox.Show(ProfilsConfig());return;
 
             PartsPdmTable.ItemsSource = null;
+            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели2, 2)) return;
+            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели3, 3)) return;
+            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели1, 1)) return;       
 
-            if (ШиринаСъемнойПанели2.Visibility == Visibility.Visible)
-            {
-                if (ШиринаСъемнойПанели2.Text == "")
-                {
-                    MessageBox.Show("Введите ширину 2-й съемной панели");return;
-                }
-                if (ШиринаСъемнойПанели2.Text.Contains("-"))
-                {
-                    MessageBox.Show("Ширина 2-й съемной панели не может быть отрицательной!");return;
-                }
-                if (Convert.ToInt32(ШиринаСъемнойПанели2.Text) < 100)
-                {
-                    MessageBox.Show("Ширина 2-й съемной панели не может быть меньше 100 мм!");return;
-                }
-            }
-
-            if (ШиринаСъемнойПанели3.Visibility == Visibility.Visible)
-            {
-                if (ШиринаСъемнойПанели3.Text == "")
-                {
-                    MessageBox.Show("Введите ширину 3-й съемной панели"); return;
-                }
-                if (ШиринаСъемнойПанели3.Text.Contains("-"))
-                {
-                    MessageBox.Show("Ширина 3-й съемной панели не может быть отрицательной!"); return;
-                }
-                if (Convert.ToInt32(ШиринаСъемнойПанели3.Text) < 100)
-                {
-                    MessageBox.Show("Ширина 3-й съемной панели не может быть меньше 100 мм!"); return;
-                }
-            }
-
-            if (Convert.ToInt32(ШиринаСъемнойПанели1.Text) < 100)
-            {
-                MessageBox.Show("Ширина съемной панели не может быть меньше 100 мм!"); return;
-            }
-
-            Логгер.Информация(
-                "Начато построение бескаркасной установки",
-                "",
+            Логгер.Информация("Начато построение бескаркасной установки","",
                 "Сохранение настроек программы",
                 "FramelessUnitUc");
 
@@ -512,26 +434,11 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 if (onlySearch.IsChecked != true)
                 {
                     var framelessBlockNewName = $"{SizeOfUnit.Text} {OrderTextBox.Text}B Section {SectionTextBox.Text}";
-
                     var orderFolder =
                         $@"{Settings.Default.DestinationFolder}\{ModelSw.UnitFramelessOreders}\{SizeOfUnit.Text}\{SizeOfUnit.Text} {OrderTextBox.Text}B";
-
                     var framelessBlockNewPath = new FileInfo($@"{orderFolder}\{framelessBlockNewName}.SLDASM").FullName;
 
-                    string asmPath;
-                    int fileId;
-                    int projectId;
-                    var asmName = Path.GetFileNameWithoutExtension(framelessBlockNewPath);
-                    if (ModelSw.GetExistingFile(asmName, out asmPath, out fileId, out projectId, Settings.Default.PdmBaseName))
-                    {
-                        if (MessageBox.Show("Установка " + asmName + " уже есть в базе. Открыть?",
-                            "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                        {
-                            Process.Start("conisio://" + Settings.Default.TestPdmBaseName + "/open?projectid=" + projectId +
-                                          "&documentid=" + fileId + "&objecttype=1");
-                        }
-                        return;
-                    }
+                    if (ModelSw.OpenIfExist(framelessBlockNewPath)) return;                    
                 }
 
                 #endregion
@@ -573,8 +480,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 var typeOfDoubleStrНесъемнаяПанель = НесъемнаяПанельСдвоенойПанели.Visibility == Visibility.Visible
                     ? typeOfDoubleНесъемнаяПанель.Name.Replace("n", "") : "00";
 
-                MessageBox.Show($"Криша - {typeOfDoubleStrКриша}\nОпорнаяЧасть - {typeOfDoubleStrОпорнаяЧасть}\nНесъемнаяПанель - {typeOfDoubleStrНесъемнаяПанель}");
-
+               // MessageBox.Show($"Криша - {typeOfDoubleStrКриша}\nОпорнаяЧасть - {typeOfDoubleStrОпорнаяЧасть}\nНесъемнаяПанель - {typeOfDoubleStrНесъемнаяПанель}");
 
                 var ironwares = new ModelSw.Ironwares
                 {
@@ -619,9 +525,10 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     {
                         "35",
                         "Торцевая панель",
-                        Convert.ToString(SqlBaseData.PanelsTypeId("35")),
-                        ТипУсилПанели1.Text
+                        Convert.ToString(SqlBaseData.PanelsTypeId("35"))                      
                     };
+
+                 
 
                 if (НаличиеТорцевойПанели.SelectedIndex == 1 || НаличиеТорцевойПанели.SelectedIndex == 3)
                 {
@@ -655,11 +562,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.ToString());
-                        Логгер.Ошибка(
-                            ex.Message,
-                            ex.StackTrace,
-                            ex.TargetSite.ToString(),
-                            "FramelessUnitUc");
+                        Логгер.Ошибка(ex.Message, ex.StackTrace, ex.TargetSite.ToString(),"FramelessUnitUc");
                     }
                 }
 
@@ -962,10 +865,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                         ТипУсилПанели1.SelectedValue.ToString(),
                                         ТипУсилПанели1.Text,
                                         Convert.ToString(SqlBaseData.PanelsTypeId(ТипУсилПанели1.SelectedValue.ToString()))
-
-                                        //ТипНесъемнойПанели.SelectedValue.ToString(),
-                                        //ТипНесъемнойПанели.Text,
-                                        //Convert.ToString(basedata.PanelsTypeId(ТипНесъемнойПанели.SelectedValue.ToString()))
                                     },
 
                                     width: Convert.ToString(130), height: Convert.ToString(height - 40),
@@ -981,7 +880,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                         ТипНесъемнойПанели.SelectedValue.ToString(),
                                         ТипНесъемнойПанели.Text,
                                         Convert.ToString(SqlBaseData.PanelsTypeId(ТипНесъемнойПанели.SelectedValue.ToString()))
-                                    }, // ((ComboBoxItem)ТипУсилПанели1.SelectedItem).Tag.ToString(), // typeOfPanel.Tag.ToString(),
+                                    }, 
                                     типТорцевой: null,
                                     типДвойной: "00",
                                     screws: null,
@@ -1013,11 +912,13 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                         ТипУсилПанели2.SelectedValue.ToString(),
                                         ТипУсилПанели2.Text,
                                         Convert.ToString(SqlBaseData.PanelsTypeId(ТипУсилПанели2.SelectedValue.ToString()))
+
                                         #region to delete
                                         //ТипНесъемнойПанели.SelectedValue.ToString(),
                                         //ТипНесъемнойПанели.Text,
                                         //Convert.ToString(basedata.PanelsTypeId(ТипНесъемнойПанели.SelectedValue.ToString()))
                                         #endregion
+
                                     },
 
                                     width: Convert.ToString(130), height: Convert.ToString(height - 40),
@@ -1208,6 +1109,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                     //PlanelCentrDoor2 = dimO1 + remPanelWidth1 + dimO2 + remPanelWidth2 / 2,
                     //PlanelCentrDoor3 = dimO1 + remPanelWidth1 + dimO2 + remPanelWidth2 + dimO3 + remPanelWidth3 / 2
                     #endregion
+
                 };
 
                 if (PartsGenerationChk.IsChecked == true)
@@ -1390,8 +1292,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             else
             {
                 return
-                    $"{ТипПроф1.Text + "_" + ШиринаПрофиля1.Text};{ТипПроф2.Text + "_" + ШиринаПрофиля2.Text};{ТипПроф3.Text + "_" + ШиринаПрофиля3.Text};{ТипПроф4.Text + "_" + ШиринаПрофиля4.Text}";//{((ТипУсилПанели1.Visibility == Visibility.Visible) ? "130" : "-")};{((ТипУсилПанели2.Visibility == Visibility.Visible) ? "130" : "-") }"; 
-                    //{((ТипУсилПанели1.Text == "-") ? "-": "e") + "" };{((ТипУсилПанели2.Text == "-") ? "-" : "e") + ""}";
+                    $"{ТипПроф1.Text + "_" + ШиринаПрофиля1.Text};{ТипПроф2.Text + "_" + ШиринаПрофиля2.Text};{ТипПроф3.Text + "_" + ШиринаПрофиля3.Text};{ТипПроф4.Text + "_" + ШиринаПрофиля4.Text}";                    
             }
         }
 

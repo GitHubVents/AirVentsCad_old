@@ -34,23 +34,27 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BatchDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AirVentsCadWpf\BatchDLL.dll</HintPath>
+    </Reference>
     <Reference Include="MakeDxfUpdatePartData">
       <HintPath>..\..\..\..\Documents\Visual Studio 2012\Projects\MakeDxfUpdatePartData\MakeDxfUpdatePartData\bin\Debug\MakeDxfUpdatePartData.dll</HintPath>
     </Reference>
     <Reference Include="SolidWorks.Interop.sldworks">
-      <HintPath>..\..\..\..\..\SW2013\SolidWorks\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="SolidWorks.Interop.swcommands">
-      <HintPath>..\..\..\..\..\SW2013\SolidWorks\api\redist\SolidWorks.Interop.swcommands.dll</HintPath>
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swcommands.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="SolidWorks.Interop.swconst">
-      <HintPath>..\..\..\..\..\SW2013\SolidWorks\api\redist\SolidWorks.Interop.swconst.dll</HintPath>
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swconst.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="SolidWorks.Interop.swdocumentmgr">
-      <HintPath>..\..\..\..\..\SW2013\SolidWorks\api\redist\SolidWorks.Interop.swdocumentmgr.dll</HintPath>
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swdocumentmgr.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -67,10 +71,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attachments\Dumper.cs" />
-    <Compile Include="Attachments\Panels.cs" />
-    <Compile Include="Attachments\Spigot.cs" />
+    <Compile Include="Products\Attachments\Dumper.cs" />
+    <Compile Include="Products\Attachments\Panels.cs" />
+    <Compile Include="Products\Attachments\Spigot.cs" />
+    <Compile Include="Functions\SwDoc.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Products\ProductInterface.cs" />
     <Compile Include="VaulSystem\PdmBatch.cs" />
     <Compile Include="SqlData\SqlData.cs" />
     <Compile Include="VaulSystem\SwEpdm.cs" />

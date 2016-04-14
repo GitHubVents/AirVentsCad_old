@@ -1745,6 +1745,15 @@
             <param name="path"></param>
             <param name="vaultName"></param>
         </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BatchGet(System.String,System.Collections.Generic.List{VentsCadLibrary.VaultSystem.BatchGetParams},System.Collections.Generic.List{VentsCadLibrary.VaultSystem.PdmFilesAfterGet}@)">
+            <summary>
+            
+            </summary>
+            <param name="vaultName"></param>
+            <param name="list"></param>
+            <param name="pdmFilesAfterGet"></param>
+            <param name="getList"></param>
+        </member>
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetLastVersionPdm(System.String,System.String)">
             <summary>
             Gets the last version PDM.
@@ -1802,6 +1811,22 @@
             </summary>
             <param name="filePath"></param>
             <param name="inPdm"></param>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.#ctor">
+            <summary>
+            
+            </summary>
         </member>
         <member name="T:AirVentsCadWpf.DataControls.MonoBlock01Uc50">
             <summary>
@@ -2358,6 +2383,23 @@
         <member name="M:AirVentsCadWpf.DataControls.ForConstructors.ForConstructorsUc.InitializeComponent">
             <summary>
             InitializeComponent
+            </summary>
+        </member>
+        <member name="F:AirVentsCadWpf.UserControlEdr.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:AirVentsCadWpf.UserControlEdr.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:AirVentsCadWpf.UserControlEdr.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
             </summary>
         </member>
         <member name="T:AirVentsCadWpf.App">

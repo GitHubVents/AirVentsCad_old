@@ -231,6 +231,33 @@ namespace VentsCadLibrary
             }
         }
 
+        public void GetObjectType(int idPdm, string vaultName)
+        {
+            try
+            {
+                var vaultSource = new EdmVault5();
+                IEdmFolder5 oFolder;
+                if (!vaultSource.IsLoggedIn)
+                {
+                    vaultSource.LoginAuto(vaultName, 0);
+                }
+
+  //              var objectType = vaultSource..GetObject(EdmObjectType., idPdm);
+
+                //File = (IEdmFile5)vault1.GetObject(EdmObjectType.EdmObject_File, curListFile.mlFileID);
+
+
+           //     var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
+       //         edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
+                //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
+            }
+            catch (Exception excepiton)
+            {
+                MessageBox.Show(excepiton.Message);
+            }
+        }
+
+
         public static void GetLastVersionOfFile(string path, string vaultName)
         {
             try
@@ -296,10 +323,12 @@ namespace VentsCadLibrary
             return vaults;
         }
 
-        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, string vaultName)
+        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configs, bool getFileCopy, string vaultName)
         {
             fileName = null;
             fileIdPdm = 0;
+            currentVerison = 0;
+            configs = new List<string>();
             try
             {
                 IEdmFolder5 oFolder;
@@ -326,21 +355,36 @@ namespace VentsCadLibrary
                     goto m1;
                 }
 
-                try
+                if (getFileCopy)
                 {
-                    edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
-                }
-                catch (Exception)
-                {
-                    // 
+                    try
+                    {
+                        edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
+                    }
+                    catch (Exception)
+                    {
+                        // 
+                    }
                 }
 
                 fileName = edmFile5.Name;
                 fileIdPdm = edmFile5.ID;
+                currentVerison = edmFile5.CurrentVersion;
+                EdmStrLst5 list = edmFile5.GetConfigurations();
+
+                IEdmPos5 pos = default(IEdmPos5);
+                pos = list.GetHeadPosition();
+                string cfgName = null;
+                while (!pos.IsNull)
+                {
+                    cfgName = list.GetNext(pos);
+                    if (cfgName == "@") continue;                    
+                    configs.Add(cfgName);
+                }                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //
+               // MessageBox.Show(ex.StackTrace);
             }
         }
 
@@ -422,7 +466,7 @@ namespace VentsCadLibrary
                 });
             }
         }
-
+        
         public static void BatchUnLock1(List<string> filesPathesList, string vaultName)
         {
             var edmVault5 = new EdmVault5();
@@ -565,10 +609,28 @@ namespace VentsCadLibrary
             }
             batchUnlocker.UnlockFiles(0);
         }
-        
+
+        public static void BatchGet(string vaultName, List<BatchDLL.Batches.TaskParam> list)
+        {
+            var edmVault5 = new EdmVault5();
+            if (!edmVault5.IsLoggedIn) { edmVault5.LoginAuto(vaultName, 0); }
+            var edmVault7 = (IEdmVault7)edmVault5;
+            BathGet(edmVault7, list);
+        }
+
+        internal static void BathGet(IEdmVault7 vault, List<BatchDLL.Batches.TaskParam> list)
+        {
+            List<KeyValuePair<Exception, string>> exception;
+            BatchDLL.Batches.BatchGet(vault, list, out exception);
+
+            foreach (var item in exception)
+            {
+                MessageBox.Show(item.Key.InnerException + "\n" + item.Value);// + "\n" + item.Data + "\n" + item.Message + "\n" + item.StackTrace);
+            } 
+        }
+
         public class EpdmSearch
         {
-            //public string VaultName { private get; set; }
 
             private static IEdmVault5 _edmVault5;
 

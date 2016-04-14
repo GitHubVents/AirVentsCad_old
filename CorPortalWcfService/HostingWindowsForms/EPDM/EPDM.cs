@@ -48,13 +48,16 @@ namespace HostingWindowsForms.EPDM
             public int? Position { get; set; }
             public List<decimal> КолПоКонфигурациям { get; set; }
             public string КонфГлавнойСборки { get; set; }
+            public string ТипОбъекта { get; set; }
+            public string GetPathName { get; set; }           
+
         }
 
      
         public List<BomCells> BomList(string filePath, string config, bool asBuild , out Exception exception)
         {
             var bomFlag = asBuild ? EdmBomFlag.EdmBf_AsBuilt : EdmBomFlag.EdmBf_ShowSelected;
-            Getbom(BomId, filePath,  config, bomFlag, out exception);
+            Getbom(BomId, filePath, config, EdmBomFlag.EdmBf_ShowSelected, out exception);
             return _bomList;
         }
 
@@ -171,8 +174,7 @@ namespace HostingWindowsForms.EPDM
                 CheckPdmVault();
                 EdmFile7 = (IEdmFile7) _edmVault5.GetFileFromPath(filePath, out oFolder);
 
-                var bomView = EdmFile7.GetComputedBOM(Convert.ToInt32(bomId), Convert.ToInt32(-1), bomConfiguration,
-                    (int) bomFlag); //(int)EdmBomFlag.EdmBf_ShowSelected);
+                var bomView = EdmFile7.GetComputedBOM(Convert.ToInt32(bomId), Convert.ToInt32(-1), bomConfiguration, (int) bomFlag); 
 
                 if (bomView == null) return;
                 Array bomRows;
@@ -190,6 +192,8 @@ namespace HostingWindowsForms.EPDM
                 //bomTable.Columns.Add(new DataColumn { ColumnName = "Путь" });
                 bomTable.Columns.Add(new DataColumn {ColumnName = "Уровень"});
                 bomTable.Columns.Add(new DataColumn {ColumnName = "КонфГлавнойСборки"});
+                bomTable.Columns.Add(new DataColumn { ColumnName = "ТипОбъекта" });
+                bomTable.Columns.Add(new DataColumn { ColumnName = "GetPathName" });
 
                 for (var i = 0; i < bomRows.Length; i++)
                 {
@@ -199,13 +203,15 @@ namespace HostingWindowsForms.EPDM
 
                     for (var j = 0; j < bomColumns.Length; j++)
                     {
-                        var column = (EdmBomColumn) bomColumns.GetValue(j);
+                        var column = (EdmBomColumn) bomColumns.GetValue(j);                       
+
                         object value;
                         object computedValue;
                         string config;
                         bool readOnly;
-                        cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config,
-                            out readOnly);
+
+                        cell.GetVar(column.mlVariableID, column.meType, out value, out computedValue, out config, out readOnly);
+
                         if (value != null)
                         {
                             bomTable.Rows[i][j] = value;
@@ -214,10 +220,11 @@ namespace HostingWindowsForms.EPDM
                         {
                             bomTable.Rows[i][j] = null;
                         }
-                        //bomTable.Rows[i][j + 1] = cell.GetPathName();
                         bomTable.Rows[i][j + 1] = cell.GetTreeLevel();
 
                         bomTable.Rows[i][j + 2] = bomConfiguration;
+                        bomTable.Rows[i][j + 3] = config;
+                        bomTable.Rows[i][j + 4] = cell.GetPathName();
                     }
                 }
 
@@ -265,7 +272,9 @@ namespace HostingWindowsForms.EPDM
                                 Format = values[17].ToString(),
                                 Note = values[18].ToString(),
                                 Уровень = Convert.ToInt32(values[19]),
-                                КонфГлавнойСборки = values[20].ToString()
+                                КонфГлавнойСборки = values[20].ToString(),
+                                ТипОбъекта = values[21].ToString(),
+                                GetPathName = values[22].ToString()
                              });
 
             //LoggerInfo("Список из полученой таблицы успешно заполнен элементами в количестве" + bomList.Count);

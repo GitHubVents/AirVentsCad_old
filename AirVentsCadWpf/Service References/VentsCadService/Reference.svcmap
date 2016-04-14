@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d7bf43da-4d43-4d13-b3c5-c5d3ec9ecf0a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8000/hello" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="hello.xsd" MetadataType="Schema" ID="556a0243-7277-47ac-9bac-1ae2582f4601" SourceId="1" SourceUrl="http://192.168.14.86:8000/hello?xsd=xsd0" />
+    <MetadataFile FileName="hello.disco" MetadataType="Disco" ID="f5b58c5d-d842-4f93-8b40-946f8fb14eda" SourceId="1" SourceUrl="http://192.168.14.86:8000/hello?disco" />
+    <MetadataFile FileName="hello1.xsd" MetadataType="Schema" ID="0117c85f-59cf-4661-ab5f-d86bd41a6c65" SourceId="1" SourceUrl="http://192.168.14.86:8000/hello?xsd=xsd1" />
+    <MetadataFile FileName="VentsService.wsdl" MetadataType="Wsdl" ID="40a24741-6b1d-41e2-b353-c328bd1a4c44" SourceId="1" SourceUrl="http://192.168.14.86:8000/hello?wsdl" />
+    <MetadataFile FileName="hello2.xsd" MetadataType="Schema" ID="53122374-ef70-4d33-8612-f5895c9db7af" SourceId="1" SourceUrl="http://192.168.14.86:8000/hello?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

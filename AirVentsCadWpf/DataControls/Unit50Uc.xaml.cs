@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,12 +34,19 @@ namespace AirVentsCadWpf.DataControls
             InnerPartGrid.Visibility = Visibility.Collapsed;
             
             var sqlBaseData = new SqlBaseData();
+
             var airVentsStandardSize = sqlBaseData.AirVentsStandardSize();
             SizeOfUnit.ItemsSource = ((IListSource)airVentsStandardSize).GetList();
             SizeOfUnit.DisplayMemberPath = "Type";
             SizeOfUnit.SelectedIndex = 0;
 
-            SectionTextBox.ItemsSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToList();
+            SectionTextBox.ItemsSource = Totals.SectionLetters;
+
+            TypeOfPanel.ItemsSource = (SqlBaseData.Profils.GetList());
+            TypeOfPanel.DisplayMemberPath = "Description";
+            TypeOfPanel.SelectedValuePath = "ProfilID";
+            TypeOfPanel.SelectedIndex = 0;
+
 
             #region UNIT50FULL
 
@@ -54,67 +59,23 @@ namespace AirVentsCadWpf.DataControls
 
             #endregion
 
-            TypeOfPanel50.ItemsSource = ((IListSource)_sqlBaseData.PanelsTable()).GetList();
-            TypeOfPanel50.DisplayMemberPath = "PanelTypeName";
-            TypeOfPanel50.SelectedValuePath = "PanelTypeCode";
-            TypeOfPanel50.SelectedIndex = 0;
+            Totals.SetPanelType(TypeOfPanel50);
+            Totals.SetMaterial(MaterialP1);
+            Totals.SetMaterial(MaterialP2);
 
-            MaterialP1.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP1.DisplayMemberPath = "MaterialsName";
-            MaterialP1.SelectedValuePath = "LevelID";
-            MaterialP1.SelectedIndex = 0;
-
-            MaterialP2.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP2.DisplayMemberPath = "MaterialsName";
-            MaterialP2.SelectedValuePath = "LevelID";
-            MaterialP2.SelectedIndex = 0;
-
-
-            Ral1.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            Ral1.DisplayMemberPath = "RAL";
-            Ral1.SelectedValuePath = "Hex";
-            Ral1.SelectedIndex = 0;
-
-            Ral2.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            Ral2.DisplayMemberPath = "RAL";
-            Ral2.SelectedValuePath = "Hex";
-            Ral2.SelectedIndex = 0;
-
-            Ral1.Visibility = Visibility.Hidden;
-            Ral2.Visibility = Visibility.Hidden;
-
-            ТолщинаВнешней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
-
-            ТолщинаВннутренней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВннутренней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВннутренней.SelectedIndex = 2;
 
-            CoatingType1.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingType1.DisplayMemberPath = "Name";
-            CoatingType1.SelectedValuePath = "Code";
-            CoatingType1.SelectedIndex = 0;
-
-            CoatingType2.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingType2.DisplayMemberPath = "Name";
-            CoatingType2.SelectedValuePath = "Code";
-            CoatingType2.SelectedIndex = 0;
-
-            CoatingClass1.ItemsSource = _setMaterials.CoatingListClass();
-            CoatingClass2.ItemsSource = _setMaterials.CoatingListClass();
+            Totals.SetRal(Ral1);
+            Totals.SetRal(Ral2);
+            Ral1.Visibility = Visibility.Hidden;
+            Ral2.Visibility = Visibility.Hidden;
+            Totals.SetCoatingType(CoatingType1);
+            Totals.SetCoatingType(CoatingType2);
+            Totals.SetCoatingClass(CoatingClass1);
+            Totals.SetCoatingClass(CoatingClass2);
 
             PanelGrid.Visibility = Visibility.Collapsed;
             InnerGrid.Visibility = Visibility.Collapsed;
@@ -149,27 +110,14 @@ namespace AirVentsCadWpf.DataControls
             LenghtBaseFrame.Visibility = Visibility.Collapsed;
             WidthBaseFrame.Visibility = Visibility.Collapsed;
 
-            MaterialMontageFrame.ItemsSource = ((IListSource)_sqlBaseData.MaterialsForMontageFrame()).GetList();
-            MaterialMontageFrame.DisplayMemberPath = "MaterialsName";
-            MaterialMontageFrame.SelectedValuePath = "LevelID";
-            MaterialMontageFrame.SelectedIndex = 0;
-
+            Totals.SetMontageFrameMaterial(MaterialMontageFrame);
             FrameOffset.MaxLength = 5;
             FrameOffset.IsReadOnly = true;
 
-            RalFrame1.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            RalFrame1.DisplayMemberPath = "RAL";
-            RalFrame1.SelectedValuePath = "Hex";
-            RalFrame1.SelectedIndex = 0;
-
+            Totals.SetRal(RalFrame1);            
             RalFrame1.Visibility = Visibility.Hidden;
-
-            CoatingTypeFrame1.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingTypeFrame1.DisplayMemberPath = "Name";
-            CoatingTypeFrame1.SelectedValuePath = "Code";
-            CoatingTypeFrame1.SelectedIndex = 0;
-
-            CoatingClassFrame1.ItemsSource = _setMaterials.CoatingListClass();
+            Totals.SetCoatingType(CoatingTypeFrame1);
+            Totals.SetCoatingClass(CoatingClassFrame1);           
 
             #endregion
         }
@@ -184,24 +132,32 @@ namespace AirVentsCadWpf.DataControls
                 }
                 var id = Convert.ToInt32(((DataRowView)SizeOfUnit.SelectedItem)["SizeID"].ToString());
                 var sqlBaseData = new SqlBaseData();
-                var standartUnitSizes = sqlBaseData.StandartSize(id, 2);
+                var type = Convert.ToInt32(TypeOfPanel.SelectedValue);               
+                var standartUnitSizes = sqlBaseData.StandartSize(id, type);
+
+                switch(type)
+                {
+                    case 1:
+                        thicknessOfPanel = "30";
+                        break;
+                    case 2:
+                        thicknessOfPanel = "50";
+                        break;
+                    case 7:
+                        thicknessOfPanel = "70";
+                        break;
+                    default:
+                        thicknessOfPanel = "40";
+                        break;
+                }
 
                 if (WidthU == null || HeightU == null)
                 {
                     return;
                 }
-                var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
-                switch (thicknessOfPanel)
-                {
-                    case "30":
-                        WidthU.Text = (Convert.ToInt32(standartUnitSizes[0]) - 40).ToString();
-                        HeightU.Text = (Convert.ToInt32(standartUnitSizes[1]) - 40).ToString();
-                        break;
-                    default:
-                        WidthU.Text = standartUnitSizes[0];
-                        HeightU.Text = standartUnitSizes[1];
-                        break;
-                }
+
+                WidthU.Text = standartUnitSizes[0];
+                HeightU.Text = standartUnitSizes[1];
             }
             catch (Exception)
             {
@@ -227,10 +183,12 @@ namespace AirVentsCadWpf.DataControls
             HeightU.IsReadOnly = true;
         }
 
+        string thicknessOfPanel { get; set; }
+
         void BUILDING_Click(object sender, RoutedEventArgs args)
         {
-            var sw = new ModelSw();
-            var thicknessOfPanel = ((ComboBoxItem)TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
+            var sw = new ModelSw();         
+
             switch (thicknessOfPanel)
             {
                 case "30":
@@ -300,8 +258,8 @@ namespace AirVentsCadWpf.DataControls
                                             typeOfPanel:
                                             new[]
                                             {
-                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][1].ToString(),
                                                 "30"
                                             },
                                             width: Convert.ToString(Convert.ToInt32(Lenght.Text) - 60),
@@ -329,8 +287,8 @@ namespace AirVentsCadWpf.DataControls
                                             typeOfPanel:
                                             new[]
                                             {
-                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][1].ToString(),
                                                 "30"
                                             },
                                             width: Convert.ToString(Convert.ToInt32(Lenght.Text) - 60),
@@ -400,6 +358,7 @@ namespace AirVentsCadWpf.DataControls
                         MessageBox.Show(e.Message);
                     }
                     break;
+
                 default:
                     frame = "";
                     try
@@ -470,8 +429,8 @@ namespace AirVentsCadWpf.DataControls
                                             typeOfPanel:
                                             new[]
                                             {
-                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][1].ToString(),
                                                 TypeOfPanel.SelectedIndex==0 ? "50":"70"
                                             },
                                             width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
@@ -500,8 +459,8 @@ namespace AirVentsCadWpf.DataControls
                                             typeOfPanel:
                                             new[]
                                             {
-                                                _sqlBaseData.PanelsTable().Rows[0][2].ToString(),
-                                                _sqlBaseData.PanelsTable().Rows[0][1].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][2].ToString(),
+                                                SqlBaseData.PanelsTable().Rows[0][1].ToString(),
                                                 TypeOfPanel.SelectedIndex==0 ? "50":"70"
                                             },
                                             width: Convert.ToString(Convert.ToInt32(Lenght.Text) - panelsDelta),
@@ -799,3 +758,4 @@ namespace AirVentsCadWpf.DataControls
         }
     }
 }
+

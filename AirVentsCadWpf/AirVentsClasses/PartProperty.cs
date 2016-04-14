@@ -261,11 +261,12 @@ namespace AirVentsCadWpf.AirVentsClasses
             return bomList;
         }
 
-
-
         static string ErrorMessageForParts(PartPropBomCells partPropBomCells)
         {
             return "";
+
+            #region  tO DELETE
+
             //var обозначениеErr = "";
             //var материалЦмиErr = "";
             //var наименованиеErr = "";
@@ -321,6 +322,9 @@ namespace AirVentsCadWpf.AirVentsClasses
             //    конфигурацияErr);
 
             //return partPropBomCells.Errors == messageErr ? "" : message;
+
+            #endregion
+
         }
 
         #endregion

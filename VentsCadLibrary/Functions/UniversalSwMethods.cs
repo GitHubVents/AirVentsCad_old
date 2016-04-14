@@ -10,27 +10,112 @@ using VentsMaterials;
 
 namespace VentsCadLibrary
 {
-    public partial class VentsCad
+    public partial class VentsCad : IDisposable
     {
-        public static string ConnectionToSql { get; set; }
+            #region DISPOSE CLASS
 
-        public string VaultName { get; set; }
+       
 
-        public string DestVaultName { get; set; }
+        private IntPtr _handle;
+        // Other managed resource this class uses.
+        private readonly System.ComponentModel.Component _component = new System.ComponentModel.Component();
+        // Track whether Dispose has been called.
+        private bool disposed;
 
-        static string LocalPath(string vault)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method.
+            // Therefore, you should call GC.SupressFinalize to
+            // take this object off the finalization queue
+            // and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (disposed) return;
+            // If disposing equals true, dispose all managed
+            // and unmanaged resources.
+            if (disposing)
+            {
+                // Dispose managed resources.
+                _component.Dispose();
+            }
+
+            // Call the appropriate methods to clean up
+            // unmanaged resources here.
+            // If disposing is false,
+            // only the following code is executed.
+            CloseHandle(_handle);
+            _handle = IntPtr.Zero;
+
+            // Note disposing has been done.
+            disposed = true;
+        }
+        // Use interop to call the method necessary
+        // to clean up the unmanaged resource.
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private extern static bool CloseHandle(IntPtr handle);
+
+        // Use C# destructor syntax for finalization code.
+        // This destructor will run only if the Dispose method
+        // does not get called.
+        // It gives your base class the opportunity to finalize.
+        // Do not provide destructors in types derived from this class.
+        /// <summary>
+        /// 
+        /// </summary>
+        //public ModelSw()
+        //{
+        //    // do not re-create dispose clean-up code here.
+        //    // calling dispose(false) is optimal in terms of
+        //    // readability and maintainability.
+        //    Dispose(false);
+        //}
+
+        //public ModelSw(IntPtr handle)
+        //{
+        //    this._handle = handle;
+        //}
+
+        #endregion
+
+        public VentsCad(string connectionToSql = null, string vaultName = null, string destVaultName = null)
+        {
+            Dispose(false);
+
+            if (!string.IsNullOrEmpty(connectionToSql)) { ConnectionToSql = connectionToSql; }
+            if (!string.IsNullOrEmpty(vaultName)) { VaultName = vaultName; }
+            if (!string.IsNullOrEmpty(destVaultName)) { DestVaultName = destVaultName; }
+
+            sourceRootFolder = LocalPath(VaultName);
+            destRootFolder = LocalPath(DestVaultName);
+        }
+
+        internal static string sourceRootFolder;
+        internal static string destRootFolder;
+
+        public static string ConnectionToSql { get; set; } = "Data Source=srvkb;Initial Catalog=SWPlusDB;Persist Security Info=True;User ID=sa;Password=PDMadmin;MultipleActiveResultSets=True";
+
+        internal static string VaultName { get; set; } = "Vents-PDM";
+
+        internal static string DestVaultName { get; set; } = "Vents-PDM";
+
+        internal static string LocalPath(string vault)
         {
             try
             {
                 return VaultSystem.GetSwEpdRootFolderPath(vault);
-
-                #region to delete
-
-                //var edmVault5 = new EdmVault5();
-                //edmVault5.LoginAuto(vault, 0);
-                //return edmVault5.RootFolder.LocalPath;
-
-                #endregion
             }
             catch (Exception e)
             {
@@ -39,17 +124,16 @@ namespace VentsCadLibrary
             }
         }
 
-        SldWorks _swApp;
+        internal static SldWorks _swApp;
 
-        public List<VaultSystem.VentsCadFiles> NewComponents = new List<VaultSystem.VentsCadFiles>();
+        public static List<VaultSystem.VentsCadFiles> NewComponents = new List<VaultSystem.VentsCadFiles>();
 
-        static bool IsConvertToInt(IEnumerable<string> newStringParams)
+        static bool ConvertToInt(IEnumerable<string> newStringParams)
         {
             foreach (var param in newStringParams)
             {
                 try
-                {
-                    // ReSharper disable once UnusedVariable
+                {                    
                     var y = Convert.ToInt32(param);
                 }
                 catch (Exception)
@@ -60,7 +144,7 @@ namespace VentsCadLibrary
             return true;
         }
 
-        internal void GetLastVersionAsmPdm(string path, string vaultName)
+        internal static void GetLastVersionAsmPdm(string path, string vaultName)
         {            
             try
             {
@@ -74,7 +158,7 @@ namespace VentsCadLibrary
             }
         }
 
-        internal bool InitializeSw(bool visible)
+        internal static bool InitializeSw(bool visible)
         {
             try
             {
@@ -87,7 +171,7 @@ namespace VentsCadLibrary
             return _swApp != null;
         }
 
-        static void DelEquations(int index, IModelDoc2 swModel)
+        internal static void DelEquations(int index, IModelDoc2 swModel)
         {
             try
             {
@@ -101,8 +185,8 @@ namespace VentsCadLibrary
                 Логгер.Ошибка($"Удаление уравнения #{index} в модели {swModel.GetPathName()}. {e.Message}", null, e.StackTrace, "DelEquations");
             }
         }
-        
-        bool GetExistingFile(string fileName, int type, string vaultName)
+
+        internal bool GetExistingFile(string fileName, int type, string vaultName)
         {
             List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
             switch (type)
@@ -133,7 +217,7 @@ namespace VentsCadLibrary
 
         }
 
-        bool GetExistingFile(string partName, out string path, out int fileId, out int projectId)
+        internal static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId)
         {
             fileId = 0;
             projectId = 0;
@@ -152,6 +236,7 @@ namespace VentsCadLibrary
             try
             {
                 GetLastVersionAsmPdm(найденныеФайлы[0].Path, VaultName);
+                path = найденныеФайлы[0].Path;
                 fileId = найденныеФайлы[0].FileId;
                 projectId = найденныеФайлы[0].ProjectId;
                 return true;
@@ -163,7 +248,7 @@ namespace VentsCadLibrary
             }
         }
         
-        void PartInfoToXml(string filePath)
+        static void PartInfoToXml(string filePath)
         {
             try
             {
@@ -274,13 +359,16 @@ namespace VentsCadLibrary
             }
         }
 
-        internal void GetIdPdm(string path, out string fileName, out int fileIdPdm)
+        internal void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int curVer, out List<string> configurations)
         {
             fileName = null;
             fileIdPdm = 0;
+            curVer = 0;
+            configurations = null;
+
             try
             {             
-                VaultSystem.GetIdPdm(path, out fileName, out fileIdPdm, VaultName);
+                VaultSystem.GetIdPdm(path, out fileName, out fileIdPdm, out curVer, out configurations, false, VaultName);
             }
             catch (Exception e)
             {

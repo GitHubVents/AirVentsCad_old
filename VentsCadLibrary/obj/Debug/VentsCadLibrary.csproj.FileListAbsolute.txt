@@ -35,3 +35,4 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\Inte
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.csproj.ResolveComReference.cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\obj\Debug\VentsCadLibrary.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\VentsCadLibrary\bin\Debug\BatchDLL.dll

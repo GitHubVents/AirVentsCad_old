@@ -832,6 +832,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #region Сборка панели
 
+
+            var iDs = "";
+
             var idAsm = 0;
             foreach (var сборка in partIds.Select(partId => new AddingPanel
             {
@@ -867,12 +870,47 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 PanelNumber = newId
             }))
             {
-                idAsm =  сборка.Add();
+                idAsm = сборка.Add();
+                iDs = iDs + "\n" + idAsm;
             }
+            
+            //MessageBox.Show(iDs);
+            //return null;
 
             #endregion
+            
 
             var обозначениеНовойПанели = "02-" + typeOfPanel[0] + "-" + idAsm;
+
+            existingAsmsAndParts.AddRange(new List<ExistingAsmsAndParts>
+                {
+                    new ExistingAsmsAndParts
+                    {
+                        PartName = обозначениеНовойПанели,
+                        Comment = "Сборка панели",
+                        IdAsm = обозначениеНовойПанели + " - " + typeOfPanel[1],
+                        PartQuery = $@"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}
+                        Width = {Convert.ToInt32(width)} Height = {Convert.ToInt32(height)}" +
+                        //PanelMatOut = {Convert.ToInt32(materialP1[0])}
+                        //PanelMatIn = {Convert.ToInt32(materialP2[0])}
+                        //PanelMatThickOut = {Convert.ToDouble(materialP1[1].Replace('.', ','))}
+                        //PanelMatThickIn = {Convert.ToDouble(materialP2[1].Replace('.', ','))}
+                        //RalOut = {покрытие[0]}
+                        //RalIn = {покрытие[0]}
+                        //CoatingTypeOut = {покрытие[1]}
+                        //CoatingTypeIn = {покрытие[1]}
+                        //CoatingClassOut = {Convert.ToInt32(покрытие[2])}
+                        //CoatingClassIn = {Convert.ToInt32(покрытие[2])}
+                        $@" Mirror = {config.Contains("01")}
+                        Step = {(needToAddStepInsertionAndStep ? расположениеПанелей : null)}
+                        StepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}
+                        Reinforcing = {усиление}
+                        StickyTape = {скотч.Contains("Со скотчем")}
+                        AirHole = {типТорцевой}
+                        PanelNumber = {newId}"
+                    }
+                });
+
 
             if (типДвойной == "00")
             {
@@ -2021,148 +2059,190 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             else
             {
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp2 == "01" || ValProfils.Tp2 == "00")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз61@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз61@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз61@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз62@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз62@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз62@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp3 == "01" || ValProfils.Tp3 == "00")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз63@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз63@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз63@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз64@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз64@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз64@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);               
+
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp4 == "01" || ValProfils.Tp4 == "00")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз82@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз82@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз82@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
-                    swDoc.Extension.SelectByID2("Эскиз83@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз83@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                    //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
+                    //swDoc.Extension.SelectByID2("Эскиз83@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Вырез-ВытянутьTp4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp1 == "02")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);                    
+                    //swDoc.Extension.SelectByID2("Тип-02-1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
-                {
-                    swDoc.Extension.SelectByID2("Тип-02-1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                {                    
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Тип-02-1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Тип-02-1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+
+                //swDoc.Extension.SelectByID2("Тип-02-1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Тип-02-1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp2 == "02")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Тип-02-2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Тип-02-2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Тип-02-2R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Тип-02-2L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp3 == "02")
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Тип-02-3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Тип-02-3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Тип-02-3R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Тип-02-3L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
 
@@ -2170,21 +2250,25 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 if (config.Contains("01"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
                 if (config.Contains("02"))
                 {
-                    swDoc.Extension.SelectByID2("Тип-02-4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditSuppress();
+                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    //swDoc.Extension.SelectByID2("Тип-02-4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                    //swDoc.EditSuppress();
                 }
             }
             else
             {
-                swDoc.Extension.SelectByID2("Тип-02-4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Тип-02-4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Тип-02-4R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Тип-02-4L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             // Полупанель внутрення
@@ -2192,37 +2276,48 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (ValProfils.Tp1 == "05"){}
             else
             {
-                swDoc.Extension.SelectByID2("Тип-05-1@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Эскиз88@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-1@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз88@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+
+                //swDoc.Extension.SelectByID2("Тип-05-1@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Эскиз88@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp2 == "05"){}
             else
             {
-                swDoc.Extension.SelectByID2("Тип-05-2@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Эскиз66@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-2@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз66@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+
+                //swDoc.Extension.SelectByID2("Тип-05-2@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Эскиз66@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp3 == "05"){}
             else
             {
-                swDoc.Extension.SelectByID2("Тип-05-3@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Эскиз67@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-3@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз67@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Тип-05-3@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                //swDoc.Extension.SelectByID2("Эскиз67@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
             }
 
             if (ValProfils.Tp4 == "05"){}
             else
             {
-                swDoc.Extension.SelectByID2("Тип-05-4@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditSuppress();
-                swDoc.Extension.SelectByID2("Эскиз89@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0); 
-                swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-4@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Тип-05-4@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditSuppress();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз89@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                //swDoc.Extension.SelectByID2("Эскиз89@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0); 
+                //swDoc.EditSuppress();
             }
 
             #endregion
@@ -2231,66 +2326,76 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (pType == "21" || pType == "22" || pType == "23")
             {
-                    
-                swDoc.Extension.SelectByID2("Эскиз59@" + nameUpPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditUnsuppress2();
-                swDoc.Extension.SelectByID2("Эскиз73@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditUnsuppress2();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз59@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                //swDoc.Extension.SelectByID2("Эскиз59@" + nameUpPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
+                //swDoc.EditUnsuppress2();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз73@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                //swDoc.Extension.SelectByID2("Эскиз73@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
+                //swDoc.EditUnsuppress2();
 
-                if (ValProfils.Tp1 != "-")
+                if (!string.IsNullOrEmpty(ValProfils.Tp1))
                 {
                     if (config.Contains("02"))
                     {
                         foreach (var name in new[] { "U32", "U31" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U33", "U34" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
                         }
                     }
                     if (config.Contains("01"))
                     {
                         foreach (var name in new[] { "U52", "U51" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U53", "U54" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                 }
-                if (ValProfils.Tp4 != "-")
+                if (!string.IsNullOrEmpty(ValProfils.Tp4))
                 {
                     if (config.Contains("02"))
                     {
                         foreach (var name in new[] { "U42", "U41" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                     if (config.Contains("02"))
                     {
                         foreach (var name in new[] { "U43", "U44" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                     if (config.Contains("01"))
                     {
                         foreach (var name in new[] { "U62", "U61" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U63", "U64" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                 }
@@ -2299,66 +2404,76 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (pType == "30" || pType == "31")
             {
 
-                swDoc.Extension.SelectByID2("Эскиз59@" + nameUpPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditUnsuppress2();
-                swDoc.Extension.SelectByID2("Эскиз73@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditUnsuppress2();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз59@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                //swDoc.Extension.SelectByID2("Эскиз59@" + nameUpPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
+                //swDoc.EditUnsuppress2();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз73@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                //swDoc.Extension.SelectByID2("Эскиз73@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
+                //swDoc.EditUnsuppress2();
 
-                if (ValProfils.Tp1 != "-")
+                if (!string.IsNullOrEmpty(ValProfils.Tp1))//(ValProfils.Tp1 != "-")
                 {
                     if (config.Contains("02"))
                     {
                         foreach (var name in new[] { "U32", "U31" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U33", "U34" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                     if (config.Contains("01"))
                     {
                         foreach (var name in new[] { "U52", "U51" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U53", "U54" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                 }
-                if (ValProfils.Tp4 != "-")
+                if (!string.IsNullOrEmpty(ValProfils.Tp4))//(ValProfils.Tp4 != "-")
                 {
                     if (config.Contains("02"))
                     {
                         foreach (var name in new [] {"U42", "U41" })
                         {
-                            swDocExt.SelectByID2(name +"@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name +"@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U43", "U44" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                     if (config.Contains("01"))
                     {
                         foreach (var name in new[] { "U62", "U61" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                         foreach (var name in new[] { "U63", "U64" })
                         {
-                            swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditUnsuppress2();
+                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            //swDocExt.SelectByID2(name + "@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
+                            //swDoc.EditUnsuppress2();
                         }
                     }
                 }
@@ -2370,8 +2485,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (скотч != "Со скотчем")
             {
-                swDocExt.SelectByID2("02-11-04-40--1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditDelete();
+                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.COMPONENT, "02-11-04-40--1", VentsCad.Act.Delete);
+                //swDocExt.SelectByID2("02-11-04-40--1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                //swDoc.EditDelete();
                 swDocExt.SelectByID2("D1@Расстояние1@" + nameAsm + ".SLDASM", "DIMENSION", 0, 0, 0, true, 0, null, 0);
                 ((Dimension)(swDoc.Parameter("D1@Расстояние1"))).SystemValue = 0; // p1Deep = 19.2;
             }

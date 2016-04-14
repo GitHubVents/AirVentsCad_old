@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AirVentsCadWpf.AirVentsClasses;
-using AirVentsCadWpf.Properties;
-using VentsMaterials;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
 
 namespace AirVentsCadWpf.DataControls
@@ -18,11 +14,7 @@ namespace AirVentsCadWpf.DataControls
     /// </summary>
     public partial class DamperUc
     {
-        readonly SqlBaseData _sqlBaseData = new SqlBaseData();
-        readonly SetMaterials _setMaterials = new SetMaterials();
-        readonly ToSQL _toSql = new ToSQL();
-
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="DamperUc"/> class.
         /// </summary>
@@ -30,22 +22,9 @@ namespace AirVentsCadWpf.DataControls
         {
             InitializeComponent();
 
-            ToSQL.Conn = Settings.Default.ConnectionToSQL;
-
-            MaterialP1.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP1.DisplayMemberPath = "MaterialsName";
-            MaterialP1.SelectedValuePath = "LevelID";
-            MaterialP1.SelectedIndex = 0;
-
-
-            ТолщинаВнешней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+           // ToSQL.Conn = Settings.Default.ConnectionToSQL;
+            Totals.SetMaterial(MaterialP1);
+            ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
         }
 
@@ -53,7 +32,7 @@ namespace AirVentsCadWpf.DataControls
         {
             try
             {
-                //#region
+                #region CodeMaterial
 
                 //var mat1Code = "";
                 //var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
@@ -62,7 +41,6 @@ namespace AirVentsCadWpf.DataControls
                 //    mat1Code = row1.Field<string>("CodeMaterial");
                 //var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
 
-                //#endregion
 
                 //var vcad = new VentsCadLibrary.VentsCad
                 //{
@@ -77,6 +55,8 @@ namespace AirVentsCadWpf.DataControls
                 //MessageBox.Show("Finish");
 
                 //return;
+
+                #endregion
 
                 var mat1Code = "";
                 var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;

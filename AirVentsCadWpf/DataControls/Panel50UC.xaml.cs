@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
-using AirVentsCadWpf.Properties;
-using VentsMaterials;
+
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -18,12 +15,7 @@ namespace AirVentsCadWpf.DataControls
     /// Interaction logic for Panel50UC.xaml
     /// </summary>
     public partial class Panel50Uc
-    {
-
-        readonly SqlBaseData _sqlBaseData = new SqlBaseData();
-        readonly SetMaterials _setMaterials = new SetMaterials();
-        readonly ToSQL _toSql = new ToSQL();
-
+    {      
         /// <summary>
         /// Initializes a new instance of the <see cref="Panel50Uc"/> class.
         /// </summary>
@@ -33,70 +25,30 @@ namespace AirVentsCadWpf.DataControls
 
             _backgroundWorker.DoWork += BackgroundWorkerOnDoWork ;
            // _backgroundWorker += _backgroundWorker.ReportProgress(100);
-           // _backgroundWorker += _backgroundWorker.RunWorkerCompleted;
+           // _backgroundWorker += _backgroundWorker.RunWorkerCompleted;            
 
-            ToSQL.Conn = Settings.Default.ConnectionToSQL;
-
-            ТолщинаВнешней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
 
-            ТолщинаВннутренней.ItemsSource = new List<ComboBoxItem>
-            {
-                new ComboBoxItem {Content = "0.5"},
-                new ComboBoxItem {Content = "0.6"},
-                new ComboBoxItem {Content = "0.8"},
-                new ComboBoxItem {Content = "1.0"},
-                new ComboBoxItem {Content = "1.2"}
-            };
+            ТолщинаВннутренней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВннутренней.SelectedIndex = 2;
 
-            TypeOfPanel50.ItemsSource = ((IListSource)_sqlBaseData.PanelsTable()).GetList();
-            TypeOfPanel50.DisplayMemberPath = "PanelTypeName";
-            TypeOfPanel50.SelectedValuePath = "PanelTypeCode";
-            TypeOfPanel50.SelectedIndex = 0;
+            Totals.SetPanelType(TypeOfPanel50);            
 
-            MaterialP1.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP1.DisplayMemberPath = "MaterialsName";
-            MaterialP1.SelectedValuePath = "LevelID";
-            MaterialP1.SelectedIndex = 0;
+            Totals.SetMaterial(MaterialP1);
+            Totals.SetMaterial(MaterialP2);
 
-            MaterialP2.ItemsSource = ((IListSource)_sqlBaseData.MaterialsTable()).GetList();
-            MaterialP2.DisplayMemberPath = "MaterialsName";
-            MaterialP2.SelectedValuePath = "LevelID";
-            MaterialP2.SelectedIndex = 0;
-
-            Ral1.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            Ral1.DisplayMemberPath = "RAL";
-            Ral1.SelectedValuePath = "Hex";
-            Ral1.SelectedIndex = 0;
-
-            Ral2.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            Ral2.DisplayMemberPath = "RAL";
-            Ral2.SelectedValuePath = "Hex";
-            Ral2.SelectedIndex = 0;
-            
+            #region Paint
+            Totals.SetRal(Ral1);
+            Totals.SetRal(Ral2);
             Ral1.Visibility = Visibility.Hidden;
             Ral2.Visibility = Visibility.Hidden;
+            Totals.SetCoatingType(CoatingType1);
+            Totals.SetCoatingType(CoatingType2);
+            Totals.SetCoatingClass(CoatingClass1);
+            Totals.SetCoatingClass(CoatingClass2);
+            #endregion
 
-            CoatingType1.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingType1.DisplayMemberPath = "Name";
-            CoatingType1.SelectedValuePath = "Code";
-            CoatingType1.SelectedIndex = 0;
-
-            CoatingType2.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingType2.DisplayMemberPath = "Name";
-            CoatingType2.SelectedValuePath = "Code";
-            CoatingType2.SelectedIndex = 0;
-
-            CoatingClass1.ItemsSource = _setMaterials.CoatingListClass();
-            CoatingClass2.ItemsSource = _setMaterials.CoatingListClass();
         }
 
         private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
@@ -254,7 +206,9 @@ namespace AirVentsCadWpf.DataControls
             }
             App.ElementVisibility.SetImage(picturePath + pictureName, PicturePanel);
         }
-       
+
+        
+
 
         private void Ral1_LayoutUpdated(object sender, EventArgs e)
         {

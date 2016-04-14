@@ -58,12 +58,14 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Button Content="Обозначения текущего документа" Margin="5" VerticalAlignment="Top" Click="Button_Click_1" Background="{x:Null}" Padding="5,1"/>
                 <Button Content="Закрыть активный документ" Margin="5" VerticalAlignment="Top" Grid.Row="1" Click="Button_Click_3" Background="{x:Null}" Padding="5,1"/>
                 <Button Content="Закрыть SolidWorks" Margin="5" VerticalAlignment="Top" Grid.Row="2" Click="Button_Click_2" Background="{x:Null}" Padding="5,1"/>
                 <Button Content="Закрыть процесс SolidWorks" Margin="5" VerticalAlignment="Bottom" Grid.Row="3" Click="Button_Click_4" Background="{x:Null}" Padding="5,1"/>
                 <Button Content="Внести массу по всем к-ям в таблицу параметров" Margin="5" VerticalAlignment="Bottom" Grid.Row="4" Background="{x:Null}" Padding="5,1" Click="Button_Click"/>
+                <Button Content="Получение детали и свойств" Margin="5" VerticalAlignment="Bottom" Grid.Row="5" Background="{x:Null}" Padding="5,1" Click="Button_Click_5" />
             </Grid>
         </GroupBox>
         <GroupBox Header="Таблицы для чертежей" HorizontalAlignment="Left" Margin="5" Grid.Row="2">

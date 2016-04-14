@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace VentsCadLibrary
 {
@@ -74,9 +75,60 @@ namespace VentsCadLibrary
             SwEpdm.GetLastVersionOfFile(path, vaultName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idPdm"></param>
+        /// <param name="vaultName"></param>
+        public static void GetObjectType(int idPdm, string vaultName)
+        {
+          //  SwEpdm.GetObjectType(idPdm, vaultName);
+        }
+
         public static void GetAsmFilesAsBuild(string path, string vaultName)
         {
             SwEpdm.GetAsmFilesAsBuild(path, vaultName);
+        }
+
+        public class BatchGetParams
+        {
+            public string FilePath { get; set; }
+            public int IdPdm { get; set; }
+            public int CurrentVersion { get; set; }
+
+        }
+
+        public static void BatchGet(string vaultName, List<BatchGetParams> list, out List<PdmFilesAfterGet> pdmFilesAfterGets)
+        {
+            var taskParams = list.Select(batchGetParamse => new BatchDLL.Batches.TaskParam
+            {
+                CurrentVersion = batchGetParamse.CurrentVersion,
+                FullFilePath = batchGetParamse.FilePath,
+                IdPDM  = batchGetParamse.IdPdm
+            }).ToList();
+
+            pdmFilesAfterGets = taskParams.Select(batchGetParamse => new PdmFilesAfterGet
+            {
+                VersionToGet = batchGetParamse.CurrentVersion,
+                FilePath = batchGetParamse.FullFilePath,                
+            }).ToList();
+
+            SwEpdm.BatchGet(vaultName, taskParams);
+        }
+
+        public class PdmFilesAfterGet
+        {
+            public string FilePath { get; set; }
+
+            public string FileName { get; set; }
+
+            public int VersionBeforeGet { get; set; }
+
+            public int VersionToGet { get; set; }
+
+            public int VersionAfterGet { get; set; }
+
+            public bool Equal => VersionToGet == VersionAfterGet;
         }
 
         /// <summary>
@@ -107,10 +159,12 @@ namespace VentsCadLibrary
         /// <param name="path"></param>
         /// <param name="fileName"></param>
         /// <param name="fileIdPdm"></param>
+        /// <param name="currentVerison"></param>
+        /// <param name="getFileCopy"></param>
         /// <param name="vaultName"></param>
-        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, string vaultName)
+        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configurations, bool getFileCopy, string vaultName)
         {
-            SwEpdm.GetIdPdm(path, out fileName, out fileIdPdm, vaultName);
+            SwEpdm.GetIdPdm(path, out fileName, out fileIdPdm, out currentVerison, out configurations, getFileCopy, vaultName);
         }
         
         /// <summary>

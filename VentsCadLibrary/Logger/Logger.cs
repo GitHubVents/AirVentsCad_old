@@ -75,7 +75,8 @@ namespace VentsCadLibrary
                     try
                     {
                         con.Open();
-                        var sqlCommand = new SqlCommand("AddErrorLog", con) { CommandType = CommandType.StoredProcedure };
+                        var sqlCommand = new SqlCommand("AddErrorLog" +
+                                                        "", con) { CommandType = CommandType.StoredProcedure };
 
                         var sqlParameter = sqlCommand.Parameters;
 
@@ -92,7 +93,7 @@ namespace VentsCadLibrary
                         }
                         sqlParameter.AddWithValue("@ErrorTime", DateTime.Now);
                         sqlParameter.AddWithValue("@ErrorState", тип);
-                        if (string.IsNullOrEmpty(код))
+                        if (string.IsNullOrEmpty(функция))
                         {
                             sqlParameter.AddWithValue("@ErrorFunction", DBNull.Value);
                         }
@@ -104,7 +105,7 @@ namespace VentsCadLibrary
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Введите корректные данные! " + e.Message);
+                        MessageBox.Show("Введите корректные данные! " + e.StackTrace);
                     }
                     finally
                     {

@@ -42,26 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ConnectorOneC.dll" size="13824">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ConnectorOneC.dll" size="12288">
       <assemblyIdentity name="ConnectorOneC" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>7GQwonUMJ1u01iBWmHk59bmjMrGFQb5dPhrYlKKv72E=</dsig:DigestValue>
+        <dsig:DigestValue>MqFCAwBg8TDQuADlflrd63Rk2S5J87sKSDRZm1CGvY4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HostingWindowsForms.exe" size="111544">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HostingWindowsForms.exe" size="112032">
       <assemblyIdentity name="HostingWindowsForms" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>DBjsYROQsewofgm/ZV7aeDxEgk6P95X2M/lZHHga05U=</dsig:DigestValue>
+        <dsig:DigestValue>+Ro7JS4sLvCZoy78nr7q+8h9vW84JHE5Hxpnw7sT304=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -73,7 +73,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2K8JNp6AY85jPaHrTme94uwmZtwPnGKb0Z3o5nWtj8M=</dsig:DigestValue>
+        <dsig:DigestValue>CHuSHTd4kFARe14gQXD4QoZN0fAikn4B/tETVuOk9vU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

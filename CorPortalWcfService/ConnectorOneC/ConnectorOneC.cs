@@ -8,17 +8,20 @@ namespace ConecctorOneC
 
         static public dynamic ConnectionString()
         {
-            var com1S = new V83.COMConnector
-            {
-                PoolCapacity = 10,
-                PoolTimeout = 60,
-                MaxConnections = 2
-            };
 
-            //Result = com1S.Connect(@"File='\\srvkb\SolidWorks Admin\TEMP\1C_Test';Usr='Админенко (администратор)';pwd='';");
-            //Result = com1S.Connect(@"File='C:\1C_test_base';Usr='Админенко (администратор)';pwd='';");
-            Result = com1S.Connect("srvr='Srvprog'; ref='Yurchenko_new'; usr='com-user'; pwd='1'");
-            return Result;
+            return null;
+
+            //var com1S = new V83.COMConnector
+            //{
+            //    PoolCapacity = 10,
+            //    PoolTimeout = 60,
+            //    MaxConnections = 2
+            //};
+
+            ////Result = com1S.Connect(@"File='\\srvkb\SolidWorks Admin\TEMP\1C_Test';Usr='Админенко (администратор)';pwd='';");
+            ////Result = com1S.Connect(@"File='C:\1C_test_base';Usr='Админенко (администратор)';pwd='';");
+            //Result = com1S.Connect("srvr='Srvprog'; ref='Yurchenko_new'; usr='com-user'; pwd='1'");
+            //return Result;
         }
 
         public void CreateNomenclature(string description)

@@ -15,9 +15,9 @@ namespace AirVentsCadWpf.DataControls
     /// </summary>
     public partial class MontageFrameUc
     {
-        readonly SqlBaseData _sqlBaseData = new SqlBaseData();
-        readonly SetMaterials _setMaterials = new SetMaterials();
-        readonly ToSQL _toSql = new ToSQL();
+        //readonly SqlBaseData _sqlBaseData = new SqlBaseData();
+        //  readonly SetMaterials _setMaterials = new SetMaterials();
+        //  readonly ToSQL _toSql = new ToSQL();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MontageFrameUc"/> class.
@@ -26,7 +26,7 @@ namespace AirVentsCadWpf.DataControls
         {
             InitializeComponent();
 
-            MaterialMontageFrame.ItemsSource = ((IListSource)_sqlBaseData.MaterialsForMontageFrame()).GetList();
+            MaterialMontageFrame.ItemsSource = ((IListSource)SqlBaseData.MaterialsForMontageFrame()).GetList();
             MaterialMontageFrame.DisplayMemberPath = "MaterialsName";
             MaterialMontageFrame.SelectedValuePath = "LevelID"; //"CodeMaterial";
             MaterialMontageFrame.SelectedIndex = 0;
@@ -40,22 +40,13 @@ namespace AirVentsCadWpf.DataControls
             WidthBaseFrame.MaxLength = 5;
 
             #endregion
+            
+            //ToSQL.Conn = Settings.Default.ConnectionToSQL;
 
-            ToSQL.Conn = Settings.Default.ConnectionToSQL;
-
-            Ral1.ItemsSource = ((IListSource)_toSql.RalTable()).GetList();
-            Ral1.DisplayMemberPath = "RAL";
-            Ral1.SelectedValuePath = "Hex";
-            Ral1.SelectedIndex = 0;
-
+            Totals.SetRal(Ral1);
             Ral1.Visibility = Visibility.Hidden;
-
-            CoatingType1.ItemsSource = ((IListSource)_setMaterials.CoatingTypeDt()).GetList();
-            CoatingType1.DisplayMemberPath = "Name";
-            CoatingType1.SelectedValuePath = "Code";
-            CoatingType1.SelectedIndex = 0;
-
-            CoatingClass1.ItemsSource = _setMaterials.CoatingListClass();
+            Totals.SetCoatingType(CoatingType1);
+            Totals.SetCoatingClass(CoatingClass1);            
         }
 
         void BUILDING_Click(object sender, RoutedEventArgs e)
