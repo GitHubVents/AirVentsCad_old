@@ -19,6 +19,12 @@
   <wsdl:message name="IVentsCadService_GetDataUsingDataContract_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetDataUsingDataContractResponse" />
   </wsdl:message>
+  <wsdl:message name="IVentsCadService_BuildSpigot_InputMessage">
+    <wsdl:part name="parameters" element="tns:BuildSpigot" />
+  </wsdl:message>
+  <wsdl:message name="IVentsCadService_BuildSpigot_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BuildSpigotResponse" />
+  </wsdl:message>
   <wsdl:portType name="IVentsCadService">
     <wsdl:operation name="GetData">
       <wsdl:input wsam:Action="http://tempuri.org/IVentsCadService/GetData" message="tns:IVentsCadService_GetData_InputMessage" />
@@ -27,6 +33,10 @@
     <wsdl:operation name="GetDataUsingDataContract">
       <wsdl:input wsam:Action="http://tempuri.org/IVentsCadService/GetDataUsingDataContract" message="tns:IVentsCadService_GetDataUsingDataContract_InputMessage" />
       <wsdl:output wsam:Action="http://tempuri.org/IVentsCadService/GetDataUsingDataContractResponse" message="tns:IVentsCadService_GetDataUsingDataContract_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BuildSpigot">
+      <wsdl:input wsam:Action="http://tempuri.org/IVentsCadService/BuildSpigot" message="tns:IVentsCadService_BuildSpigot_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/IVentsCadService/BuildSpigotResponse" message="tns:IVentsCadService_BuildSpigot_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IVentsCadService" type="tns:IVentsCadService">
@@ -42,6 +52,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetDataUsingDataContract">
       <soap:operation soapAction="http://tempuri.org/IVentsCadService/GetDataUsingDataContract" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuildSpigot">
+      <soap:operation soapAction="http://tempuri.org/IVentsCadService/BuildSpigot" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

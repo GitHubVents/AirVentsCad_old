@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using VentsCadLibrary;
 
 namespace VentsCadServiceLibrary
@@ -30,8 +31,8 @@ namespace VentsCadServiceLibrary
         {
             throw new NotImplementedException();
         }
-
-        public VentsCad.Spigot Spigot(string type, string width, string height)
+               
+        public VentsCad.Spigot Spigot(string type, string width, string height)  
         {
             VentsCad.Spigot spigot = null;
             try
@@ -47,6 +48,31 @@ namespace VentsCadServiceLibrary
             }
 
             return spigot;
+        }
+
+        public void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm)
+        {
+            projectId = 0;
+            idPdm = 0;
+            try
+            {
+                using (var server = new VentsCad())
+                {
+                    var newSpigot = new VentsCad.Spigot(type, width, height);
+                    if (!newSpigot.Exist)
+                    {
+                        newSpigot.Build();
+                    }
+                    var place = newSpigot.GetPlace();
+
+                    projectId = place.ProjectId;
+                    idPdm = place.IdPdm;
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+            }
         }
     }
 }

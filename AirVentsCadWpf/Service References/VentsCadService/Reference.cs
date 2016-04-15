@@ -29,7 +29,7 @@ namespace AirVentsCadWpf.VentsCadService {
         private string StringValueField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
-        public ExtensionDataObject ExtensionData {
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
                 return this.extensionDataField;
             }
@@ -89,6 +89,57 @@ namespace AirVentsCadWpf.VentsCadService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IVentsCadService/GetDataUsingDataContractResponse")]
         System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.CompositeType> GetDataUsingDataContractAsync(AirVentsCadWpf.VentsCadService.CompositeType composite);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/BuildSpigot", ReplyAction="http://tempuri.org/IVentsCadService/BuildSpigotResponse")]
+        AirVentsCadWpf.VentsCadService.BuildSpigotResponse BuildSpigot(AirVentsCadWpf.VentsCadService.BuildSpigotRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/BuildSpigot", ReplyAction="http://tempuri.org/IVentsCadService/BuildSpigotResponse")]
+        System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.BuildSpigotResponse> BuildSpigotAsync(AirVentsCadWpf.VentsCadService.BuildSpigotRequest request);
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="BuildSpigot", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class BuildSpigotRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public string type;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public string width;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=2)]
+        public string height;
+        
+        public BuildSpigotRequest() {
+        }
+        
+        public BuildSpigotRequest(string type, string width, string height) {
+            this.type = type;
+            this.width = width;
+            this.height = height;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="BuildSpigotResponse", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class BuildSpigotResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public int projectId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public int idPdm;
+        
+        public BuildSpigotResponse() {
+        }
+        
+        public BuildSpigotResponse(int projectId, int idPdm) {
+            this.projectId = projectId;
+            this.idPdm = idPdm;
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -97,8 +148,7 @@ namespace AirVentsCadWpf.VentsCadService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class VentsCadServiceClient : System.ServiceModel.ClientBase<IVentsCadService>, IVentsCadService
-    {
+    public partial class VentsCadServiceClient : System.ServiceModel.ClientBase<AirVentsCadWpf.VentsCadService.IVentsCadService>, AirVentsCadWpf.VentsCadService.IVentsCadService {
         
         public VentsCadServiceClient() {
         }
@@ -131,8 +181,27 @@ namespace AirVentsCadWpf.VentsCadService {
             return base.Channel.GetDataUsingDataContract(composite);
         }
         
-        public System.Threading.Tasks.Task<CompositeType> GetDataUsingDataContractAsync(AirVentsCadWpf.VentsCadService.CompositeType composite) {
+        public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.CompositeType> GetDataUsingDataContractAsync(AirVentsCadWpf.VentsCadService.CompositeType composite) {
             return base.Channel.GetDataUsingDataContractAsync(composite);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        AirVentsCadWpf.VentsCadService.BuildSpigotResponse AirVentsCadWpf.VentsCadService.IVentsCadService.BuildSpigot(AirVentsCadWpf.VentsCadService.BuildSpigotRequest request) {
+            return base.Channel.BuildSpigot(request);
+        }
+        
+        public int BuildSpigot(string type, string width, string height, out int idPdm) {
+            AirVentsCadWpf.VentsCadService.BuildSpigotRequest inValue = new AirVentsCadWpf.VentsCadService.BuildSpigotRequest();
+            inValue.type = type;
+            inValue.width = width;
+            inValue.height = height;
+            AirVentsCadWpf.VentsCadService.BuildSpigotResponse retVal = ((AirVentsCadWpf.VentsCadService.IVentsCadService)(this)).BuildSpigot(inValue);
+            idPdm = retVal.idPdm;
+            return retVal.projectId;
+        }
+        
+        public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.BuildSpigotResponse> BuildSpigotAsync(AirVentsCadWpf.VentsCadService.BuildSpigotRequest request) {
+            return base.Channel.BuildSpigotAsync(request);
         }
     }
 }

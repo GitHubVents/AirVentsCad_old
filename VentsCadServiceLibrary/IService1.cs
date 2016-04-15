@@ -13,12 +13,12 @@ namespace VentsCadServiceLibrary
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
+        
+        //[OperationContract]
+        //VentsCad.Spigot Spigot(string type, string width, string height);
 
         [OperationContract]
-        VentsCad.Spigot Spigot(string type, string width, string height);
-        
-        [OperationContract]
-        void BuildSpigot(string type, string width, string height, out VentsCad.ProductPlace place);
+        void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm);
     } 
 
 
@@ -45,7 +45,7 @@ namespace VentsCadServiceLibrary
         }
     }
 
-
+   
     
 
 }

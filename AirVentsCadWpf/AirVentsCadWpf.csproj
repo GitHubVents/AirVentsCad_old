@@ -423,6 +423,9 @@
     </EmbeddedResource>
     <None Include="AirVentsCadWpf_1_TemporaryKey.pfx" />
     <None Include="Properties\DataSources\HostingWindowsForms.EPDM.datasource" />
+    <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.BuildSpigotResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.CompositeType.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
