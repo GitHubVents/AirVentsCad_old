@@ -186,7 +186,7 @@ namespace VentsCadLibrary
             }
         }
 
-        internal bool GetExistingFile(string fileName, int type, string vaultName)
+        internal static bool GetExistingFile(string fileName, int type, string vaultName)
         {
             List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
             switch (type)
@@ -527,7 +527,7 @@ namespace VentsCadLibrary
             }
         }
         
-        void SwPartParamsChangeWithNewName(string partName, string newName, string[,] newParams, bool newFuncOfAdding, IList<string> copies)
+        static void SwPartParamsChangeWithNewName(string partName, string newName, string[,] newParams, bool newFuncOfAdding, IList<string> copies)
         {
             try
             {

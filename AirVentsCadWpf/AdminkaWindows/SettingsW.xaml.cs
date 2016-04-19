@@ -36,6 +36,9 @@ namespace AirVentsCadWpf.AdminkaWindows
             SourceFolder.Content = " SourceFolder - " + Settings.Default.SourceFolder;
             DestinationFolder.Content = " DestinationFolder - " + Settings.Default.DestinationFolder;
             Developer.Content = " Developer - " + Settings.Default.Developer;
+
+            VentsServiceAddress.Text = Settings.Default.ServiceAddress;
+
         }
       
         void SaveSettingsClick(object sender, RoutedEventArgs e)
@@ -86,6 +89,9 @@ namespace AirVentsCadWpf.AdminkaWindows
 
             var selectedItem = (KeyValuePair<string, int>) VaultsComboBox.SelectedItem;
             Settings.Default.VaultSystemType = selectedItem.Value;
+
+            Settings.Default.ServiceAddress = VentsServiceAddress.Text;
+            App.Service.SetAddress(Settings.Default.ServiceAddress);
 
             Settings.Default.Save();
             
@@ -139,6 +145,25 @@ namespace AirVentsCadWpf.AdminkaWindows
         {
             if (VaultsComboBox == null) return;
             SQLBase.Text = VaultsComboBox.SelectedValue?.ToString() == "Vents-PDM" ? "Рабочая" : "Тестовая";
+        }
+
+        private void TestService_Click(object sender, RoutedEventArgs e)
+        {
+            using (var client = new VentsCadService.VentsCadServiceClient(App.Service.Binding, App.Service.GetAddress(VentsServiceAddress.Text)))
+            {
+                try
+                {
+                    client.Open();
+                    client.GetData(0);
+                    MessageBox.Show("Сервер AirVentsCad доступен");
+                    client.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Сервер AirVentsCad недоступен");
+                }     
+                
+            }
         }
     }
 }

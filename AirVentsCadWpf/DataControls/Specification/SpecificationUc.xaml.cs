@@ -1339,20 +1339,26 @@ namespace AirVentsCadWpf.DataControls.Specification
                           //   MessageBox.Show(exc.Message + "\n" + item.Наименование + "\n" + item.IdPmd + "\n" + item.CurrentVersion + "\n" + item.Конфигурация);
                         }                
                 }
-
-             //   MessageBox.Show(listToExportLocal.Count.ToString());
+                
+                //MessageBox.Show(listToExportLocal.Count.ToString());
 
                 listToExportLocal.AddRange(ListToRun.Where(x => !x.Dxf).ToList());
 
                 GetFiles(listToExportLocal, out _pdmFilesAfterGet);
-
-            //    MessageBox.Show(listToExportLocal.Count.ToString());
+                
+                //MessageBox.Show(listToExportLocal.Count.ToString());
 
                 foreach (var part in listToExportLocal)
                 { 
                     Exception exception;
                     List< Exception> exceptions;
                     List<Dxf.DxfFiles> dxfFiles;
+
+                    //if (part.Наименование.ToLower().Contains("902.01.112"))
+                    //{
+                    //    MessageBox.Show(part.CurrentVersion.ToString(),  part.IdPmd.ToString());
+                    //}                    
+
                     Dxf.Save(Path.GetFullPath(part.Путь), pathToSave, OnlyInAsmConfigs ? part.Конфигурация : null, out exception, part.IdPmd, part.CurrentVersion, out dxfFiles, true, true);
                     if (exception != null)
                     {
@@ -1366,15 +1372,14 @@ namespace AirVentsCadWpf.DataControls.Specification
                     foreach (var item in exceptions)
                     {
                         if (item != null)
-                    {
-                        try
                         {
-                            MessageBox.Show(item.Message + "\n" + item.StackTrace, "Exception SS");
+                            try
+                            {
+                                MessageBox.Show(item.Message + "\n" + item.StackTrace, "Exception SS");
+                            }
+                            catch (Exception) { }
                         }
-                        catch (Exception) { }                      
                     }
-                    }
-
                 }
 
                 foreach (var process in Process.GetProcessesByName("SLDWORKS"))
@@ -1384,7 +1389,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             }
             catch (Exception exception)
             {
-             //   MessageBox.Show(exception.StackTrace);
+                //MessageBox.Show(exception.StackTrace);
             }
 
             MessageBox.Show($"Выгрузка разверток {Path.GetFileNameWithoutExtension(ПутьКСборке)} завершена");

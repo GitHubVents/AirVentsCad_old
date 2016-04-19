@@ -1,13 +1,13 @@
-﻿namespace VentsCadLibrary
+﻿using System;
+
+namespace VentsCadLibrary
 {
     partial class VentsCad
     { 
         interface WorkWithProduct
         {
-            string Name();
-            string DestinationFolder();            
             void Build();
-            ProductPlace GetPlace();
+            //ProductPlace GetPlace();
         }
         public class ProductPlace
         {
@@ -21,5 +21,48 @@
             public int ProjectId;
             public string Path;
         }   
+
+
+     
+
+        public abstract class Product : WorkWithProduct
+        {
+            internal abstract string ModelName { get; set; }
+
+            internal abstract string ModelPath { get; set; }
+
+
+            internal abstract string DestinationFolder { get; }
+                        
+            internal abstract string TemplateFolder { get; }
+
+            public bool Exist => Place != null;// { get; }
+
+            public abstract ProductPlace Place { get; set; }
+
+            public abstract void Build();
+
+            public ProductPlace GetPlace()
+            {
+                if (Place != null) return Place;
+
+                string path;
+                int fileId;
+                int projectId;
+                //Exist = 
+                    GetExistingFile(ModelName, out path, out fileId, out projectId);
+                if (string.IsNullOrEmpty(path))
+                {
+                    Place = null;
+                }
+                else
+                {
+                    Place = new ProductPlace(path, fileId, projectId);
+                }
+
+                return Place;
+            }            
+        }
     }
+
 }

@@ -24,65 +24,57 @@ namespace AirVentsCadWpf.DataControls
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
 
-            var _binding = new BasicHttpBinding
-            {
-                ReceiveTimeout = TimeSpan.FromMinutes(15),
-                SendTimeout = TimeSpan.FromMinutes(15),
-                MaxBufferPoolSize = 2147483647, // 2147483647
-                MaxBufferSize = 2147483647,
-                MaxReceivedMessageSize = 2147483647, // 2147483647
-                Name = "BasicHttpBinding_IVentsCadService"
-            };
-
-            var myReaderQuotas = new XmlDictionaryReaderQuotas();
-            myReaderQuotas.MaxStringContentLength = 2147483647;
-            myReaderQuotas.MaxArrayLength = 2147483647;
-            myReaderQuotas.MaxBytesPerRead = 2147483647;
-            myReaderQuotas.MaxDepth = 2000000;
-            myReaderQuotas.MaxNameTableCharCount = 2147483647;
-
-            _binding.GetType().GetProperty("ReaderQuotas").SetValue(_binding, myReaderQuotas, null);
-
-            var _address = new EndpointAddress("http://localhost:8000/hello");
-
-            using (var client = new VentsCadService.VentsCadServiceClient(_binding, _address))
-            {
-                int idPdm;
-                int projId;
-
-                client.Open();
-
-                MessageBox.Show(client.BuildSpigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out idPdm).ToString());
-
-                client.Close();
-            }
-
             #region VentsCadService
 
-            //    VentsCadService.VentsCadServiceClient sdfb = new VentsCadService.VentsCadServiceClient();
-            //int idPdm;
-            //int projId;
-            //MessageBox.Show(sdfb.BuildSpigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out idPdm).ToString());
-            //return;
-
             //try
-            //{              
-            //    using (var server = new VentsCadLibrary.VentsCad())
+            //{   
+            //    using (var client = new VentsCadService.VentsCadServiceClient(App.Service.Binding, App.Service.Address))
             //    {
-            //        var newSpigot = new VentsCadLibrary.VentsCad.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);
-            //        if (!newSpigot.Exist)
-            //        {
-            //            newSpigot.Build();
-            //        }
-            //        var place = newSpigot.GetPlace();
-            //        MessageBox.Show(place.Path +"\n" +place.IdPdm + "\n" + place.ProjectId);            
-
+            //        int idPdm; int projId;
+            //        client.Open();
+            //        MessageBox.Show(client.BuildSpigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out idPdm).ToString());
+            //        client.Close();
             //    }
             //}
             //catch (Exception ex)
             //{
+            //   // MessageBox.Show(App.Service.Address.ToString());
             //    MessageBox.Show(ex.Message);
             //}
+
+            #endregion
+
+            VentsCadLibrary.VentsCad.ProductFactory serviceObj = new VentsCadLibrary.VentsCad.ProductFactory(new[] { "spigot", TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text } );
+
+            MessageBox.Show(serviceObj.product.Exist.ToString());
+
+            MessageBox.Show(serviceObj.product.Place?.IdPdm.ToString());
+
+            serviceObj.product.Build();
+
+            MessageBox.Show(serviceObj.product.Exist.ToString());
+            MessageBox.Show(serviceObj.product.Place?.IdPdm.ToString());
+            return;
+
+            #region VentsCadLibrary         
+
+            try
+            {
+                using (var server = new VentsCadLibrary.VentsCad())
+                {
+                    var newSpigot = new VentsCadLibrary.VentsCad.Spigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);
+                    if (!newSpigot.Exist)
+                    {
+                        newSpigot.Build();
+                    }
+                    var place = newSpigot.GetPlace();
+                    MessageBox.Show(place.Path + "\n" + place.IdPdm + "\n" + place.ProjectId);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             #endregion
 

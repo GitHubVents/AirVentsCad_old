@@ -48,14 +48,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirVentsCad.exe" size="1804704">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirVentsCad.exe" size="1806752">
       <assemblyIdentity name="AirVentsCad" version="1.0.1.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>+/7B3Sgyyb5KO4YE0MfexwxkQ9Gpmvl6epAWJjpyPU0=</dsig:DigestValue>
+        <dsig:DigestValue>uOEXn+HRylVIB3s8/NsTRvYxJzJnhXv+8RlqteugP3Y=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -216,14 +216,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VentsCadLibrary.dll" size="136192">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VentsCadLibrary.dll" size="159744">
       <assemblyIdentity name="VentsCadLibrary" version="0.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6C6kBeUHcbTCBD6gzDeLDO8n13syPLKQiH7ti8F2zDc=</dsig:DigestValue>
+        <dsig:DigestValue>+cXDazf+zVlNTDDCznuD0EWXKOs0iyUU6g7ycULfaM4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -296,13 +296,13 @@
       <dsig:DigestValue>X8k/z1rd5tOfpvNj0XJYDbtmYNPvTng0IElCHsBc6UU=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="AirVentsCad.exe.config" size="6726">
+  <file name="AirVentsCad.exe.config" size="6836">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>1xuuBaYVm6uzDkDaSXqbsekcOu47rw6ovfVDzGAYc2Y=</dsig:DigestValue>
+      <dsig:DigestValue>Ht+T1XoMeihXAdaRyMTWpVs8VIjo33r6xr0tgcqa+sQ=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Libraries\VentsPDM-dll.dll" size="11776">

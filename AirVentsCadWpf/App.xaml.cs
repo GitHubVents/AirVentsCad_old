@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using AirVentsCadWpf.Properties;
+using System.ServiceModel;
+using System.Xml;
 
 namespace AirVentsCadWpf
 {
@@ -49,6 +51,43 @@ namespace AirVentsCadWpf
         public static int VaultType
         {
             get { return (int)VaultTypes.Intermech; }
+        }
+
+        public class Service
+        {
+            public static BasicHttpBinding Binding = new BasicHttpBinding
+            {
+                ReceiveTimeout = TimeSpan.FromMinutes(15),
+                SendTimeout = TimeSpan.FromMinutes(15),
+                MaxBufferPoolSize = 2147483647, 
+                MaxBufferSize = 2147483647,
+                MaxReceivedMessageSize = 2147483647, 
+                Name = "BasicHttpBinding_IVentsCadService"
+            };
+
+            XmlDictionaryReaderQuotas myReaderQuotas = new XmlDictionaryReaderQuotas
+            {
+                MaxStringContentLength = 2147483647,
+                MaxArrayLength = 2147483647,
+                MaxBytesPerRead = 2147483647,
+                MaxDepth = 2000000,
+                MaxNameTableCharCount = 2147483647
+            };
+            
+            //_binding.GetType().GetProperty("ReaderQuotas").SetValue(_binding, myReaderQuotas, null);
+
+            public static EndpointAddress Address { get; set; } = new EndpointAddress(Settings.Default.ServiceAddress);
+
+            public static void SetAddress (string address)
+            {
+                Address = new EndpointAddress(address);
+            }
+
+
+            public static EndpointAddress GetAddress(string address)
+            {
+                return new EndpointAddress(address);
+            }
         }
 
 

@@ -106,3 +106,4 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVe
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCadWpf.UserControlEdr.resources
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\PdmAsmBomToXml.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\PdmAsmBomToXml.pdb
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad_MarkupCompile.lref

@@ -14,6 +14,9 @@ namespace VentsCadService
         {
             InitializeComponent();
             button2.Enabled = false;
+
+            //MessageBox.Show(localComputerName);
+
             IPAddress[] localIPs = Dns.GetHostAddresses(localComputerName);
             List<string> Data = new List<string>();
             foreach (var item in localIPs)
@@ -27,7 +30,7 @@ namespace VentsCadService
 
         }
 
-        string localComputerName = Dns.GetHostName();
+        string localComputerName = Dns.GetHostName();        
 
         public static bool IsLocalIpAddress(string host)
         {
@@ -67,12 +70,12 @@ namespace VentsCadService
 
             var Ht = new BasicHttpBinding
             {
-                ReceiveTimeout = TimeSpan.FromMinutes(5),
-                SendTimeout = TimeSpan.FromMinutes(5),
-                MaxBufferPoolSize = 2147483647, // 2147483647
+                ReceiveTimeout = TimeSpan.FromMinutes(15),
+                SendTimeout = TimeSpan.FromMinutes(15),
+                MaxBufferPoolSize = 2147483647, 
                 MaxBufferSize = 2147483647,
-                MaxReceivedMessageSize = 2147483647, // 2147483647
-              //  Name = "BasicHttpBinding_ITaskService"
+                MaxReceivedMessageSize = 2147483647, 
+                //Name = "BasicHttpBinding_ITaskService"
             };
 
             var smb = new ServiceMetadataBehavior

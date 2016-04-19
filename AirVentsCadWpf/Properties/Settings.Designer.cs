@@ -163,5 +163,17 @@ namespace AirVentsCadWpf.Properties {
                 this["VaultSystemType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost/")]
+        public string ServiceAddress {
+            get {
+                return ((string)(this["ServiceAddress"]));
+            }
+            set {
+                this["ServiceAddress"] = value;
+            }
+        }
     }
 }

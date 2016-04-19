@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>67</ApplicationRevision>
+    <ApplicationRevision>68</ApplicationRevision>
     <ApplicationVersion>2.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -429,16 +429,6 @@
     <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.CompositeType.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\VentsCadService\hello.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\VentsCadService\hello1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\VentsCadService\hello2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\VentsCadService\VentsService.wsdl" />
     <None Include="Service References\ServiceReference68\AirVentsCadWpf.ServiceReference68.ConnectionClassifierMeasure.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -476,6 +466,7 @@
     <None Include="Service References\ServiceReference68\service21.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\VentsCadService\VentsService1.wsdl" />
     <Resource Include="DataControls\Pictures\Бескаркасная установка\01 - Frameless Design 40mm - 01.JPG" />
     <Resource Include="DataControls\Pictures\Бескаркасная установка\01 - Frameless Design 40mm - 02.JPG" />
     <Resource Include="DataControls\Pictures\Бескаркасная установка\01 - Frameless Design 40mm - 03.JPG" />
@@ -551,13 +542,22 @@
     <WCFMetadataStorage Include="Service References\ServiceReference68\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\VentsCadService\item.disco" />
+    <None Include="Service References\VentsCadService\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\VentsCadService\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\VentsCadService\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\VentsCadService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\VentsCadService\configuration.svcinfo" />
     <None Include="Service References\VentsCadService\configuration91.svcinfo" />
-    <None Include="Service References\VentsCadService\hello.disco" />
     <Resource Include="DataControls\Pictures\loading.gif" />
     <Resource Include="DataControls\Pictures\button_cancel.png" />
     <Resource Include="DataControls\Pictures\cancel.JPG" />
