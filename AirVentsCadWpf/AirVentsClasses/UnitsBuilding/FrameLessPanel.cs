@@ -150,7 +150,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             // todo Удаление цельной детали в панели
 
-            BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName }, Settings.Default.TestPdmBaseName);
+            BatchUnLock1(new List<string> { new FileInfo(asmPath).FullName });//, Settings.Default.TestPdmBaseName);
         }
 
 
@@ -3456,7 +3456,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             List<VentsCadFiles> outList;
 
-            CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
+            CheckInOutPdmNew(NewComponentsFull, true, //Settings.Default.TestPdmBaseName, 
+                out outList);
 
             //var mess = outList.Aggregate("", (current, item) => current + "\n PartIdPdm - " + item.PartIdPdm + "\n PartIdSql - " + item.PartIdSql + "\n LocalPartFileInfo - " + item.LocalPartFileInfo + "\n PartName - " + item.PartName);
             //MessageBox.Show(mess);

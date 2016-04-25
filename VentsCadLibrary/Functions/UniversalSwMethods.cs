@@ -150,7 +150,7 @@ namespace VentsCadLibrary
             {
                 Логгер.Информация($"Получение последней версии по пути {path}\nБаза - {vaultName}", null, "", "GetLastVersionPdm");
 
-                VaultSystem.GetLastVersionOfFile(path, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
             }
             catch (Exception e)
             {
@@ -217,6 +217,31 @@ namespace VentsCadLibrary
 
         }
 
+        internal static void ComponentToAdd(string[] paths)
+        {
+            foreach (var path in paths)
+            {
+                ComponentToAdd(path);
+            }
+        }
+
+        internal static void ComponentToAdd(string path)
+        {
+            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = path });
+        }
+
+        internal static void AddMaterial(string[] material, string newName)
+        {
+            try
+            {
+                  VentsMatdll(material, null, newName);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
         internal static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId)
         {
             fileId = 0;
@@ -270,7 +295,8 @@ namespace VentsCadLibrary
                 else
                 {
                     List<VaultSystem.VentsCadFiles> list;
-                    VaultSystem.CheckInOutPdmNew(new List<VaultSystem.VentsCadFiles> { new VaultSystem.VentsCadFiles { LocalPartFileInfo = newEdrwFileName } }, true, VaultName, out list);
+                    VaultSystem.CheckInOutPdmNew(new List<VaultSystem.VentsCadFiles> { new VaultSystem.VentsCadFiles { LocalPartFileInfo = newEdrwFileName } }, true,//   VaultName, 
+                        out list);
                     Логгер.Информация("Закончена обработка детали " + Path.GetFileName(filePath) + " с ошибками", null, "", "PartInfoToXml");
                 }
             }
@@ -376,11 +402,16 @@ namespace VentsCadLibrary
             }
         }
         
-        private void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
+        private static void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
         {
             try
             {
                 _swApp.ActivateDoc2(newName, true, 0);
+
+                MessageBox.Show($"Activate - {newName}");
+                MessageBox.Show((_swApp == null).ToString());
+
+
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = ConnectionToSql;
                 var toSql = new ToSQL();
@@ -408,17 +439,19 @@ namespace VentsCadLibrary
                     setMaterials.CheckSheetMetalProperty("00", _swApp, out message);
                     if (message != null)
                     {
-                       // MessageBox.Show(message, newName);
+                        MessageBox.Show(message, newName);
                     }
                 }
                 catch (Exception e)
                 {
+                    MessageBox.Show(e.Message + "\n" + e.StackTrace, "VentsMatdll");
                     Логгер.Ошибка("Ошибка: " + e.StackTrace, e.GetHashCode().ToString("X"), newName, "VentsMatdll");
                 }
             }
 
             catch (Exception e)
             {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace, "VentsMatdll");
                 Логгер.Ошибка("Ошибка: " + e.StackTrace, e.GetHashCode().ToString("X"), newName, "VentsMatdll");
             }
 
@@ -431,6 +464,7 @@ namespace VentsCadLibrary
                 }
                 catch (Exception e)
                 {
+                    MessageBox.Show(e.Message + "\n" + e.StackTrace);
                     Логгер.Ошибка("Ошибка: " + e.StackTrace, e.GetHashCode().ToString("X"), newName, "VentsMatdll");
                 }    
             }

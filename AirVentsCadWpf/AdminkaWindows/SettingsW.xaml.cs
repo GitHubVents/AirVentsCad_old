@@ -45,10 +45,14 @@ namespace AirVentsCadWpf.AdminkaWindows
         {
             Логгер.Информация("Сохранение настроек программы", "", "Сохранение настроек программы", "SettingsW");
 
-            if (string.IsNullOrEmpty(SwEpdm.GetSwEpdRootFolderPath("Tets_debag"))) return;
+            VaultSystem.SetPmdVaultName("Tets_debag");
 
-            var testVaultSwEpdmRootPath = SwEpdm.GetSwEpdRootFolderPath("Tets_debag");
-            var pdmRootPath = SwEpdm.GetSwEpdRootFolderPath(VaultsComboBox.Text);
+            if (string.IsNullOrEmpty(SwEpdm.GetSwEpdRootFolderPath())) return;
+            var testVaultSwEpdmRootPath = SwEpdm.GetSwEpdRootFolderPath();
+
+
+            VaultSystem.SetPmdVaultName(VaultsComboBox.Text);
+            var pdmRootPath = SwEpdm.GetSwEpdRootFolderPath();
 
             switch (VaultsComboBox.Text)
             {
@@ -118,7 +122,7 @@ namespace AirVentsCadWpf.AdminkaWindows
             
             VaultsComboBox.SelectedValue = Settings.Default.PdmBaseName;
             if (PdmBaseName != null) 
-                PdmBaseName.Content = "Текущая корневая папка " + SwEpdm.GetSwEpdRootFolderPath(Settings.Default.PdmBaseName);
+                PdmBaseName.Content = "Текущая корневая папка " + SwEpdm.GetSwEpdRootFolderPath();
         }
 
         void ФайлЛоггера_Click(object sender, RoutedEventArgs e)
@@ -154,7 +158,7 @@ namespace AirVentsCadWpf.AdminkaWindows
                 try
                 {
                     client.Open();
-                    client.GetData(0);
+                    client.IsBusy();
                     MessageBox.Show("Сервер AirVentsCad доступен");
                     client.Close();
                 }

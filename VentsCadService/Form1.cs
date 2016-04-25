@@ -14,7 +14,6 @@ namespace VentsCadService
         {
             InitializeComponent();
             button2.Enabled = false;
-
             //MessageBox.Show(localComputerName);
 
             IPAddress[] localIPs = Dns.GetHostAddresses(localComputerName);
@@ -54,41 +53,40 @@ namespace VentsCadService
                 }
             }
             catch { }
-            return false;
-        }
+            return false;          
 
-
+        }       
 
         ServiceHost host { get; set; }
+
         Uri baseAddress { get; set; } = new Uri("http://localhost:8000/hello");//Uri("http://192.168.14.86:8000/hello");
 
         private void button1_Click(object sender, EventArgs e)
         {
             var baseAddress = new Uri("http://" + localHostIps.Text);// + ":/hello");
 
-            host = new ServiceHost(typeof(VentsService), baseAddress);
-
-            var Ht = new BasicHttpBinding
-            {
-                ReceiveTimeout = TimeSpan.FromMinutes(15),
-                SendTimeout = TimeSpan.FromMinutes(15),
-                MaxBufferPoolSize = 2147483647, 
-                MaxBufferSize = 2147483647,
-                MaxReceivedMessageSize = 2147483647, 
-                //Name = "BasicHttpBinding_ITaskService"
-            };
+            host = new ServiceHost(typeof(VentsService), baseAddress);            
 
             var smb = new ServiceMetadataBehavior
             {
                 HttpGetEnabled = true,
                 MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 }
             };
-            host.Description.Behaviors.Add(smb);           
-            
-            host.Open();
-            Status.Text = $"The service is ready at {baseAddress}";
-            button1.Enabled = false;
-            button2.Enabled = true;            
+            host.Description.Behaviors.Add(smb);
+
+            try
+            {
+                host.Open();
+                Status.Text = $"The service is ready at {baseAddress}";
+                button1.Enabled = false;
+                button2.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                
+            }
+
         }
 
         private void button2_Click(object sender, EventArgs e)

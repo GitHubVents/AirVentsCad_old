@@ -12,6 +12,7 @@ namespace VentsCadLibrary
         public class Dumper : Product
         {
             public override ProductPlace Place { get; set; }
+
             public Dumper(string typeOfFlange, string width, string height, bool isOutDoor, string[] material)
             {
                 IsOutDoor = isOutDoor;
@@ -43,10 +44,10 @@ namespace VentsCadLibrary
 
                 modelType = $"{(material[3] == "AZ" ? "" : "-" + material[3])}{(material[3] == "AZ" ? "" : material[1])}";
 
-                var drawing = "11-20";
+                drawing = "11-20";
                 if (modelName == "11-30")
                 { drawing = modelName; }
-                ModelName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O" : "");
+                ModelName = modelName + "-" + width + "-" + height + modelType + (isOutDoor == true ? "-O" : "");
                 ModelPath = $@"{destRootFolder}\{DamperDestinationFolder}\{ModelName}.SLDDRW";
 
                 Place = GetPlace();
@@ -58,15 +59,9 @@ namespace VentsCadLibrary
 
                 MessageBox.Show(DateTime.Now.Hour.ToString());
 
-                var drawing = "12-00";
-                if (modelName == "12-30")
-                {
-                    drawing = modelName;
-                }
-
                 Dimension myDimension;
                 var modelSpigotDrw = $@"{sourceRootFolder}{TemplateFolder}\{drawing}.SLDDRW";
-
+                
                 GetLastVersionAsmPdm(modelSpigotDrw, VaultName);
 
                 if (!InitializeSw(true)) return;
@@ -74,8 +69,11 @@ namespace VentsCadLibrary
                 var swDrwSpigot = _swApp.OpenDoc6(modelSpigotDrw, (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_LoadModel, "", 0, 0);              
 
                 var modelDamperDrw = $@"{destRootFolder}{modelDamperPath}\{drawing}.SLDDRW";
+                var modelLamel = $@"{sourceRootFolder}{modelDamperPath}\{"11-100"}.SLDDRW";
+
 
                 GetLastVersionAsmPdm(new FileInfo(modelDamperDrw).FullName, VaultName);
+                GetLastVersionAsmPdm(new FileInfo(modelLamel).FullName, VaultName);
 
                 if (!InitializeSw(true)) return;
 
@@ -104,8 +102,7 @@ namespace VentsCadLibrary
                 var hC = Math.Truncate(7 + 5.02 + (heightD - countL / 10 - 10.04) / 2);
 
                 // Коэффициенты и радиусы гибов   
-                var thiknessStr = material?[1].Replace(".", ",") ?? "0,8";
-                //MessageBox.Show(thiknessStr);
+                var thiknessStr = material?[1].Replace(".", ",") ?? "0,8";                
 
                 #region typeOfFlange = "20"
 
@@ -131,6 +128,8 @@ namespace VentsCadLibrary
                         swDoc.Extension.SelectByID2("Вырез-Вытянуть10@11-001-7@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Эскиз34@11-001-7@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
+                        #region To Delete
+
                         swDoc.Extension.SelectByID2("ВНС-901.41.302-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
                         swDoc.Extension.SelectByID2("Rivet Bralo-130@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
@@ -139,6 +138,8 @@ namespace VentsCadLibrary
                         swDoc.Extension.SelectByID2("Rivet Bralo-128@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Rivet Bralo-127@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Rivet Bralo-126@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
+
+                        #endregion
 
                         // 11-005 
 
@@ -157,21 +158,19 @@ namespace VentsCadLibrary
                                 $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                                 new[,]
                                 {
-                                {"D3@Эскиз1", Convert.ToString(heightD)},
-                                {"D1@Кривая1", Convert.ToString(rivetH)},
-
-                                {"D1@Кривая1", Convert.ToString(rivetH)},
-                                {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
-
-                                {"Толщина@Листовой металл", thiknessStr}
+                                    {"D3@Эскиз1", Convert.ToString(heightD)},
+                                    {"D1@Кривая1", Convert.ToString(rivetH)},
+                                    
+                                    {"D1@Кривая1", Convert.ToString(rivetH)},
+                                    {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
+                                    
+                                    {"Толщина@Листовой металл", thiknessStr}
                                 },
                                 false,
                                 null);
 
                             AddMaterial(material, newName);
-
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                            //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            ComponentToAdd(newPartPath);
                         }
 
                         // 11-006 
@@ -190,16 +189,15 @@ namespace VentsCadLibrary
                                 $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                                 new[,]
                                 {
-                                {"D3@Эскиз1", Convert.ToString(heightD)},
-                                {"D1@Кривая1", Convert.ToString(rivetH)},
-                                {"Толщина@Листовой металл", thiknessStr}
+                                    {"D3@Эскиз1", Convert.ToString(heightD)},
+                                    {"D1@Кривая1", Convert.ToString(rivetH)},
+                                    {"Толщина@Листовой металл", thiknessStr}
                                 },
                                 false,
                                 null);
 
                             AddMaterial(material, newName);
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                            //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            ComponentToAdd(newPartPath);
                         }
                     }
                     else
@@ -212,6 +210,13 @@ namespace VentsCadLibrary
                         swDoc.Extension.SelectByID2("Вырез-Вытянуть11@11-003-6@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Эскиз34@11-003-6@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Эскиз35@11-003-6@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
+
+
+
+
+
+                        #region To Delete
+
                         swDoc.Extension.SelectByID2("11-005-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("11-006-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Rivet Bralo-187@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
@@ -226,6 +231,8 @@ namespace VentsCadLibrary
                         swDoc.Extension.SelectByID2("Rivet Bralo-196@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Rivet Bralo-197@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("Rivet Bralo-198@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
+
+                        #endregion
                     }
 
 
@@ -246,21 +253,20 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(heightD + 8.04)},
-                            {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
-                            {"D2@Эскиз27", Convert.ToString(100*Math.Truncate(countL/2000))},
-                            {"D1@Кривая1", Convert.ToString(countL)},
-
-                            {"D1@Кривая2", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(heightD + 8.04)},
+                                {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
+                                {"D2@Эскиз27", Convert.ToString(100*Math.Truncate(countL/2000))},
+                                {"D1@Кривая1", Convert.ToString(countL)},
+                                
+                                {"D1@Кривая2", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);
                     }
 
                     // 11-002 
@@ -279,19 +285,18 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(widthD - 3.96)},
-                            {"D1@Кривая1", Convert.ToString(rivetW)},
-
-                            {"D1@Кривая3", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл1", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(widthD - 3.96)},
+                                {"D1@Кривая1", Convert.ToString(rivetW)},
+                                
+                                {"D1@Кривая3", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл1", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);
                     }
 
                     // 11-003 
@@ -310,20 +315,19 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(heightD + 8.04)},
-                            {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
-                            {"D1@Кривая1", Convert.ToString(countL)},
-
-                            {"D1@Кривая2", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(heightD + 8.04)},
+                                {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
+                                {"D1@Кривая1", Convert.ToString(countL)},
+                                
+                                {"D1@Кривая2", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);
                     }
 
                     // 11-004
@@ -342,20 +346,20 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(widthD - 24)},
-                            {"D7@Ребро-кромка1", Convert.ToString(hC)},
-                            {"D1@Кривая1", Convert.ToString(countL)},
-
-                            {"D1@Кривая5", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл1", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(widthD - 24)},
+                                {"D7@Ребро-кромка1", Convert.ToString(hC)},
+                                {"D1@Кривая1", Convert.ToString(countL)},
+                                
+                                {"D1@Кривая5", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл1", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);
+                        
                     }
 
                     //11-100 Сборка лопасти
@@ -395,13 +399,7 @@ namespace VentsCadLibrary
                             swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                             _swApp.CloseDoc(newName);
 
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-
-                            //NewComponents.Add(new VaultSystem.VentsCadFiles
-                            //{
-                            //    LocalPartFileInfo = new FileInfo(
-                            //    $@"{destinationFolder}\{DamperDestinationFolder}\{newName}").FullName
-                            //});
+                            ComponentToAdd(newPartPath);                            
                         }
 
                         #endregion
@@ -409,21 +407,15 @@ namespace VentsCadLibrary
                         _swApp.ActivateDoc2("11-100", false, 0);
                         swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                         swDoc.ForceRebuild3(false);
-                        var docDrw100 = _swApp.OpenDoc6(
-                            $@"{sourceRootFolder}{modelDamperPath}\{"11-100"}.SLDDRW", (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
+                        var docDrw100 = _swApp.OpenDoc6(modelLamel, (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
                         swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                         _swApp.CloseDoc(newNameAsm);
                         docDrw100.ForceRebuild3(false);
-                        docDrw100.SaveAs2(
-                            $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
-                            $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
+                        var drwNewName = $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW";
+                        docDrw100.SaveAs2(drwNewName, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+                        _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(drwNewName).FullName) + " - DRW1");
 
-
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-                        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
+                        ComponentToAdd(new[] { newPartPath, drwNewName });                        
                     }
                 }
 
@@ -483,21 +475,18 @@ namespace VentsCadLibrary
                                 $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                                 new[,]
                                 {
-                                {"D3@Эскиз1", Convert.ToString(heightD)},
-                                {"D1@Кривая1", Convert.ToString(rivetH)},
-
-                                {"D1@Кривая1", Convert.ToString(rivetH)},
-                                {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
-
-                                {"Толщина@Листовой металл", thiknessStr}
+                                    {"D3@Эскиз1", Convert.ToString(heightD)},
+                                    {"D1@Кривая1", Convert.ToString(rivetH)},
+                                    
+                                    {"D1@Кривая1", Convert.ToString(rivetH)},
+                                    {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
+                                    
+                                    {"Толщина@Листовой металл", thiknessStr}
                                 },
                                 false,
                                 null);
                             AddMaterial(material, newName);
-
-                            //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
-
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            ComponentToAdd(newPartPath);
                         }
 
                         // 11-006 
@@ -523,7 +512,7 @@ namespace VentsCadLibrary
                                 false,
                                 null);
                             AddMaterial(material, newName);
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            ComponentToAdd(newPartPath);                            
                         }
                     }
                     else
@@ -547,28 +536,7 @@ namespace VentsCadLibrary
                         foreach (var item in itemsToDelete)
                         {
                             DoWithSwDoc(_swApp, CompType.COMPONENT, item, Act.Delete);
-                        }
-
-                        #region To delete
-
-                        //  swDoc.Extension.SelectByID2("11-005-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        // swDoc.Extension.SelectByID2("11-006-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-
-
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-346@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-347@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-348@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-349@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-350@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-351@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-356@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-357@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-358@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-359@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-360@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-                        //swDoc.Extension.SelectByID2("Rivet Bralo-361@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
-
-                        #endregion
+                        }                     
 
                     }
 
@@ -699,16 +667,15 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(widthD/2 - 0.8)},
-                            {"D3@Эскиз18", Convert.ToString(lp2)},
-                            {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
-                            {"Толщина@Листовой металл", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(widthD/2 - 0.8)},
+                                {"D3@Эскиз18", Convert.ToString(lp2)},
+                                {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
                         AddMaterial(material, newName);
-
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);
                     }
 
                     // 11-30-002 
@@ -727,21 +694,20 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(heightD + 10)},
-                            {"D3@Эскиз23", Convert.ToString(countL/10 - 100)},
-                            {"D2@Эскиз23", Convert.ToString(100*Math.Truncate(countL/2000))},
-
-                            {"D1@Кривая2", Convert.ToString(countL)},
-                            {"D1@Кривая3", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(heightD + 10)},
+                                {"D3@Эскиз23", Convert.ToString(countL/10 - 100)},
+                                {"D2@Эскиз23", Convert.ToString(100*Math.Truncate(countL/2000))},
+                                
+                                {"D1@Кривая2", Convert.ToString(countL)},
+                                {"D1@Кривая3", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);                        
                     }
 
                     // 11-30-004 
@@ -760,21 +726,20 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(heightD + 10)},
-                            {"D3@Эскиз23", Convert.ToString(countL/10 - 100)},
-                            {"D2@Эскиз23", Convert.ToString(100*Math.Truncate(countL/2000))},
-                            {"D1@Кривая2", Convert.ToString(countL)},
-
-                            {"D1@Кривая5", Convert.ToString(rivetH)},
-
-                            {"Толщина@Листовой металл", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(heightD + 10)},
+                                {"D3@Эскиз23", Convert.ToString(countL/10 - 100)},
+                                {"D2@Эскиз23", Convert.ToString(100*Math.Truncate(countL/2000))},
+                                {"D1@Кривая2", Convert.ToString(countL)},
+                                
+                                {"D1@Кривая5", Convert.ToString(rivetH)},
+                                
+                                {"Толщина@Листовой металл", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);                        
                     }
 
 
@@ -794,16 +759,16 @@ namespace VentsCadLibrary
                             $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                            {"D2@Эскиз1", Convert.ToString(lp)},
-                            {"D7@Ребро-кромка1", Convert.ToString(hC)},
-                            {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
-                            {"Толщина@Листовой металл1", thiknessStr}
+                                {"D2@Эскиз1", Convert.ToString(lp)},
+                                {"D7@Ребро-кромка1", Convert.ToString(hC)},
+                                {"D1@Кривая1", Convert.ToString((Math.Truncate(lp2/step) + 1)*1000)},
+                                {"Толщина@Листовой металл1", thiknessStr}
                             },
                             false,
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        ComponentToAdd(newPartPath);                        
                     }
 
                     #endregion
@@ -852,7 +817,7 @@ namespace VentsCadLibrary
                                 swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                                 swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                                 _swApp.CloseDoc(newName);
-                                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                                ComponentToAdd(newPartPath);                                
                             }
 
                             #endregion
@@ -898,7 +863,7 @@ namespace VentsCadLibrary
                                 swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                                 swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                                 _swApp.CloseDoc(newName);
-                                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                                ComponentToAdd(newPartPath);                                
                             }
 
                             #endregion
@@ -919,14 +884,12 @@ namespace VentsCadLibrary
                     swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                     _swApp.CloseDoc(newNameAsm);
                     docDrw100.ForceRebuild3(false);
-                    docDrw100.SaveAs2(
-                        $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                    _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
-                        $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
+                    var drwNewName = $@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW";
+                    docDrw100.SaveAs2(drwNewName, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+                    _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(drwNewName).FullName) + " - DRW1");
 
-                    NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPathAsm).FullName });
-                    NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
-
+                    ComponentToAdd(new[] { newPartPathAsm, drwNewName });
+                                        
                     #endregion
 
                     #region 11-30-100 Сборка Перемычки
@@ -964,18 +927,18 @@ namespace VentsCadLibrary
                                     $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                                     new[,]
                                     {
-                                    {"D2@Эскиз1", Convert.ToString(heightD + 10)},
-                                    {"D3@Эскиз19", Convert.ToString(countL/10 - 100)},
-                                    {"D1@Кривая1", Convert.ToString(countL)},
-                                    {"D1@Кривая2", Convert.ToString(rivetH)},
-                                    {"Толщина@Листовой металл", thiknessStr}
+                                        {"D2@Эскиз1", Convert.ToString(heightD + 10)},
+                                        {"D3@Эскиз19", Convert.ToString(countL/10 - 100)},
+                                        {"D1@Кривая1", Convert.ToString(countL)},
+                                        {"D1@Кривая2", Convert.ToString(rivetH)},
+                                        {"Толщина@Листовой металл", thiknessStr}
                                     },
                                     false,
                                     null);
                                 AddMaterial(material, newName);
 
                                 _swApp.CloseDoc(newName);
-                                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
+                                ComponentToAdd(new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName);
                             }
 
                             #endregion
@@ -1003,25 +966,18 @@ namespace VentsCadLibrary
                                     $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
                                     new[,]
                                     {
-                                    {"D2@Эскиз1", Convert.ToString(heightD + 10)},
-                                    {"D2@Эскиз19", Convert.ToString(countL/10 - 100)},
-                                    {"D1@Кривая2", Convert.ToString(countL)},
-                                    {"D1@Кривая1", Convert.ToString(rivetH)},
-                                    {"Толщина@Листовой металл", thiknessStr}
+                                        {"D2@Эскиз1", Convert.ToString(heightD + 10)},
+                                        {"D2@Эскиз19", Convert.ToString(countL/10 - 100)},
+                                        {"D1@Кривая2", Convert.ToString(countL)},
+                                        {"D1@Кривая1", Convert.ToString(rivetH)},
+                                        {"Толщина@Листовой металл", thiknessStr}
                                     },
                                     false,
                                     null);
-                                try
-                                {
-                                    //VentsMatdll(material, null, newName);
-                                }
-                                catch (Exception e)
-                                {
-                                    MessageBox.Show(e.Message);
-                                }
+                                AddMaterial(material, newName);
 
                                 _swApp.CloseDoc(newName);
-                                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
+                                ComponentToAdd(new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName);                                
                             }
 
                             #endregion
@@ -1030,9 +986,7 @@ namespace VentsCadLibrary
                             swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                             swDoc.ForceRebuild3(false); swDoc.ForceRebuild3(true);
                             swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                            _swApp.CloseDoc(newNameAsm);
-                            NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
-
+                            _swApp.CloseDoc(newNameAsm);                           
                             #endregion
 
                         }
@@ -1044,38 +998,34 @@ namespace VentsCadLibrary
                 #endregion
 
                 swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm, true, 0)));
-                try
-                {
-                    GabaritsForPaintingCamera(swDoc);
-                }
-                catch (Exception)
-                {
-                    //
-                }
+                GabaritsForPaintingCamera(swDoc);               
 
                 swDoc.EditRebuild3();
                 swDoc.ForceRebuild3(true);
                 var name = $@"{destRootFolder}\{DamperDestinationFolder}\{ModelName}";
-                swDoc.SaveAs2(name + ".SLDASM", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(name + ".SLDASM").FullName));
+                var newAsm = name + ".SLDASM";
+                var newDrw = name + ".SLDDRW";
+                swDoc.SaveAs2(newAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+                _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(newAsm).FullName));
                 swDocDrw.Extension.SelectByID2("DRW1", "SHEET", 0, 0, 0, false, 0, null, 0);
                 var drw = (DrawingDoc)(_swApp.IActivateDoc3(drawing + ".SLDDRW", true, 0));
                 drw.ActivateSheet("DRW1");
-                var m = 5;
-                if (Convert.ToInt32(Width) > 850 || Convert.ToInt32(Height) > 850) { m = 15; }
-                if (Convert.ToInt32(Width) > 1250 || Convert.ToInt32(Height) > 1250) { m = 20; }
+
+                //var m = 5;
+                //if (Convert.ToInt32(Width) > 850 || Convert.ToInt32(Height) > 850) { m = 15; }
+                //if (Convert.ToInt32(Width) > 1250 || Convert.ToInt32(Height) > 1250) { m = 20; }                
                 //drw.SetupSheet5("DRW1", 12, 12, 1, m, true, Settings.Default.DestinationFolder + @"\\srvkb\SolidWorks Admin\Templates\Основные надписи\A2-A-1.slddrt", 0.42, 0.297, "По умолчанию", false);
-                swDocDrw.SaveAs2(name + ".SLDDRW", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
+
+                swDocDrw.SaveAs2(newDrw, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                 _swApp.CloseDoc(ModelPath);
                 _swApp.ExitApp();
                 _swApp = null;
 
-
-                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDASM").FullName });
-                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName });
+                ComponentToAdd(new[] { newDrw, newAsm });               
 
                 List<VaultSystem.VentsCadFiles> outList;
-                VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out outList);
+                VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
+                    out outList);
 
                 //if (unloadXml)
                 //{
@@ -1085,7 +1035,45 @@ namespace VentsCadLibrary
                 //    }
                 //}
 
-            }
+                Place = GetPlace();
+
+            }            
+
+
+            //void asdg()
+            //{
+            //    newName = "11-05-" + Height + modelType;
+            //    newPartPath = $@"{destRootFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
+            //    if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1, VaultName))
+            //    {
+            //        swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+            //        swDoc.Extension.SelectByID2("11-005-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+            //        swAsm.ReplaceComponents(newPartPath, "", false, true);
+            //        _swApp.CloseDoc("11-005.SLDPRT");
+            //    }
+            //    else
+            //    {
+            //        SwPartParamsChangeWithNewName("11-005",
+            //            $@"{destRootFolder}\{DamperDestinationFolder}\{newName}",
+            //            new[,]
+            //            {
+            //                    {"D3@Эскиз1", Convert.ToString(heightD)},
+            //                    {"D1@Кривая1", Convert.ToString(rivetH)},
+
+            //                    {"D1@Кривая1", Convert.ToString(rivetH)},
+            //                    {"D3@Эскиз37", (Convert.ToInt32(countL / 1000) % 2 == 1) ? "0" : "50"},
+
+            //                    {"Толщина@Листовой металл", thiknessStr}
+            //            },
+            //            false,
+            //            null);
+            //        AddMaterial(material, newName);
+
+            //        //NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+
+            //        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+            //    }
+            //}
 
             internal override string DestinationFolder => @"\Проекты\Blauberg\11 - Регулятор расхода воздуха";
 
@@ -1099,6 +1087,7 @@ namespace VentsCadLibrary
             internal string modelType;
             internal string modelDamperPath;
             internal string nameAsm;
+            internal string drawing;
 
             internal bool IsOutDoor;
 
@@ -1107,8 +1096,6 @@ namespace VentsCadLibrary
             internal string TypeOfFlange;
             internal string Width;
             internal string Height;
-
-
         }
 
 
@@ -2084,14 +2071,7 @@ namespace VentsCadLibrary
                                 },
                                 false,
                                 null);
-                            try
-                            {
-                                VentsMatdll(material, null, newName);
-                            }
-                            catch (Exception e)
-                            {
-                                MessageBox.Show(e.Message);
-                            }
+                            AddMaterial(material, newName);
 
                             _swApp.CloseDoc(newName);
                             NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{destinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
@@ -2149,7 +2129,8 @@ namespace VentsCadLibrary
             NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName });
 
             List<VaultSystem.VentsCadFiles> outList;
-            VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out outList);
+            VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
+                out outList);
 
             if (unloadXml)
             {
@@ -2161,18 +2142,7 @@ namespace VentsCadLibrary
 
             newFile = newDamperPath;
         }
-
-        private static void AddMaterial(string[] material, string newName)
-        {
-            try
-            {
-                //  VentsMatdll(material, null, newName);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
+             
 
         #endregion
 
@@ -3179,7 +3149,8 @@ namespace VentsCadLibrary
             NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = name + ".SLDDRW" });
 
             List<VaultSystem.VentsCadFiles> outList;
-            VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out outList);
+            VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName, 
+                out outList);
 
             //CheckInOutPdmNew(NewComponents, true, Settings.Default.TestPdmBaseName, out outList);
             if (unloadXml)

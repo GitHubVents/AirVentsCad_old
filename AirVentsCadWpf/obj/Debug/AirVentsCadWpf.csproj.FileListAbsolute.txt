@@ -21,7 +21,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\Inter
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\ConnectorOneC.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\FixBends.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\Excel.dll
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\BatchDLL.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\ExportPartData.pdb
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\HostingWindowsForms.pdb
@@ -37,7 +36,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\Excel
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCadWpf.csprojResolveAssemblyReference.cache
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\Adminka.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\SettingsW.baml
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\01-MonoBlock50.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\AirVentsUnits50Uc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Bom.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\BomServiceUc.baml
@@ -67,7 +65,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\MenuC
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\SpigotUC.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\Adminka.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\SettingsW.g.cs
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\01-MonoBlock50.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\AirVentsUnits50Uc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Bom.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\BomServiceUc.g.cs
@@ -107,3 +104,6 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVe
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\PdmAsmBomToXml.dll
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\PdmAsmBomToXml.pdb
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AirVentsCad_MarkupCompile.lref
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\bin\Debug\AddinConvertTo.dll
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Specification\01-MonoBlock50.baml
+D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Specification\01-MonoBlock50.g.cs

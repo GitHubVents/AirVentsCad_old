@@ -15,18 +15,24 @@ namespace AirVentsCadWpf.VentsCadService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CompositeType", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Parameters", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
     [System.SerializableAttribute()]
-    public partial class CompositeType : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class Parameters : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool BoolValueField;
+        private string[][] MaterialsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string StringValueField;
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private AirVentsCadWpf.VentsCadService.Sizes[] SizesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TypeField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -39,27 +45,191 @@ namespace AirVentsCadWpf.VentsCadService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool BoolValue {
+        public string[][] Materials {
             get {
-                return this.BoolValueField;
+                return this.MaterialsField;
             }
             set {
-                if ((this.BoolValueField.Equals(value) != true)) {
-                    this.BoolValueField = value;
-                    this.RaisePropertyChanged("BoolValue");
+                if ((object.ReferenceEquals(this.MaterialsField, value) != true)) {
+                    this.MaterialsField = value;
+                    this.RaisePropertyChanged("Materials");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string StringValue {
+        public string Name {
             get {
-                return this.StringValueField;
+                return this.NameField;
             }
             set {
-                if ((object.ReferenceEquals(this.StringValueField, value) != true)) {
-                    this.StringValueField = value;
-                    this.RaisePropertyChanged("StringValue");
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public AirVentsCadWpf.VentsCadService.Sizes[] Sizes {
+            get {
+                return this.SizesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SizesField, value) != true)) {
+                    this.SizesField = value;
+                    this.RaisePropertyChanged("Sizes");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Type {
+            get {
+                return this.TypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TypeField, value) != true)) {
+                    this.TypeField = value;
+                    this.RaisePropertyChanged("Type");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Sizes", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
+    [System.SerializableAttribute()]
+    public partial class Sizes : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HeightField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string LenghtField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string WidthField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Height {
+            get {
+                return this.HeightField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HeightField, value) != true)) {
+                    this.HeightField = value;
+                    this.RaisePropertyChanged("Height");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Lenght {
+            get {
+                return this.LenghtField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.LenghtField, value) != true)) {
+                    this.LenghtField = value;
+                    this.RaisePropertyChanged("Lenght");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Width {
+            get {
+                return this.WidthField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.WidthField, value) != true)) {
+                    this.WidthField = value;
+                    this.RaisePropertyChanged("Width");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ProductPlace", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
+    [System.SerializableAttribute()]
+    public partial class ProductPlace : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdPdmField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ProjectIdField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdPdm {
+            get {
+                return this.IdPdmField;
+            }
+            set {
+                if ((this.IdPdmField.Equals(value) != true)) {
+                    this.IdPdmField = value;
+                    this.RaisePropertyChanged("IdPdm");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ProjectId {
+            get {
+                return this.ProjectIdField;
+            }
+            set {
+                if ((this.ProjectIdField.Equals(value) != true)) {
+                    this.ProjectIdField = value;
+                    this.RaisePropertyChanged("ProjectId");
                 }
             }
         }
@@ -78,17 +248,27 @@ namespace AirVentsCadWpf.VentsCadService {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="VentsCadService.IVentsCadService")]
     public interface IVentsCadService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/GetData", ReplyAction="http://tempuri.org/IVentsCadService/GetDataResponse")]
-        string GetData(int value);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/Build", ReplyAction="http://tempuri.org/IVentsCadService/BuildResponse")]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="place")]
+        AirVentsCadWpf.VentsCadService.ProductPlace Build(AirVentsCadWpf.VentsCadService.Parameters parameters);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/GetData", ReplyAction="http://tempuri.org/IVentsCadService/GetDataResponse")]
-        System.Threading.Tasks.Task<string> GetDataAsync(int value);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/Build", ReplyAction="http://tempuri.org/IVentsCadService/BuildResponse")]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="place")]
+        System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.ProductPlace> BuildAsync(AirVentsCadWpf.VentsCadService.Parameters parameters);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IVentsCadService/GetDataUsingDataContractResponse")]
-        AirVentsCadWpf.VentsCadService.CompositeType GetDataUsingDataContract(AirVentsCadWpf.VentsCadService.CompositeType composite);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/IsBusy", ReplyAction="http://tempuri.org/IVentsCadService/IsBusyResponse")]
+        bool IsBusy();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IVentsCadService/GetDataUsingDataContractResponse")]
-        System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.CompositeType> GetDataUsingDataContractAsync(AirVentsCadWpf.VentsCadService.CompositeType composite);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/IsBusy", ReplyAction="http://tempuri.org/IVentsCadService/IsBusyResponse")]
+        System.Threading.Tasks.Task<bool> IsBusyAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/BuildSp", ReplyAction="http://tempuri.org/IVentsCadService/BuildSpResponse")]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="place")]
+        AirVentsCadWpf.VentsCadService.ProductPlace BuildSp(string type, string width, string height);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/BuildSp", ReplyAction="http://tempuri.org/IVentsCadService/BuildSpResponse")]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="place")]
+        System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.ProductPlace> BuildSpAsync(string type, string width, string height);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IVentsCadService/BuildSpigot", ReplyAction="http://tempuri.org/IVentsCadService/BuildSpigotResponse")]
         AirVentsCadWpf.VentsCadService.BuildSpigotResponse BuildSpigot(AirVentsCadWpf.VentsCadService.BuildSpigotRequest request);
@@ -169,20 +349,26 @@ namespace AirVentsCadWpf.VentsCadService {
                 base(binding, remoteAddress) {
         }
         
-        public string GetData(int value) {
-            return base.Channel.GetData(value);
+        public ProductPlace Build(Parameters parameters) {  return Channel.Build(parameters);     }
+        
+        public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.ProductPlace> BuildAsync(AirVentsCadWpf.VentsCadService.Parameters parameters) {
+            return base.Channel.BuildAsync(parameters);
         }
         
-        public System.Threading.Tasks.Task<string> GetDataAsync(int value) {
-            return base.Channel.GetDataAsync(value);
+        public bool IsBusy() {
+            return base.Channel.IsBusy();
         }
         
-        public AirVentsCadWpf.VentsCadService.CompositeType GetDataUsingDataContract(AirVentsCadWpf.VentsCadService.CompositeType composite) {
-            return base.Channel.GetDataUsingDataContract(composite);
+        public System.Threading.Tasks.Task<bool> IsBusyAsync() {
+            return base.Channel.IsBusyAsync();
         }
         
-        public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.CompositeType> GetDataUsingDataContractAsync(AirVentsCadWpf.VentsCadService.CompositeType composite) {
-            return base.Channel.GetDataUsingDataContractAsync(composite);
+        public AirVentsCadWpf.VentsCadService.ProductPlace BuildSp(string type, string width, string height) {
+            return base.Channel.BuildSp(type, width, height);
+        }
+        
+        public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.ProductPlace> BuildSpAsync(string type, string width, string height) {
+            return base.Channel.BuildSpAsync(type, width, height);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]

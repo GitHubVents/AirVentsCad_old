@@ -11,28 +11,6 @@ namespace VentsCadLibrary
 {
     partial class VentsCad
     {
-
-        public class ProductFactory
-        {
-            public Product product;            
-
-            public ProductFactory(string[] query)
-            {
-                using (var server = new VentsCad())
-                {
-                    switch (query[0])
-                    {
-                        case "spigot":
-                            product = new Spigot(query[1], query[2], query[3]);
-                            break;                        
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-
         public class Spigot : Product
         {
             public override ProductPlace Place { get; set; }               
@@ -189,10 +167,7 @@ namespace VentsCadLibrary
                         myDimension = ((Dimension)(swDoc.Parameter("D1@Кривая1@12-20-001.Part")));
                         myDimension.SystemValue = weldH;
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles
-                        {
-                            LocalPartFileInfo = newPartPath
-                        });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
 
@@ -217,7 +192,7 @@ namespace VentsCadLibrary
                         myDimension = ((Dimension)(swDoc.Parameter("D1@Кривая1@12-20-002.Part")));
                         myDimension.SystemValue = weldW;
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
 
@@ -243,7 +218,7 @@ namespace VentsCadLibrary
                         myDimension.SystemValue = h;
                         swDoc.EditRebuild3();
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
                 }
@@ -271,7 +246,7 @@ namespace VentsCadLibrary
                         myDimension = ((Dimension)(swDoc.Parameter("D1@Кривая1@12-30-001.Part")));
                         myDimension.SystemValue = weldH;
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
 
@@ -297,7 +272,7 @@ namespace VentsCadLibrary
                         myDimension = ((Dimension)(swDoc.Parameter("D1@Кривая1@12-30-002.Part")));
                         myDimension.SystemValue = weldH;
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
 
@@ -324,7 +299,7 @@ namespace VentsCadLibrary
                         myDimension.SystemValue = h;
                         swDoc.EditRebuild3();
                         swPartDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                        NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = newPartPath });
+                        ComponentToAdd(newPartPath);
                         _swApp.CloseDoc(newPartName);
                     }
                 }
@@ -335,11 +310,7 @@ namespace VentsCadLibrary
 
                 swDoc.ForceRebuild3(true);
                 swDoc.SaveAs2(ModelPath + ".SLDASM", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                _swApp.CloseDoc(ModelName + ".SLDASM");
-                NewComponents.Add(new VaultSystem.VentsCadFiles
-                {
-                    LocalPartFileInfo = ModelPath + ".SLDASM"
-                });
+                _swApp.CloseDoc(ModelName + ".SLDASM");                
                 swDrwSpigot.Extension.SelectByID2("DRW1", "SHEET", 0, 0, 0, false, 0, null, 0);
                 var drw = (DrawingDoc)(_swApp.IActivateDoc3(drawing + ".SLDDRW", true, 0));
                 drw.ActivateSheet("DRW1");
@@ -351,15 +322,15 @@ namespace VentsCadLibrary
                 var errors = 0; var warnings = 0;
 
                 swDrwSpigot.SaveAs4(ModelPath + ".SLDDRW", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref errors, ref warnings);
-
-                NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = ModelPath + ".SLDDRW" });
+                ComponentToAdd(new[] { ModelPath + ".SLDDRW", ModelPath + ".SLDASM" });                
 
                 _swApp.CloseDoc(ModelPath);
                 _swApp.ExitApp();
                 _swApp = null;
 
                 List<VaultSystem.VentsCadFiles> newFilesList;
-                VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out newFilesList);
+                VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
+                    out newFilesList);
 
                 foreach (var item in newFilesList)
                 {

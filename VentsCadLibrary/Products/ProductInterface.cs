@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace VentsCadLibrary
+﻿namespace VentsCadLibrary
 {
     partial class VentsCad
     { 
         interface WorkWithProduct
         {
-            void Build();
-            //ProductPlace GetPlace();
+            void Build();            
         }
+
         public class ProductPlace
         {
             public ProductPlace(string path, int idPdm, int projectId)
@@ -20,10 +18,7 @@ namespace VentsCadLibrary
             public int IdPdm;
             public int ProjectId;
             public string Path;
-        }   
-
-
-     
+        }        
 
         public abstract class Product : WorkWithProduct
         {
@@ -31,12 +26,11 @@ namespace VentsCadLibrary
 
             internal abstract string ModelPath { get; set; }
 
-
             internal abstract string DestinationFolder { get; }
                         
             internal abstract string TemplateFolder { get; }
 
-            public bool Exist => Place != null;// { get; }
+            public bool Exist => Place != null;
 
             public abstract ProductPlace Place { get; set; }
 
@@ -49,8 +43,8 @@ namespace VentsCadLibrary
                 string path;
                 int fileId;
                 int projectId;
-                //Exist = 
-                    GetExistingFile(ModelName, out path, out fileId, out projectId);
+
+                GetExistingFile(ModelName, out path, out fileId, out projectId);
                 if (string.IsNullOrEmpty(path))
                 {
                     Place = null;

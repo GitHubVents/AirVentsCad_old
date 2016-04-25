@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>68</ApplicationRevision>
+    <ApplicationRevision>69</ApplicationRevision>
     <ApplicationVersion>2.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -175,7 +175,7 @@
     <Compile Include="AirVentsClasses\UnitsBuilding\FrameLessUI.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\FrameLessPanel.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\GenerateUnit50.cs" />
-    <Compile Include="DataControls\01-MonoBlock50.xaml.cs">
+    <Compile Include="DataControls\Specification\01-MonoBlock50.xaml.cs">
       <DependentUpon>01-MonoBlock50.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataControls\AirVentsUnits50Uc.xaml.cs">
@@ -256,11 +256,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Service References\ServiceReference68\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
+    <Compile Include="ServiceVents\ServiceVents.cs" />
     <Compile Include="Switcher.cs" />
     <Compile Include="UserControlEdr.cs">
       <SubType>UserControl</SubType>
@@ -277,7 +273,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DataControls\01-MonoBlock50.xaml">
+    <Page Include="DataControls\Specification\01-MonoBlock50.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -426,44 +422,15 @@
     <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.BuildSpigotResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.CompositeType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference68\AirVentsCadWpf.ServiceReference68.ConnectionClassifierMeasure.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference68\AirVentsCadWpf.ServiceReference68.ConnectionNomenclature.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference68\Arrays1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference68\ConecctorOneC1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference68\HostingWindowsForms.Data1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference68\HostingWindowsForms1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference68\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference68\configuration.svcinfo" />
-    <None Include="Service References\ServiceReference68\configuration91.svcinfo" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="AirVentsCadWpf_TemporaryKey.pfx" />
-    <None Include="Service References\ServiceReference68\service1.wsdl" />
-    <None Include="Service References\ServiceReference68\service2.xsd">
-      <SubType>Designer</SubType>
+    <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.ProductPlace.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServiceReference68\service21.xsd">
+    <None Include="Service References\VentsCadService\item3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\VentsCadService\VentsService1.wsdl" />
@@ -539,7 +506,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\VentsCadService\" />
-    <WCFMetadataStorage Include="Service References\ServiceReference68\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\VentsCadService\item.disco" />

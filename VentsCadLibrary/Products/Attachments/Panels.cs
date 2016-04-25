@@ -836,7 +836,8 @@ namespace VentsCadLibrary
             _swApp.Visible = true;
 
             List<VaultSystem.VentsCadFiles> newFilesList;
-            VaultSystem.CheckInOutPdmNew(NewComponents, true, DestVaultName, out newFilesList);
+            VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName, 
+                out newFilesList);
 
             foreach (var newComponent in NewComponents)
             {

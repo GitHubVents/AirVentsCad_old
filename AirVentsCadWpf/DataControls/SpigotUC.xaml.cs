@@ -2,9 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using AirVentsCadWpf.Properties;
-using System.ServiceModel;
-using System.Xml;
+using System.Threading.Tasks;
+using AirVentsCadWpf.ServiceVents;
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -21,35 +20,89 @@ namespace AirVentsCadWpf.DataControls
             InitializeComponent();
         }
 
+
+        //void build()
+        //{
+        //    VentsCadService.ProductPlace place = null;
+        //    try
+        //    {
+        //        using (var client = new VentsCadService.VentsCadServiceClient(App.Service.Binding, App.Service.Address))
+        //        {                    
+        //            client.Open();                 
+        //            place = client.BuildSp(type, width, height);
+        //            client.Close();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {                
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        ModelSw.Open(place.IdPdm, place.ProjectId, "");              
+        //    }
+        //}
+
+        //Task Build;
+
+        //void ExportTaskRun(Action action)
+        //{
+        //    Build = new Task(action);
+        //    Build.Start();
+        //}
+
+        string type;
+        string width;
+        string height;
+
+
+        ServiceV serv { get; set; }
+
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
+            //type = TypeOfSpigot.Text;
+            //width = WidthSpigot.Text;
+            //height = HeightSpigot.Text;
 
-            #region VentsCadService
+            //new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text).build(); 
 
-            //try
-            //{   
-            //    using (var client = new VentsCadService.VentsCadServiceClient(App.Service.Binding, App.Service.Address))
-            //    {
-            //        int idPdm; int projId;
-            //        client.Open();
-            //        MessageBox.Show(client.BuildSpigot(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text, out idPdm).ToString());
-            //        client.Close();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //   // MessageBox.Show(App.Service.Address.ToString());
-            //    MessageBox.Show(ex.Message);
-            //}
 
-            #endregion
+            //serv = new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);//.build();
+
+            serv = new ServiceV(new VentsCadService.Parameters
+            {
+                Name = "spigot",//"dumper",//
+                Type  = TypeOfSpigot.Text,
+                Sizes = new VentsCadService.Sizes[]
+                {
+                    new VentsCadService.Sizes
+                    {
+                            Width = WidthSpigot.Text,
+                            Height = HeightSpigot.Text
+                    }
+                }
+                ,
+                Materials = null
+            });
+
+           // serv.Busy();
+            
+            var Build = new Task(serv.build);
+            Build.Start();
+
+          //  serv.Busy();
+
+            //ExportTaskRun(build);
+
+            MessageBox.Show("Чекайте повідомлення після закінчення генерації");
+
+            return;         
+
+            m1:
 
             VentsCadLibrary.VentsCad.ProductFactory serviceObj = new VentsCadLibrary.VentsCad.ProductFactory(new[] { "spigot", TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text } );
 
-            MessageBox.Show(serviceObj.product.Exist.ToString());
-
-            MessageBox.Show(serviceObj.product.Place?.IdPdm.ToString());
-
+            MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
             serviceObj.product.Build();
 
             MessageBox.Show(serviceObj.product.Exist.ToString());
@@ -67,8 +120,8 @@ namespace AirVentsCadWpf.DataControls
                     {
                         newSpigot.Build();
                     }
-                    var place = newSpigot.GetPlace();
-                    MessageBox.Show(place.Path + "\n" + place.IdPdm + "\n" + place.ProjectId);
+                    var place2 = newSpigot.GetPlace();
+                    MessageBox.Show(place2.Path + "\n" + place2.IdPdm + "\n" + place2.ProjectId);
                 }
             }
             catch (Exception ex)
@@ -100,6 +153,22 @@ namespace AirVentsCadWpf.DataControls
         {
             var regex = new Regex("[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var Build = new Task(serv.Busy);
+                Build.Start();
+            }
+            catch (Exception)
+            {
+
+             
+            }          
+
+           
         }
     }
 }

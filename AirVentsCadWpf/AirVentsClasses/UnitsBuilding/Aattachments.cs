@@ -139,9 +139,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         {
             if (!IsConvertToInt(new[] { width, height })){return "";}
 
-            string modelName;
-            string modelDamperPath;
-            string nameAsm;
+            string modelName = null;
+            string modelDamperPath = null; 
+            string nameAsm = null;
 
             switch (typeOfFlange)
             {
@@ -154,47 +154,33 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     modelName = "11-30";
                     modelDamperPath = DamperFolder;
                     nameAsm = "11-30";
-                    break;
-                default:
-                    modelName = "11-20";
-                    modelDamperPath = DamperFolder;
-                    nameAsm = "11 - Damper";
-                    break;
+                    break;             
             }
+
+            if (string.IsNullOrEmpty(modelName)) return null; 
+            
 
             var modelType = $"{(material[3] == "AZ" ? "" : "-" + material[3])}{(material[3] == "AZ" ? "" : material[1])}";
             
             var drawing = "11-20";
             if (modelName == "11-30")
             { drawing = modelName; }
-            var newDamperName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O":"");
+            var newDamperName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O" : "");
             var newDamperPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newDamperName}.SLDDRW";
 
-            if (OpenIfExist(newDamperPath)) return "";
-
-            //string path; int fileId; int projectId;
-
-            //if (GetExistingFile(Path.GetFileNameWithoutExtension(newDamperPath), out path, out fileId, out projectId, Settings.Default.PdmBaseName))
-            //{
-            //    if (MessageBox.Show("Заслонка " + Path.GetFileNameWithoutExtension(newDamperPath) + " уже есть в базе. Открыть?",
-            //        "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //    {
-            //        System.Diagnostics.Process.Start("conisio://" + Settings.Default.PdmBaseName + "/open?projectid=" + projectId + "&documentid=" + fileId + "&objecttype=1");
-            //    }
-            //    return "";
-            //}
+            if (OpenIfExist(newDamperPath)) return null;            
             
             var modelDamperDrw = $@"{Settings.Default.SourceFolder}{modelDamperPath}\{drawing}.SLDDRW";
+            var modelLamel = $@"{Settings.Default.SourceFolder}{modelDamperPath}\{"11-100"}.SLDDRW";
 
-            GetLatestVersionAsmPdm(new FileInfo(modelDamperDrw).FullName, Settings.Default.PdmBaseName);
-            
-            if (!InitializeSw(true)) return "";
-            if (!Warning()) return "";
+            GetLastVersionPdm(new[] { new FileInfo(modelDamperDrw).FullName, new FileInfo(modelLamel).FullName }, Settings.Default.PdmBaseName);            
+
+            if (!InitializeSw(true)) return null;
+            if (!Warning()) return null;
             var swDocDrw = _swApp.OpenDoc6(@modelDamperDrw, (int)swDocumentTypes_e.swDocDRAWING,
                 (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
 
             ModelDoc2 swDoc = _swApp.ActivateDoc2(nameAsm, false, 0);
-
             var swAsm = (AssemblyDoc)swDoc;
             swAsm.ResolveAllLightWeightComponents(false);
 
@@ -518,38 +504,42 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
 
                         // ToDo Delete
-                        _swApp.CloseDoc(newName+".sldasm");
+                        _swApp.CloseDoc(newName + ".sldasm");
 
                         NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(
-                            $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}").FullName });
+                            $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.sldasm").FullName });
                     }
 
                     #endregion
-
+                    
                     _swApp.ActivateDoc2("11-100", false, 0);
                     swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                     swDoc.ForceRebuild3(false);
-                    var docDrw100 = _swApp.OpenDoc6(
-                        $@"{Settings.Default.SourceFolder}{modelDamperPath}\{"11-100"}.SLDDRW", (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
+                    
+                    
+                    var docDrw100 = _swApp.OpenDoc6(modelLamel, (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
                     swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-                    _swApp.CloseDoc(newNameAsm);
                     try
                     {
-                        docDrw100.ForceRebuild3(true);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "11-101  Профиль лопасти");
-                        // MessageBox.Show(exception.Message);
-                    }
-                    
-                    docDrw100.SaveAs2(
+                        //_swApp.CloseDoc(newNameAsm);                    
+                        _swApp.ActivateDoc2(docDrw100?.GetTitle(), false, 0);
+                        docDrw100?.ForceRebuild3(true);
+
+                        docDrw100.SaveAs2(
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW", (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                     _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
 
                     NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
+
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "11-101  Профиль лопасти");
+                        // MessageBox.Show(exception.Message);
+                    }
                 }
             }
 
@@ -995,6 +985,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
 
                 var docDrw100 = _swApp.OpenDoc6($@"{Settings.Default.SourceFolder}{modelDamperPath}\{"11-100"}.SLDDRW", (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
+                
+                _swApp.ActivateDoc2(Path.GetFileNameWithoutExtension(newPartPathAsm), false, 0);
                 swDoc.ForceRebuild3(false);
                 swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                 _swApp.CloseDoc(newNameAsm);
@@ -1143,12 +1135,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             _swApp.CloseDoc(newDamperPath);
             _swApp.ExitApp();
 
-
-            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDASM").FullName });
-            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName });
+            NewComponentsFull.AddRange(new List<VaultSystem.VentsCadFiles>
+                        {
+                            new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDASM").FullName },
+                            new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName },
+                         });            
 
             List<VaultSystem.VentsCadFiles> outList;
-            VaultSystem.CheckInOutPdmNew(NewComponentsFull, true, Settings.Default.TestPdmBaseName, out outList);
+            VaultSystem.CheckInOutPdmNew(NewComponentsFull, true, //Settings.Default.TestPdmBaseName,
+                out outList);
 
             _swApp = null;
             return newDamperPath;

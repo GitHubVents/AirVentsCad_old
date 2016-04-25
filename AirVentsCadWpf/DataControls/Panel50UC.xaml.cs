@@ -77,8 +77,10 @@ namespace AirVentsCadWpf.DataControls
             if (row2 != null)
                 mat2Code = row2.Field<string>("CodeMaterial");
 
+
             var materialP1 = new[] {MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code};
-            var materialP2 = new[] {MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code};
+            var materialP2 = new[] {MaterialP2.SelectedValue.ToString(), ТолщинаВннутренней.Text, MaterialP2.Text, mat2Code};           
+
 
             var thicknessOfPanel = ((ComboBoxItem) TypeOfPanel.SelectedItem).Content.ToString().Remove(2);
 

@@ -2234,8 +2234,8 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             try
             {
                 if (string.IsNullOrEmpty(item?.PartPath)) return;
-                
-                VaultSystem.GetLastVersionOfFile(item.PartPath, Settings.Default.TestPdmBaseName);
+
+                VaultSystem.GetLastVersionOfFile(item.PartPath);//, Settings.Default.TestPdmBaseName);
                 Process.Start(@item.PartPath);
             }
             catch (Exception exc)
@@ -2249,7 +2249,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
             var item = PartsPdmTable.SelectedItem as ModelSw.ExistingAsmsAndParts;
             try
             {
-                VaultSystem.GoToFile(@item?.PartPath, Settings.Default.TestPdmBaseName);
+                VaultSystem.GoToFile(@item?.PartPath);//, Settings.Default.TestPdmBaseName);
             }
             catch (Exception exc)
             {

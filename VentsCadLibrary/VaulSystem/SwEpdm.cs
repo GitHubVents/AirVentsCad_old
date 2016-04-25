@@ -10,47 +10,53 @@ namespace VentsCadLibrary
 {
     public class SwEpdm
     {
-        public static void AddToPdmByPath(string path, string vaultName)
-        {
-            try
-            {
-                var vault1 = new EdmVault5Class();
-                if (!vault1.IsLoggedIn)
-                {
-                    vault1.LoginAuto(vaultName, 0);
-                }
-                var fileDirectory = new FileInfo(path).DirectoryName;
+        public static string VaultName { get; set; } = "Vents-PDM";
 
-                var fileFolder = vault1.GetFolderFromPath(fileDirectory);
-                fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
-            }
-            catch (Exception e)
-            {
-                Логгер.Ошибка("Ошибка:" + e.Message, e.StackTrace, "SwEpdm", "AddToPdmByPath");
+        public static void AddToPdmByPath(string path)//, string vaultName)
+        {
+            if (UseDll) throw new Exception("!UseDll");
+
+            else {
+                try
+                {
+                    var vault1 = new EdmVault5Class();
+                    if (!vault1.IsLoggedIn)
+                    {
+                        vault1.LoginAuto(VaultName, 0);
+                    }
+                    var fileDirectory = new FileInfo(path).DirectoryName;
+
+                    var fileFolder = vault1.GetFolderFromPath(fileDirectory);
+                    fileFolder.AddFile(fileFolder.ID, "", Path.GetFileName(path));
+                }
+                catch (Exception e)
+                {
+                    Логгер.Ошибка("Ошибка:" + e.Message, e.StackTrace, "SwEpdm", "AddToPdmByPath");
+                }
             }
         }
 
-        public static void GoToFile(string path, string vaultName)
+        public static void OpenContainingFolder(string path)//, string vaultName)
         {
             try
             {
                 IEdmVault8 edmVault8 = new EdmVault5Class();
-                edmVault8.LoginAuto(vaultName, 0);
+                edmVault8.LoginAuto(VaultName, 0);
                 if (string.IsNullOrEmpty(path)) return;
                 edmVault8.OpenContainingFolder(path);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
             }
         }
 
-        public static string GetSwEpdRootFolderPath(string vaultName)
+        public static string GetSwEpdRootFolderPath()//string vaultName)
         {
             try
             {
                 var edmVault5 = new EdmVault5();
-                edmVault5.LoginAuto(vaultName, 0);
+                edmVault5.LoginAuto(VaultName, 0);
                 return edmVault5.RootFolderPath;
             }
             catch (Exception)
@@ -59,7 +65,7 @@ namespace VentsCadLibrary
             }
         }
 
-        public static void CreateDistDirectory(string path, string vaultName)
+        public static void CreateDistDirectory(string path)//, string vaultName)
         {
             try
             {
@@ -68,7 +74,7 @@ namespace VentsCadLibrary
 
                 if (!vault1.IsLoggedIn)
                 {
-                    vault1.LoginAuto(vaultName, 0);
+                    vault1.LoginAuto(VaultName, 0);
                 }
                 var vault2 = (IEdmVault7)vault1;
                 var directoryInfo = new DirectoryInfo(path);
@@ -82,7 +88,7 @@ namespace VentsCadLibrary
             }
         }
 
-        public static void CheckInOutPdm(string filePath, bool registration, string vaultName)
+        public static void CheckInOutPdm(string filePath, bool registration)//, string vaultName)
         {
             var retryCount = 2;
             var success = false;
@@ -91,7 +97,7 @@ namespace VentsCadLibrary
                 try
                 {
                     var vault1 = new EdmVault5();
-                    if (!vault1.IsLoggedIn) { vault1.LoginAuto(vaultName, 0); }
+                    if (!vault1.IsLoggedIn) { vault1.LoginAuto(VaultName, 0); }
                     var trys = 1;
                     m1:
 
@@ -135,7 +141,7 @@ namespace VentsCadLibrary
             }
         }
 
-        public static void CheckInOutPdm(List<FileInfo> filesList, bool registration, string vaultName)
+        public static void CheckInOutPdm(List<FileInfo> filesList, bool registration)//, string vaultName)
         {
             foreach (var file in filesList)
             {
@@ -147,7 +153,7 @@ namespace VentsCadLibrary
                     {
                         var vault1 = new EdmVault5();
                         IEdmFolder5 oFolder;
-                        vault1.LoginAuto(vaultName, 0);
+                        vault1.LoginAuto(VaultName, 0);
                         var edmFile5 = vault1.GetFileFromPath(file.FullName, out oFolder);
 
                         // Разрегистрировать
@@ -207,97 +213,86 @@ namespace VentsCadLibrary
                 }
             }
         }
-
-        public static void GetAsmFilesAsBuild(string path, string vaultName)
+        
+        public static void GetAsmFilesAsBuild(string path)//, string vaultName)
         {
             try
-            {
-                var vaultSource = new EdmVault5();
+            {                
                 IEdmFolder5 oFolder;
-                if (!vaultSource.IsLoggedIn)
-                {
-                    vaultSource.LoginAuto(vaultName, 0);
-                }
-                var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
-                MessageBox.Show(path, vaultName);
-                edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing + (int)EdmGetFlag.EdmGet_RefsOverwriteLocked);
-                MessageBox.Show("Get");
-                //(int)EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing);
-
+                GetEdmFile5(path, //VaultName,
+                    out oFolder).GetFileCopy(0, 0, oFolder.ID,
+                    (int)EdmGetFlag.EdmGet_Refs + (int)EdmGetFlag.EdmGet_RefsOnlyMissing + (int)EdmGetFlag.EdmGet_RefsOverwriteLocked);
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, "Не удалось получить последнюю версию файлов из хранилища");
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace, "Не удалось получить последнюю версию файлов из хранилища");
+            }
+        }    
+
+        public static void GetLastVersionOfFile(string path)//, string vaultName)
+        {
+            try
+            {
+                IEdmFolder5 oFolder;
+                GetEdmFile5(path, //VaultName, 
+                    out oFolder).GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
             }
         }
 
-        public void GetObjectType(int idPdm, string vaultName)
+        internal static IEdmFile5 GetEdmFile5(string path,// string vaultName,
+            out IEdmFolder5 folder)
         {
+            folder = null;
             try
             {
                 var vaultSource = new EdmVault5();
                 IEdmFolder5 oFolder;
                 if (!vaultSource.IsLoggedIn)
                 {
-                    vaultSource.LoginAuto(vaultName, 0);
-                }
-
-  //              var objectType = vaultSource..GetObject(EdmObjectType., idPdm);
-
-                //File = (IEdmFile5)vault1.GetObject(EdmObjectType.EdmObject_File, curListFile.mlFileID);
-
-
-           //     var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
-       //         edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
-                //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
-            }
-            catch (Exception excepiton)
-            {
-                MessageBox.Show(excepiton.Message);
-            }
-        }
-
-
-        public static void GetLastVersionOfFile(string path, string vaultName)
-        {
-            try
-            {
-                var vaultSource = new EdmVault5();
-                IEdmFolder5 oFolder;
-                if (!vaultSource.IsLoggedIn)
-                {
-                    vaultSource.LoginAuto(vaultName, 0);
+                    vaultSource.LoginAuto(VaultName, 0);
                 }
                 var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
                 edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
                 //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
+                folder = oFolder;
+                return edmFile5;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+                return null;
             }
+        }
+
+        internal int GetPdmIds(string path, //string vaultName, 
+            out int projectId)
+        {
+            var Id = 0;
+            projectId = 0;
+            try
+            {
+                IEdmFolder5 oFolder;
+                Id = GetEdmFile5(path,// vaultName,
+                    out oFolder).ID;
+                projectId = oFolder.ID;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+            }
+            return Id;            
+
         }
 
         public static int GetVersionOfFile(string path, string vaultName)
         {
-            try
-            {
-                var vaultSource = new EdmVault5();
-                IEdmFolder5 oFolder;
-                if (!vaultSource.IsLoggedIn)
-                {
-                    vaultSource.LoginAuto(vaultName, 0);
-                }
-                var edmFile5 = vaultSource.GetFileFromPath(path, out oFolder);
-                edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
-                //edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_Simple);
-
-                return edmFile5.CurrentVersion;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
+            IEdmFolder5 oFolder;
+            return GetEdmFile5(path, //vaultName,
+                out oFolder).CurrentVersion;
         }
 
         public static List<KeyValuePair<string, int>> GetSwEpdmVaults() 
@@ -323,7 +318,7 @@ namespace VentsCadLibrary
             return vaults;
         }
 
-        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configs, bool getFileCopy, string vaultName)
+        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configs, bool getFileCopy)//, string vaultName)
         {
             fileName = null;
             fileIdPdm = 0;
@@ -340,7 +335,7 @@ namespace VentsCadLibrary
 
                 if (!vault1.IsLoggedIn)
                 {
-                    vault1.LoginAuto(vaultName, 0);
+                    vault1.LoginAuto(VaultName, 0);
                 }
 
                 var edmFile5 = vault1.GetFileFromPath(path, out oFolder);
@@ -430,12 +425,13 @@ namespace VentsCadLibrary
             }
         }
        
-        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, string vaultName, out List<VaultSystem.VentsCadFiles> newFilesList)
+        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, //string vaultName,
+            out List<VaultSystem.VentsCadFiles> newFilesList)
         {
             var edmVault5 = new EdmVault5();
             if (!edmVault5.IsLoggedIn)
             {
-                edmVault5.LoginAuto(vaultName, 0);
+                edmVault5.LoginAuto(VaultName, 0);
             }            
 
             BatchAddFiles(filesList, edmVault5);            
@@ -467,12 +463,12 @@ namespace VentsCadLibrary
             }
         }
         
-        public static void BatchUnLock1(List<string> filesPathesList, string vaultName)
+        public static void BatchUnLock1(List<string> filesPathesList)//, string vaultName)
         {
             var edmVault5 = new EdmVault5();
             if (!edmVault5.IsLoggedIn)
             {
-                edmVault5.LoginAuto(vaultName, 0);
+                edmVault5.LoginAuto(VaultName, 0);
             }
 
             IEdmPos5 aPos;
@@ -513,17 +509,59 @@ namespace VentsCadLibrary
             batchUnlocker.UnlockFiles(0);
         }
 
+        public static void BatchAdd(//string vaultName,
+            List<AddinConvertTo.Classes.FilesData.TaskParam> list)
+        {
+            var edmVault5 = new EdmVault5();
+            if (!edmVault5.IsLoggedIn) { edmVault5.LoginAuto(VaultName, 0); }
+            var edmVault7 = (IEdmVault7)edmVault5;
+            AddinConvertTo.Classes.Batches.BatchAddFiles(edmVault7, list);
+        }
+
+        internal static List<AddinConvertTo.Classes.FilesData.TaskParam> ConvertVentsCadFiles(List<VaultSystem.VentsCadFiles> filesList)
+        {
+            if (filesList?.Count == 0) return null;
+            
+            List<AddinConvertTo.Classes.FilesData.TaskParam> list = new List<AddinConvertTo.Classes.FilesData.TaskParam>();
+            foreach (var file in filesList)
+            {
+                list.Add(new AddinConvertTo.Classes.FilesData.TaskParam { FullFilePath = file.LocalPartFileInfo });
+            }
+            return list;
+        }
+
+        const bool UseDll = false;
+
+
         internal static void BatchAddFiles(List<VaultSystem.VentsCadFiles> filesList, EdmVault5 edmVault5)
         {
+            goto m1;
+
+            #region Dll            
+            
+            var edmVault7 = (IEdmVault7)edmVault5;
+            AddinConvertTo.Classes.Batches.BatchAddFiles(edmVault7, ConvertVentsCadFiles(filesList));
+            return;
+
+            #endregion
+
+            m1:
+
+            #region Code
+
+            var files = "";
+
             try
             {
                 var  poAdder = (IEdmBatchAdd2)edmVault5.CreateUtility(EdmUtility.EdmUtil_BatchAdd);
 
                 var list = "Всего файлов - "  + filesList.Count;
                 var i = 0;
+                
+
                 foreach (var file in filesList)
                 {
-                    //MessageBox.Show(file.LocalPartFileInfo);
+                    files = files + $"\n FileInfo - {file.LocalPartFileInfo} directoryName - {file.LocalPartFileInfo.Replace(file.PartWithoutExtension, "")}";                    
 
                     i++;
 
@@ -556,19 +594,25 @@ namespace VentsCadLibrary
                 try
                 {
                     //MessageBox.Show(poAdder.CommitAdd(0, null).ToString());
-                    poAdder.CommitAdd(-1, null);
+                    poAdder.CommitAdd(0, null);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.StackTrace, "2");
+                    MessageBox.Show(e.Message + "\n" + e.StackTrace, "2");
                 }
             }
             catch (Exception e)
             {
-             //   MessageBox.Show(e.StackTrace, "BatchAddFiles");
+                MessageBox.Show(e.StackTrace, "BatchAddFiles");
             }
+            finally
+            {
+               // MessageBox.Show(files);
+            }
+
+            #endregion
         }
-        
+
         internal static void BatchUnLock(List<VaultSystem.VentsCadFiles> filesList, EdmVault5 edmVault5)
         {
             IEdmPos5 aPos;
@@ -610,7 +654,7 @@ namespace VentsCadLibrary
             batchUnlocker.UnlockFiles(0);
         }
 
-        public static void BatchGet(string vaultName, List<BatchDLL.Batches.TaskParam> list)
+        public static void BatchGet(string vaultName, List<AddinConvertTo.Classes.FilesData.TaskParam> list)
         {
             var edmVault5 = new EdmVault5();
             if (!edmVault5.IsLoggedIn) { edmVault5.LoginAuto(vaultName, 0); }
@@ -618,15 +662,50 @@ namespace VentsCadLibrary
             BathGet(edmVault7, list);
         }
 
-        internal static void BathGet(IEdmVault7 vault, List<BatchDLL.Batches.TaskParam> list)
+        internal static void BathGet(IEdmVault7 vault, List<AddinConvertTo.Classes.FilesData.TaskParam> list)
         {
-            List<KeyValuePair<Exception, string>> exception;
-            BatchDLL.Batches.BatchGet(vault, list, out exception);
+            //List<KeyValuePair<Exception, string>> exception;
+            //AddinConvertTo.Classes.Batches.ClearLocalCache(vault, list);
+            //AddinConvertTo.Classes.Batches.BatchGet(vault, list);//, out exception);
 
-            foreach (var item in exception)
+            BatchGet(vault, list);
+
+            //foreach (var item in exception)
+            //{
+            //    MessageBox.Show(item.Key.InnerException + "\n" + item.Value);// + "\n" + item.Data + "\n" + item.Message + "\n" + item.StackTrace);
+            //} 
+
+        }
+
+        public static void BatchGet(IEdmVault7 vault, List<AddinConvertTo.Classes.FilesData.TaskParam> listType)
+        {
+            try
             {
-                MessageBox.Show(item.Key.InnerException + "\n" + item.Value);// + "\n" + item.Data + "\n" + item.Message + "\n" + item.StackTrace);
-            } 
+                var batchGetter = (IEdmBatchGet)vault.CreateUtility(EdmUtility.EdmUtil_BatchGet);
+                foreach (var taskVar in listType)
+                {
+                    //MessageBox.Show($"IdPDM - {taskVar.IdPDM}\n FolderID - {taskVar.FolderID}\n CurrentVersion - {taskVar.CurrentVersion}");
+                    //batchGetter.AddSelectionEx((EdmVault5)vault, taskVar.IdPDM, taskVar.FolderID, taskVar.CurrentVersion);
+                    IEdmFolder5 ppoRetParentFolder;
+                    var aFile = vault.GetFileFromPath(taskVar.FullFilePath, out ppoRetParentFolder);
+                    aFile = (IEdmFile5)vault.GetObject(EdmObjectType.EdmObject_File, taskVar.IdPDM);
+                    var aPos = aFile.GetFirstFolderPosition();
+                    var aFolder = aFile.GetNextFolder(aPos);
+                   // MessageBox.Show($"IdPDM - {taskVar.IdPDM}\n FolderID - {aFolder.ID}\n CurrentVersion - {taskVar.CurrentVersion}");
+                    batchGetter.AddSelectionEx((EdmVault5)vault, taskVar.IdPDM, aFolder.ID, taskVar.CurrentVersion);
+                }
+                if ((batchGetter != null))
+                {
+                    //batchGetter.CreateTree(0, (int)EdmGetCmdFlags.Egcf_SkipExisting + (int)EdmGetCmdFlags.Egcf_SkipUnlockedWritable + (int)EdmGetCmdFlags.Egcf_RefreshFileListing);
+                    batchGetter.CreateTree(0, (int)EdmGetCmdFlags.Egcf_SkipExisting + (int)EdmGetCmdFlags.Egcf_SkipUnlockedWritable);
+                    batchGetter.GetFiles(0, null);
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+            }
         }
 
         public class EpdmSearch

@@ -1,54 +1,56 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using VentsCadLibrary;
 
 namespace VentsCadServiceLibrary
-{
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
+{    
     public class VentsService : IVentsCadService
-    {
-        public string GetData(int value)
+    {  
+        public void BuildSp(string type, string width, string height, out ProductPlace place)
         {
-            return string.Format("You entered: {0}", value);
+            busy = true;
+            var projectId = 0;
+            var idPdm = 0;
+            BuildSpigot(type, width, height, out projectId, out idPdm);
+            place = new ProductPlace
+            {
+                IdPdm = idPdm,
+                ProjectId = projectId
+            };            
         }
 
-        
-
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public void Build(Parameters parameters, out ProductPlace place)
         {
-            if (composite == null)
+            VentsCad.ProductFactory serviceObj = new VentsCad.ProductFactory(new VentsCad.ProductFactory.Parameters
             {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
+              Name = parameters.Name,
+              Type = parameters.Type,
+              Sizes = new List<VentsCad.ProductFactory.Sizes>
+              {
+                  new VentsCad.ProductFactory.Sizes
+                  {
+                      Width = parameters.Sizes[0]?.Width,
+                      Height = parameters.Sizes[0]?.Height,
+                      Lenght = parameters.Sizes[0]?.Lenght
+                  }
+              },
+              Materials = new List<string[]> { parameters.Materials[0]  }
+              
+            });
+
+            MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
+            serviceObj.product.Build();
+
+            var getPlace = serviceObj.product.GetPlace();
+
+            place = new ProductPlace
             {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+                IdPdm = getPlace.IdPdm,
+                ProjectId = getPlace.ProjectId
+            };
         }
 
-        public void BuildSpigot(string type, string width, string height, out VentsCad.ProductPlace place)
-        {
-            throw new NotImplementedException();
-        }
-               
-        public VentsCad.Spigot Spigot(string type, string width, string height)  
-        {
-            VentsCad.Spigot spigot = null;
-            try
-            {
-                using (var server = new VentsCad())
-                {
-                    spigot = new VentsCad.Spigot(type, width, height);
-                }
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message);
-            }
-
-            return spigot;
-        }
 
         public void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm)
         {
@@ -70,9 +72,17 @@ namespace VentsCadServiceLibrary
                 }
             }
             catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message);
+            {               
+                MessageBox.Show(ex.Message);
             }
+            busy = false;
+        }       
+
+        public bool IsBusy()
+        {
+            return busy;
         }
+
+        internal bool busy { get; set; }
     }
 }

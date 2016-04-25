@@ -1,26 +1,72 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.ServiceModel;
-using VentsCadLibrary;
 
 namespace VentsCadServiceLibrary
-{
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
+{    
     [ServiceContract]
     public interface IVentsCadService
     {
         [OperationContract]
-        string GetData(int value);
+        void Build(Parameters parameters, out ProductPlace place);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-        
-        //[OperationContract]
-        //VentsCad.Spigot Spigot(string type, string width, string height);
+        bool IsBusy();       
+
+        [OperationContract]
+        void BuildSp(string type, string width, string height, out ProductPlace place);
 
         [OperationContract]
         void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm);
-    } 
+    }
 
+    [DataContract]
+    public class Parameters
+    {
+        [DataMember]
+        public string Name;
+        [DataMember]
+        public string Type;        
+        [DataMember]
+        public List<Sizes> Sizes;
+        [DataMember]
+        //public List<Material> Materials;
+        public List<string[]> Materials;
+    }
+
+    [DataContract]
+    public class Sizes
+    {
+        [DataMember]
+        public string Width;
+        [DataMember]
+        public string Height;
+        [DataMember]
+        public string Lenght;
+    }
+
+    //[DataContract]
+    //public class Material
+    //{
+    //    [DataMember]
+    //    public string Name;
+    //    [DataMember]
+    //    public string Code;
+    //    [DataMember]
+    //    public string Thikness;
+    //    [DataMember]
+    //    public string CodeName;
+    //}
+    
+    [DataContract]
+    public class ProductPlace
+    {
+        [DataMember]
+        public int IdPdm;
+        [DataMember]
+        public int ProjectId;
+    }
+    
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.
     // You can add XSD files into the project. After building the project, you can directly use the data types defined there, with the namespace "VentsCadServiceLibrary.ContractType".

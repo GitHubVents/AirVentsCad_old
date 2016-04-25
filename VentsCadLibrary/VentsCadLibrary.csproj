@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VentsCadLibrary</RootNamespace>
     <AssemblyName>VentsCadLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,14 +30,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BatchDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\AirVentsCadWpf\BatchDLL.dll</HintPath>
+    <Reference Include="AddinConvertTo">
+      <HintPath>.\AddinConvertTo.dll</HintPath>
     </Reference>
     <Reference Include="MakeDxfUpdatePartData">
       <HintPath>..\..\..\..\Documents\Visual Studio 2012\Projects\MakeDxfUpdatePartData\MakeDxfUpdatePartData\bin\Debug\MakeDxfUpdatePartData.dll</HintPath>
@@ -77,6 +78,7 @@
     <Compile Include="Functions\SwDoc.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Products\ProductInterface.cs" />
+    <Compile Include="Products\ProductFactory.cs" />
     <Compile Include="VaulSystem\PdmBatch.cs" />
     <Compile Include="SqlData\SqlData.cs" />
     <Compile Include="VaulSystem\SwEpdm.cs" />

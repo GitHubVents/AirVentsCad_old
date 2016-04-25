@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using AirVentsCadWpf.AirVentsClasses;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
+using AirVentsCadWpf.ServiceVents;
+using System.Threading.Tasks;
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -30,6 +32,17 @@ namespace AirVentsCadWpf.DataControls
 
         void BuildDamper_Click(object sender, RoutedEventArgs e)
         {
+            var mat1Code = "";
+            var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
+            var row1 = viewRowMat1.Row;
+            if (row1 != null)
+                mat1Code = row1.Field<string>("CodeMaterial");
+            var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
+
+         //   goto m1;
+
+            #region ModelSw
+
             try
             {
                 #region CodeMaterial
@@ -56,14 +69,7 @@ namespace AirVentsCadWpf.DataControls
 
                 //return;
 
-                #endregion
-
-                var mat1Code = "";
-                var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
-                var row1 = viewRowMat1.Row;
-                if (row1 != null)
-                    mat1Code = row1.Field<string>("CodeMaterial");
-                var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
+                #endregion            
 
                 var sw = new ModelSw();
                 sw.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), materialP1);
@@ -72,6 +78,62 @@ namespace AirVentsCadWpf.DataControls
             {
                 MessageBox.Show(ex.StackTrace, ex.Message);
             }
+
+            return;
+
+            #endregion
+
+
+
+            m1: // VentsCadLibrary
+
+            try
+            {             
+                using (var server = new VentsCadLibrary.VentsCad())
+                {
+                    var newDumper = new VentsCadLibrary.VentsCad.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), materialP1);
+                    if (!newDumper.Exist)
+                    {
+                        newDumper.Build();
+                    }
+                    var place = newDumper.GetPlace();
+                    MessageBox.Show(place.Path + "\n" + place.IdPdm + "\n" + place.ProjectId);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            return;
+
+            m2:  // VentsCadService
+
+            try
+            {  
+                var
+                serv = new ServiceV(new VentsCadService.Parameters
+                {
+                    Name = "dumper",
+                    Type = TypeOfDumper.Text,
+                    Sizes = new VentsCadService.Sizes[]
+                    {
+                        new VentsCadService.Sizes
+                        {
+                            Width = WidthDamper.Text,
+                            Height = HeightDamper.Text
+                        }
+                    },
+                    Materials = new [] { materialP1 }
+                });
+                var Build = new Task(serv.build);
+                Build.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         void WidthDamper_KeyDown(object sender, KeyEventArgs e)

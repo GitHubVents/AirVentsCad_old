@@ -825,7 +825,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                     int curVer;
                     string name;
                     List<string> configurations;
-                    SwEpdm.GetIdPdm(filePath, out name, out pdmId, out curVer, out configurations, true, Settings.Default.PdmBaseName);
+                    SwEpdm.GetIdPdm(filePath, out name, out pdmId, out curVer, out configurations, true); ;//, Settings.Default.PdmBaseName);
 
                     //MessageBox.Show(configurations.Count.ToString());
 
@@ -1242,6 +1242,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             }            
 
             GetFiles(ListToRun, out _pdmFilesAfterGet);
+            MessageBox.Show(ListToRun.Count(newComponent => !newComponent.Xml).ToString());
 
             try
             {
@@ -1249,9 +1250,22 @@ namespace AirVentsCadWpf.DataControls.Specification
                 {
                     using (var modelSw = new ModelSw())
                     {
-                        Exception exception;
-                        ExportXmlSql.Export(modelSw.GetSwWithPart(newComponent.Путь), newComponent.CurrentVersion, (int)newComponent.IdPmd, out exception);
-                        //modelSw.ExitSw();
+                        try
+                        {
+                            Exception exception;
+                            ExportXmlSql.Export(modelSw.GetSwWithPart(newComponent.Путь), newComponent.CurrentVersion, (int)newComponent.IdPmd, out exception);
+                            if (exception != null)
+                            {
+                                MessageBox.Show(exception.Message);
+                            }
+
+                            //modelSw.ExitSw();
+                        }
+                        catch (Exception ex )
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        
                     }
                 }
             }

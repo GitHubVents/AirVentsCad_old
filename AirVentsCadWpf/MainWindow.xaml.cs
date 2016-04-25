@@ -139,5 +139,17 @@ namespace AirVentsCadWpf
         }
 
         static string State => $"Хранилище: {Settings.Default.TestPdmBaseName}     База данных: {Settings.Default.ConnectionToSQL.Split(';')[1].Split('=')[1]}";
+
+        private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var content = "";
+            if (App.ProductsInWork.List == null) return;
+            
+            foreach (var item in App.ProductsInWork.List)
+            {
+                content = content + " | " + item;
+            }
+            label.Content = content;
+        }
     }
 }

@@ -22,11 +22,12 @@
     <MetadataSource Address="http://localhost/" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="5a7c277a-f48a-4600-9c57-059a156dc0ff" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd1" />
-    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="87acfeae-ce61-4653-a82e-155e3ecdea7a" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd2" />
-    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="43065c7e-7d68-49c0-afb3-98e6c09b4dcd" SourceId="1" SourceUrl="http://192.168.14.86/?disco" />
-    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="938bad03-46bf-46a5-b639-60930048e8a4" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd0" />
     <MetadataFile FileName="VentsService1.wsdl" MetadataType="Wsdl" ID="22cb04d2-70f4-4410-a531-e2e5722adf9e" SourceId="1" SourceUrl="http://192.168.14.86/?wsdl" />
+    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="87acfeae-ce61-4653-a82e-155e3ecdea7a" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd2" />
+    <MetadataFile FileName="item3.xsd" MetadataType="Schema" ID="10ead3b7-9b19-4b17-bbec-311340dbf398" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd3" />
+    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="938bad03-46bf-46a5-b639-60930048e8a4" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd0" />
+    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="43065c7e-7d68-49c0-afb3-98e6c09b4dcd" SourceId="1" SourceUrl="http://192.168.14.86/?disco" />
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="5a7c277a-f48a-4600-9c57-059a156dc0ff" SourceId="1" SourceUrl="http://192.168.14.86/?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

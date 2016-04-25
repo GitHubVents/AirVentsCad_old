@@ -90,6 +90,26 @@ namespace AirVentsCadWpf
             }
         }
 
+        public static class ProductsInWork
+        {
+            public static void AddProduct(string Name)
+            {
+                if (List == null)
+                {
+                    List = new List<string>();
+                }
+                List.Add(Name);
+            }
+
+            public static List<string> List { get; set; }
+
+        }
+
+        //public static string sdfv()
+        //{
+        //    return productInWork;
+        //}
+
 
 
         /// <summary>

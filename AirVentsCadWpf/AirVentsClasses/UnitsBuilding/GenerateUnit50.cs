@@ -14,6 +14,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
 using VentsMaterials;
+using System.Diagnostics;
 
 namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 {
@@ -23,6 +24,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
     /// </summary>
     public partial class ModelSw : IDisposable
     {
+
+        public static void Open(int fileId, int projectId, string fileName)
+        {
+            if (fileId == 0 || projectId == 0) return;
+            
+            if (MessageBox.Show( string.IsNullOrEmpty(fileName) ? $"Открыть {fileName}?" : 
+                "Изделие уже есть в базе. Открыть?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Process.Start("conisio://" + Settings.Default.TestPdmBaseName + "/open?projectid=" + projectId +
+                    "&documentid=" + fileId + "&objecttype=1");
+            }                        
+        }
+
 
         /// <summary>
         /// Пользовательская база PDM.
@@ -6022,7 +6036,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 Логгер.Информация($"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
 
-                VaultSystem.GetLastVersionOfFile(path, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
             }
             catch (Exception e)
             {
@@ -6087,7 +6101,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             try
             {
                 Логгер.Информация($"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
-                VaultSystem.GetLastVersionOfFile(path, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
             }
             catch (Exception e)
             {
@@ -6101,10 +6115,10 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         // TODO Asm REf
         internal static void GetLastVersionPdm(string[] path, string vaultName)
         {
-            if (Settings.Default.Developer)
-            {
-                return;
-            }
+            //if (Settings.Default.Developer)
+            //{
+            //    return;
+            //}
             for (var i = 0; i < path.Length; i++)
             {
                 try
@@ -6112,7 +6126,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     Логгер.Информация(
                     $"Получение последней версии по пути {path[i]}\nБаза - {vaultName}", "", null,
                         "GetLastVersionPdm");
-                    VaultSystem.GetLastVersionOfFile(path[i], vaultName);
+                    VaultSystem.GetLastVersionOfFile(path[i]);//, vaultName);
                 }
                 catch (Exception e)
                 {
@@ -6138,7 +6152,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 Логгер.Информация(
                 $"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
-                VaultSystem.GetLastVersionOfFile(path, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
             }
             catch (Exception e)
             {
