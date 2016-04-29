@@ -39,7 +39,7 @@ namespace AirVentsCadWpf.DataControls
                 mat1Code = row1.Field<string>("CodeMaterial");
             var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
 
-         //   goto m1;
+            goto m2;
 
             #region ModelSw
 
@@ -82,9 +82,7 @@ namespace AirVentsCadWpf.DataControls
             return;
 
             #endregion
-
-
-
+            
             m1: // VentsCadLibrary
 
             try
@@ -109,23 +107,25 @@ namespace AirVentsCadWpf.DataControls
 
             m2:  // VentsCadService
 
+            MessageBox.Show("VentsCadService");
+
             try
             {  
-                var
-                serv = new ServiceV(new VentsCadService.Parameters
-                {
-                    Name = "dumper",
-                    Type = TypeOfDumper.Text,
-                    Sizes = new VentsCadService.Sizes[]
+                var serv = new ServiceV(
+                    new VentsCadService.Parameters
                     {
-                        new VentsCadService.Sizes
+                        Name = "dumper",
+                        Type = TypeOfDumper.Text,
+                        Sizes = new VentsCadService.Sizes[]
                         {
-                            Width = WidthDamper.Text,
-                            Height = HeightDamper.Text
-                        }
-                    },
-                    Materials = new [] { materialP1 }
-                });
+                            new VentsCadService.Sizes
+                            {
+                                Width = WidthDamper.Text,
+                                Height = HeightDamper.Text
+                            }
+                        },
+                        Materials = new [] { materialP1 }
+                    });
                 var Build = new Task(serv.build);
                 Build.Start();
             }
@@ -133,7 +133,6 @@ namespace AirVentsCadWpf.DataControls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         void WidthDamper_KeyDown(object sender, KeyEventArgs e)

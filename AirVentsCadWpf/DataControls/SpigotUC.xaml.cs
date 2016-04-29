@@ -20,6 +20,7 @@ namespace AirVentsCadWpf.DataControls
             InitializeComponent();
         }
 
+        #region To delete
 
         //void build()
         //{
@@ -51,27 +52,26 @@ namespace AirVentsCadWpf.DataControls
         //    Build.Start();
         //}
 
-        string type;
-        string width;
-        string height;
+        //string type;
+        //string width;
+        //string height;
 
+        #endregion
 
-        ServiceV serv { get; set; }
+      //  ServiceV serv { get; set; }
 
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
             //type = TypeOfSpigot.Text;
             //width = WidthSpigot.Text;
             //height = HeightSpigot.Text;
-
             //new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text).build(); 
-
-
             //serv = new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);//.build();
+            //ExportTaskRun(build);
 
-            serv = new ServiceV(new VentsCadService.Parameters
+             var serv = new ServiceV(new VentsCadService.Parameters
             {
-                Name = "spigot",//"dumper",//
+                Name = "spigot",
                 Type  = TypeOfSpigot.Text,
                 Sizes = new VentsCadService.Sizes[]
                 {
@@ -83,16 +83,9 @@ namespace AirVentsCadWpf.DataControls
                 }
                 ,
                 Materials = null
-            });
-
-           // serv.Busy();
-            
+            });           
             var Build = new Task(serv.build);
-            Build.Start();
-
-          //  serv.Busy();
-
-            //ExportTaskRun(build);
+            Build.Start();                     
 
             MessageBox.Show("Чекайте повідомлення після закінчення генерації");
 
@@ -154,21 +147,6 @@ namespace AirVentsCadWpf.DataControls
             var regex = new Regex("[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var Build = new Task(serv.Busy);
-                Build.Start();
-            }
-            catch (Exception)
-            {
-
-             
-            }          
-
-           
-        }
+      
     }
 }

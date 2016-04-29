@@ -30,7 +30,6 @@ namespace VentsCadServiceLibrary
         [DataMember]
         public List<Sizes> Sizes;
         [DataMember]
-        //public List<Material> Materials;
         public List<string[]> Materials;
     }
 
@@ -44,20 +43,7 @@ namespace VentsCadServiceLibrary
         [DataMember]
         public string Lenght;
     }
-
-    //[DataContract]
-    //public class Material
-    //{
-    //    [DataMember]
-    //    public string Name;
-    //    [DataMember]
-    //    public string Code;
-    //    [DataMember]
-    //    public string Thikness;
-    //    [DataMember]
-    //    public string CodeName;
-    //}
-    
+   
     [DataContract]
     public class ProductPlace
     {
@@ -66,7 +52,8 @@ namespace VentsCadServiceLibrary
         [DataMember]
         public int ProjectId;
     }
-    
+
+    #region Example
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.
     // You can add XSD files into the project. After building the project, you can directly use the data types defined there, with the namespace "VentsCadServiceLibrary.ContractType".
@@ -91,7 +78,5 @@ namespace VentsCadServiceLibrary
         }
     }
 
-   
-    
-
+    #endregion
 }

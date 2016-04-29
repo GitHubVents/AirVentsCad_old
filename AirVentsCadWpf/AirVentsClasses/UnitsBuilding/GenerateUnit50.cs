@@ -9,7 +9,6 @@ using System.Windows;
 using System.Xml;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
-using ExportPartData;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
@@ -4122,6 +4121,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = Settings.Default.ConnectionToSQL;
                 var toSql = new ToSQL();
+
+                MessageBox.Show($"Conn - {ToSQL.Conn} SetMaterials {setMaterials == null} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
+
                 setMaterials.ApplyMaterial("", "00", Convert.ToInt32(materialP1[0]), _swApp);
                 _swApp.IActiveDoc2.Save();
 

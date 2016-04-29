@@ -22,35 +22,44 @@ namespace VentsCadServiceLibrary
 
         public void Build(Parameters parameters, out ProductPlace place)
         {
-            VentsCad.ProductFactory serviceObj = new VentsCad.ProductFactory(new VentsCad.ProductFactory.Parameters
+            place = null;
+            try
             {
-              Name = parameters.Name,
-              Type = parameters.Type,
-              Sizes = new List<VentsCad.ProductFactory.Sizes>
-              {
-                  new VentsCad.ProductFactory.Sizes
-                  {
-                      Width = parameters.Sizes[0]?.Width,
-                      Height = parameters.Sizes[0]?.Height,
-                      Lenght = parameters.Sizes[0]?.Lenght
-                  }
-              },
-              Materials = new List<string[]> { parameters.Materials[0]  }
-              
-            });
+                VentsCad.ProductFactory serviceObj = new VentsCad.ProductFactory(
+                    new VentsCad.ProductFactory.Parameters
+                    {
+                        Name = parameters.Name,
+                        Type = parameters.Type,
+                        Sizes = new List<VentsCad.ProductFactory.Sizes>
+                        {
+                        new VentsCad.ProductFactory.Sizes
+                        {
+                            Width = parameters.Sizes[0]?.Width,
+                            Height = parameters.Sizes[0]?.Height,
+                            Lenght = parameters.Sizes[0]?.Lenght
+                        }
+                        },
 
-            MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
-            serviceObj.product.Build();
+                        Materials = new List<string[]> { parameters.Materials[0] }
+                    });
 
-            var getPlace = serviceObj.product.GetPlace();
+                MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
+                serviceObj.product.Build();
 
-            place = new ProductPlace
+                var getPlace = serviceObj.product.GetPlace();
+
+                place = new ProductPlace
+                {
+                    IdPdm = getPlace.IdPdm,
+                    ProjectId = getPlace.ProjectId
+                };
+
+            }
+            catch (Exception ex)
             {
-                IdPdm = getPlace.IdPdm,
-                ProjectId = getPlace.ProjectId
-            };
+                MessageBox.Show(ex.Message);
+            }
         }
-
 
         public void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm)
         {

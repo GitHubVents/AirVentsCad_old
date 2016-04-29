@@ -407,15 +407,27 @@ namespace VentsCadLibrary
             try
             {
                 _swApp.ActivateDoc2(newName, true, 0);
-
-                MessageBox.Show($"Activate - {newName}");
-                MessageBox.Show((_swApp == null).ToString());
-
-
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = ConnectionToSql;
                 var toSql = new ToSQL();
-                setMaterials.ApplyMaterial("", "00", Convert.ToInt32(materialP1[0]), _swApp);
+
+                //SetMaterials {setMaterials == null} 
+
+                //MessageBox.Show($"Conn ");
+
+                //MessageBox.Show($"Conn - {ToSQL.Conn}");
+
+                //MessageBox.Show($" _swApp {_swApp == null} ");
+
+                //MessageBox.Show($" levelId - {Convert.ToInt32(materialP1[0])} ");
+
+                //MessageBox.Show($"Conn - {ToSQL.Conn} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
+
+
+                setMaterials.ApplyMaterial("", "00",
+                    1700,
+                    //Convert.ToInt32(materialP1[0]), 
+                    _swApp);
                 _swApp.IActiveDoc2.Save();
 
                 foreach (var confname in setMaterials.GetConfigurationNames(_swApp))
@@ -426,12 +438,14 @@ namespace VentsCadLibrary
                     }
                 }
 
-                if (покрытие[1] != "0")
+                if (покрытие != null)
                 {
-                    setMaterials.SetColor("00", покрытие[0], покрытие[1], покрытие[2], _swApp);
-                }
-
-                _swApp.IActiveDoc2.Save();
+                    if (покрытие[1] != "0")
+                    {
+                        setMaterials.SetColor("00", покрытие[0], покрытие[1], покрытие[2], _swApp);
+                    }
+                    _swApp.IActiveDoc2.Save();
+                }                
 
                 try
                 {
@@ -593,7 +607,9 @@ namespace VentsCadLibrary
 
                 if (!newFuncOfAdding)
                 {
-                    NewComponents.Add(new VaultSystem.VentsCadFiles{LocalPartFileInfo = new FileInfo(newName + ".SLDPRT").FullName});
+//                    ComponentToAdd(new FileInfo($@"{destRootFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName);
+
+  //                  NewComponents.Add(new VaultSystem.VentsCadFiles{LocalPartFileInfo = new FileInfo(newName + ".SLDPRT").FullName});
                 }
 
                 if (newFuncOfAdding)

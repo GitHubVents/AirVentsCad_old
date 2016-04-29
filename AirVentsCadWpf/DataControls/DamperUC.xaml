@@ -69,7 +69,7 @@
         </Grid>
         <Grid HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch"/>
         <Grid HorizontalAlignment="Stretch" Grid.Row="7" VerticalAlignment="Stretch"/>
-        <Button Grid.Row="0" x:Name="BuildDamper" TabIndex="7" Content="Построить" HorizontalAlignment="Left" Height="30" Margin="416,0,0,119"
+        <Button Grid.Row="0" x:Name="BuildDamper" TabIndex="7" Content="Построить" HorizontalAlignment="Left" Height="30" Margin="419,0,0,119"
                 VerticalAlignment="Bottom" Width="100"  Background="{x:Null}" Click="BuildDamper_Click" />
     </Grid>
 

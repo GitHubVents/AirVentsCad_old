@@ -1,5 +1,5 @@
 ﻿
-
+using System.Windows.Forms;
 using System.Collections.Generic;
 
 namespace VentsCadLibrary
@@ -36,20 +36,29 @@ namespace VentsCadLibrary
 
             public ProductFactory(Parameters parameters)
             {
-                using (var server = new VentsCad())
+                try
                 {
-                    switch (parameters.Name)
+                    using (var server = new VentsCad())
                     {
-                        case "spigot":
-                            product = new Spigot(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height);
-                            break;
-                        case "dumper":
-                            product = new Dumper(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height, true, parameters.Materials[0]);
-                            break;
-                        default:
-                            break;
+                        switch (parameters.Name)
+                        {
+                            case "spigot":
+                                product = new Spigot(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height);
+                                break;
+                            case "dumper":
+                                product = new Dumper(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height, true, parameters.Materials[0]);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+                
             }
 
 

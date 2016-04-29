@@ -123,7 +123,9 @@ namespace AirVentsCadWpf.DataControls.Specification
 
                 try
                 {
-                    if (lastVerOfAsm != null) exist = ExistLastXml(путьКСборке, (int)lastVerOfAsm, false);
+                    if (lastVerOfAsm != null) exist =
+                            ExportXmlSql.ExistXml(путьКСборке, (int)lastVerOfAsm);
+                            //ExistLastXml(путьКСборке, (int)lastVerOfAsm, false);
                 }
                 catch (Exception e)
                 {
@@ -846,7 +848,8 @@ namespace AirVentsCadWpf.DataControls.Specification
                         {
                             Наименование = Path.GetFileNameWithoutExtension(filePath),
                             Путь = filePath,
-                            Xml = ExistLastXml(filePath, lastVersion, false),
+                            Xml = ExportXmlSql.ExistXml(filePath, lastVersion),
+                        //ExistLastXml(filePath, lastVersion, false),
                             CurrentVersion = lastVersion,
                             Конфигурация = configname,
                             IdPmd = pdmId,
@@ -924,6 +927,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                         }
                     }
 
+                    #region to delete
                     //var message = "";
                     //foreach (var item in excList)
                     //{
@@ -933,10 +937,13 @@ namespace AirVentsCadWpf.DataControls.Specification
                     //{
                     //    MessageBox.Show(message);
                     //} 
+                    #endregion
 
                     foreach (var listXml in partsListXml2S)
                     {
-                        listXml.Xml = ExistLastXml(listXml.Путь, listXml.CurrentVersion, false);
+                        listXml.Xml =
+                            ExportXmlSql.ExistXml(listXml.Наименование, listXml.CurrentVersion);
+                            //ExistLastXml(listXml.Путь, listXml.CurrentVersion, false);
                         listXml.НаименованиеБезРасширения = listXml.Наименование.ToUpper().Replace(".SLDPRT", "");
                     }
 
@@ -1075,59 +1082,61 @@ namespace AirVentsCadWpf.DataControls.Specification
         
         #region XML File Version
 
-        static int? Version(string xmlPath)
-        {
-            if (!xmlPath.EndsWith("xml")){return null;}
+        //static int? Version(string xmlPath)
+        //{
+        //    if (!xmlPath.EndsWith("xml")){return null;}
 
-            int? version = null;
+        //    int? version = null;
 
-            try
-            {
-                var coordinates = XDocument.Load(xmlPath);
+        //    try
+        //    {
+        //        var coordinates = XDocument.Load(xmlPath);
 
-                var enumerable = coordinates.Descendants("attribute")
-                    .Select(
-                        element =>
-                            new
-                            {
-                                Number = element.FirstAttribute.Value,
-                                Values = element.Attribute("value")
-                            });
-                foreach (var obj in enumerable)
-                {
-                    if (obj.Number != "Версия") continue;
+        //        var enumerable = coordinates.Descendants("attribute")
+        //            .Select(
+        //                element =>
+        //                    new
+        //                    {
+        //                        Number = element.FirstAttribute.Value,
+        //                        Values = element.Attribute("value")
+        //                    });
+        //        foreach (var obj in enumerable)
+        //        {
+        //            if (obj.Number != "Версия") continue;
 
-                    version = Convert.ToInt32(obj.Values.Value);
+        //            version = Convert.ToInt32(obj.Values.Value);
 
-                    goto m1;
-                }
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-            m1:
-            return version;
-        }
+        //            goto m1;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return 0;
+        //    }
+        //    m1:
+        //    return version;
+        //}
 
-        static bool ExistLastXml(string partPath, int currentVersion, bool partsXml)
-        {
-            try
-            {
-                var xmlPartPath =
-                new FileInfo(@"\\srvkb\SolidWorks Admin\XML\" + Path.GetFileNameWithoutExtension(partPath) + (partsXml ? " Parts" : null) + ".xml");
+        //const string XmlPAth = @"C:\Temp\"; // @"\\srvkb\SolidWorks Admin\XML\";
 
-                if (!xmlPartPath.Exists) return false;
+        //static bool ExistLastXml(string partPath, int currentVersion, bool partsXml)
+        //{
+        //    try
+        //    {
+        //        var xmlPartPath =
+        //        new FileInfo(XmlPAth + Path.GetFileNameWithoutExtension(partPath) + (partsXml ? " Parts" : null) + ".xml");
 
-                var xmlPartVersion = Version(xmlPartPath.FullName);
+        //        if (!xmlPartPath.Exists) return false;
 
-                return Equals(xmlPartVersion, currentVersion);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+        //        var xmlPartVersion = Version(xmlPartPath.FullName);
+
+        //        return Equals(xmlPartVersion, currentVersion);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         static bool ExistLastDxf(int idPdm, int currentVersion, string configuration, out Exception exc)
         {
@@ -1242,7 +1251,7 @@ namespace AirVentsCadWpf.DataControls.Specification
             }            
 
             GetFiles(ListToRun, out _pdmFilesAfterGet);
-            MessageBox.Show(ListToRun.Count(newComponent => !newComponent.Xml).ToString());
+            //MessageBox.Show(ListToRun.Count(newComponent => !newComponent.Xml).ToString());
 
             try
             {
@@ -1264,8 +1273,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                         catch (Exception ex )
                         {
                             MessageBox.Show(ex.Message);
-                        }
-                        
+                        }                        
                     }
                 }
             }
@@ -1324,34 +1332,33 @@ namespace AirVentsCadWpf.DataControls.Specification
                 var files = "";
 
                 foreach (var item in ListToRun.Where(x=>x.Dxf))
-                {                                     
-                        try
+                {
+                    try
+                    {
+                        Exception exc;
+                        string matId;
+                        double? thikness;
+                        var blob = Database.DatabaseFileRead(item.IdPmd, item.CurrentVersion, item.Конфигурация, out matId, out thikness, out exc);
+                        if (exc != null) { MessageBox.Show(exc.StackTrace); }
+                        if (blob != null)
                         {
-                            Exception exc;
-                            string matId;
-                            double? thikness;
-                            var blob = Database.DatabaseFileRead(item.IdPmd, item.CurrentVersion, item.Конфигурация, out matId, out thikness, out exc);
-                        if (exc != null) { MessageBox.Show(exc.StackTrace); }                           
-                            if (blob != null)
-                            {
-                                Dxf.SaveByteToFile(blob, Path.Combine(pathToSave, item.НаименованиеБезРасширения.ToUpper().Replace("ВНС-", "")
-                                    + "-" + item.Конфигурация + (string.IsNullOrEmpty(matId) ? "" : "-" + matId) 
-                                    + ((thikness == null || thikness == 0) ? "" : "-" + string.Format("{0:0.0}", thikness)).Replace(",", ".") + ".dxf"));
-                            }
-                            else
-                            {
-                                files = files + "\n" + item.Наименование + " idPdm - " + item.IdPmd + " Ver - " + item.CurrentVersion + " Conf - " + item.Конфигурация;
-                                //MessageBox.Show(exc.Message + "\n" + item.Наименование + "\n" + item.IdPmd + "\n" + item.CurrentVersion + "\n" + item.Конфигурация);
-                                listToExportLocal.Add(item);
-                            }
-                            
+                            Dxf.SaveByteToFile(blob, Path.Combine(pathToSave, item.НаименованиеБезРасширения.ToUpper().Replace("ВНС-", "")
+                                + "-" + item.Конфигурация + (string.IsNullOrEmpty(matId) ? "" : "-" + matId) 
+                                + ((thikness == null || thikness == 0) ? "" : "-" + string.Format("{0:0.0}", thikness)).Replace(",", ".") + ".dxf"));
                         }
-                        catch (Exception exc)
+                        else
                         {
+                            files = files + "\n" + item.Наименование + " idPdm - " + item.IdPmd + " Ver - " + item.CurrentVersion + " Conf - " + item.Конфигурация;
+                            //MessageBox.Show(exc.Message + "\n" + item.Наименование + "\n" + item.IdPmd + "\n" + item.CurrentVersion + "\n" + item.Конфигурация);
                             listToExportLocal.Add(item);
-                            //MessageBox.Show(exc.StackTrace + "\n - " + exc.Message + "\n" + item.Наименование);
-                          //   MessageBox.Show(exc.Message + "\n" + item.Наименование + "\n" + item.IdPmd + "\n" + item.CurrentVersion + "\n" + item.Конфигурация);
-                        }                
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        listToExportLocal.Add(item);
+                        //MessageBox.Show(exc.StackTrace + "\n - " + exc.Message + "\n" + item.Наименование);
+                        //   MessageBox.Show(exc.Message + "\n" + item.Наименование + "\n" + item.IdPmd + "\n" + item.CurrentVersion + "\n" + item.Конфигурация);
+                    }                
                 }
                 
                 //MessageBox.Show(listToExportLocal.Count.ToString());
@@ -1359,14 +1366,17 @@ namespace AirVentsCadWpf.DataControls.Specification
                 listToExportLocal.AddRange(ListToRun.Where(x => !x.Dxf).ToList());
 
                 GetFiles(listToExportLocal, out _pdmFilesAfterGet);
-                
+
                 //MessageBox.Show(listToExportLocal.Count.ToString());
+
+
+                var exeptions = "";
 
                 foreach (var part in listToExportLocal)
                 { 
                     Exception exception;
-                    List< Exception> exceptions;
-                    List<Dxf.DxfFiles> dxfFiles;
+                    List<Dxf.ResultList> resultList;
+                    List<Dxf.DxfFile> dxfFiles;
 
                     //if (part.Наименование.ToLower().Contains("902.01.112"))
                     //{
@@ -1382,19 +1392,21 @@ namespace AirVentsCadWpf.DataControls.Specification
                         }
                         catch (Exception) { }                      
                     }
-                    Dxf.AddToSql(dxfFiles, false, out exceptions);
-                    foreach (var item in exceptions)
+                    Dxf.AddToSql(dxfFiles, false, out resultList);
+                    foreach (var item in resultList)
                     {
                         if (item != null)
                         {
                             try
                             {
-                                MessageBox.Show(item.Message + "\n" + item.StackTrace, "Exception SS");
+                                exeptions = exeptions + $"\nfile - {item.dxfFile.FilePath}\n(id - {item.dxfFile.IdPdm} Ver - {item.dxfFile.Version} Conf - {item.dxfFile.Configuration})";
                             }
                             catch (Exception) { }
                         }
                     }
                 }
+
+                MessageBox.Show(exeptions);
 
                 foreach (var process in Process.GetProcessesByName("SLDWORKS"))
                 {
