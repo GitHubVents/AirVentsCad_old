@@ -349,7 +349,9 @@ namespace AirVentsCadWpf.VentsCadService {
                 base(binding, remoteAddress) {
         }
         
-        public ProductPlace Build(Parameters parameters) {  return Channel.Build(parameters);     }
+        public AirVentsCadWpf.VentsCadService.ProductPlace Build(AirVentsCadWpf.VentsCadService.Parameters parameters) {
+            return base.Channel.Build(parameters);
+        }
         
         public System.Threading.Tasks.Task<AirVentsCadWpf.VentsCadService.ProductPlace> BuildAsync(AirVentsCadWpf.VentsCadService.Parameters parameters) {
             return base.Channel.BuildAsync(parameters);

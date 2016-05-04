@@ -23,9 +23,7 @@ namespace AirVentsCadWpf.DataControls
         {
             InitializeComponent();
 
-            _backgroundWorker.DoWork += BackgroundWorkerOnDoWork ;
-           // _backgroundWorker += _backgroundWorker.ReportProgress(100);
-           // _backgroundWorker += _backgroundWorker.RunWorkerCompleted;            
+            _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;           
 
             ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
@@ -134,13 +132,14 @@ namespace AirVentsCadWpf.DataControls
                         height: HeightPanel.Text,
                         materialP1: materialP1,
                         materialP2: materialP2,
-                        покрытие: new[]
-                        {
-                            Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                            Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                            Ral1.SelectedValue?.ToString() ?? "",
-                            Ral2.SelectedValue?.ToString() ?? ""
-                        },
+                        покрытие: null,
+                        //покрытие: new[]
+                        //{
+                        //    Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                        //    Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                        //    Ral1.SelectedValue?.ToString() ?? "",
+                        //    Ral2.SelectedValue?.ToString() ?? ""
+                        //},
                         path: out path);
                     break;
                 case "50":
@@ -151,13 +150,15 @@ namespace AirVentsCadWpf.DataControls
                         height: HeightPanel.Text,
                         materialP1: materialP1,
                         meterialP2: materialP2,
-                        покрытие: new[]
-                        {
-                            Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
-                            Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
-                            Ral1.SelectedValue?.ToString() ?? "",
-                            Ral2.SelectedValue?.ToString() ?? ""
-                        });
+                        покрытие: null
+                        //покрытие: new[]
+                        //{
+                        //    Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
+                        //    Ral2.Text, CoatingType2.Text, CoatingClass2.Text,
+                        //    Ral1.SelectedValue?.ToString() ?? "",
+                        //    Ral2.SelectedValue?.ToString() ?? ""
+                        //}
+                        );
                     break;
             }
         }

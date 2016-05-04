@@ -38,8 +38,8 @@ namespace AirVentsCadWpf.DataControls
 
         private BomPartListClass _bomClass;
 
-        readonly SetMaterials _swMaterials = new SetMaterials();
-        private readonly ToSQL _connectToSql = new ToSQL();
+      //  readonly SetMaterials _swMaterials = new SetMaterials();
+       // private readonly ToSQL _connectToSql = new ToSQL();
 
         readonly ModelSw _modelSwClass = new ModelSw();
 
@@ -54,7 +54,7 @@ namespace AirVentsCadWpf.DataControls
             ChangedDataGrid(false);
 
             ToSQL.Conn = Settings.Default.ConnectionToSQL;
-            MaterialsList.ItemsSource = _connectToSql.GetSheetMetalMaterialsName();
+   //         MaterialsList.ItemsSource = _connectToSql.GetSheetMetalMaterialsName();
             MaterialsList.DisplayMemberPath = "MatName";
             MaterialsList.SelectedValuePath = "MatName";
             MaterialsList.SelectedIndex = 0;
@@ -389,7 +389,7 @@ namespace AirVentsCadWpf.DataControls
 
             try
             {
-                _swMaterials.ApplyMaterial(partPath, partConfig, materialId, null);
+    //            _swMaterials.ApplyMaterial(partPath, partConfig, materialId, null);
             }
             catch (Exception e)
             {

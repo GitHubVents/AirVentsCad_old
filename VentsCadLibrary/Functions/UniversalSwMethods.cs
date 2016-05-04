@@ -406,6 +406,9 @@ namespace VentsCadLibrary
         {
             try
             {
+                MessageBox.Show("ApplyMaterial 1");
+
+
                 _swApp.ActivateDoc2(newName, true, 0);
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = ConnectionToSql;
@@ -423,6 +426,8 @@ namespace VentsCadLibrary
 
                 //MessageBox.Show($"Conn - {ToSQL.Conn} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
 
+
+                MessageBox.Show("ApplyMaterial 2");
 
                 setMaterials.ApplyMaterial("", "00",
                     1700,

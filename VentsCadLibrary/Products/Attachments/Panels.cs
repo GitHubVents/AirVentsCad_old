@@ -10,9 +10,80 @@ namespace VentsCadLibrary
     public partial class VentsCad
     {
 
+        public class Panels : Product
+        {
+            public Panels()
+            {
+
+            }
+
+
+            public override ProductPlace Place
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            internal override string DestinationFolder { get; } = @"\Проекты\Blauberg\02-01-Panels";
+
+            internal override string TemplateFolder { get; } = @"\Библиотека проектирования\DriveWorks\02 - Panels";
+
+
+            internal override string ModelName
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            internal override string ModelPath
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            
+            public override void Build()
+            {
+                throw new NotImplementedException();
+            }
+
+            enum TypeOfPanel
+            {
+                Unrem,
+                Removable,
+                Coil
+            }
+
+            
+        }
+
         private const string Panel50Folder = @"\Библиотека проектирования\DriveWorks\02 - Panels";
 
+        public string DublePanel50Folder = @"\Библиотека проектирования\DriveWorks\02 - Duble Panel";
+
         public string DestinationFolder { get; set; } = @"\Проекты\Blauberg\02 - Панели";
+
 
         private const string Panels0201 = @"\Проекты\Blauberg\02-01-Panels";
 
@@ -20,7 +91,8 @@ namespace VentsCadLibrary
 
         private const string Panels0205 = @"\Проекты\Blauberg\02-05-Coil Panels";
 
-        public string DublePanel50Folder = @"\Библиотека проектирования\DriveWorks\02 - Duble Panel";
+        
+
 
         #region Начало построения 50-й панели
 

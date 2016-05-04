@@ -122,7 +122,7 @@
                         <DataGridTemplateColumn Header="DXF" Width="33"  IsReadOnly="True" CanUserSort="True">
                             <DataGridTemplateColumn.CellTemplate >
                                 <DataTemplate>
-                                    <Image Source="{Binding Path=ImageSrc}" MouseEnter="Image_MouseEnter" Height="20" MouseLeftButtonUp="DeleteDxf"/>
+                                    <Image Source="{Binding Path=ImageSrc}" Height="20" MouseLeftButtonUp="DeleteDxf"/>
                                     <!--<Image Source="C:\Users\kb81.VENTS\Desktop\87897.PNG"/>-->
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
