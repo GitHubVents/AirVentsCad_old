@@ -184,9 +184,6 @@
     <Compile Include="DataControls\Bom.xaml.cs">
       <DependentUpon>Bom.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataControls\BomServiceUc.xaml.cs">
-      <DependentUpon>BomServiceUc.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DataControls\FrameLessUnit\FramelessUnitUc.xaml.cs">
       <DependentUpon>FramelessUnitUc.xaml</DependentUpon>
     </Compile>
@@ -282,10 +279,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataControls\Bom.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DataControls\BomServiceUc.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

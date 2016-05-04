@@ -4,12 +4,10 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Xml;
 using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.AirVentsClasses.UnitsBuilding;
 using AirVentsCadWpf.Properties;
@@ -367,65 +365,10 @@ namespace AirVentsCadWpf.DataControls.Specification
                     $"Перечень деталей для сборки {CurrentModel.ToUpper().Replace(".SLDASM","")}-{ConfigsCombo.Text} (Всего деталей: {PartsListXml2sDataGrid.Items.Count}шт. Разверток - {sdgv.Count(x=>x.Dxf)} 1С - {sdgv.Count(x => x.Xml)})";
             }
         }
-        
-        #region DXF
-
-        static bool ExistLastDxf(int idPdm, int currentVersion, string configuration, out Exception exc)
-        {
-            exc = null;
-            bool exist;
-            try
-            {
-                exist = Dxf.ExistDxf(idPdm, currentVersion, configuration, out exc);
-            }
-            catch (Exception)
-            {
-                exist = false;
-            }
-            return exist;      
-        }
-
-        void DeleteDxf(object sender, MouseButtonEventArgs mouseButtonEventArgs)
-        {
-           var item = PartsListXml2sDataGrid.SelectedItem as PartsListXml2;
-            if (item == null) return;
-            if (!item.Dxf) return;
-
-            try
-            {
-                if (MessageBox.Show(
-                    $"Удалить развертку для\n Детали - {item.НаименованиеБезРасширения}\n Конфигурация - {item.Конфигурация}\n Версия - {item.CurrentVersion}",
-                    "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    Exception exc;
-                    Database.DeleteDxf(item.IdPmd, item.Конфигурация, item.CurrentVersion, out exc);
-                }
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-            }
-        }
-
-
-        #endregion
 
         string Busy { get; set; }
 
         bool OnlyParts { get; set; }
-
-        void XmlParts1_Click(object sender, RoutedEventArgs e)
-        {
-            CollectParams();
-            ExportTaskRun(ExportToXml);
-        }
-
-        void CollectParams()
-        {
-            OnlyParts = checkBoxOnlyParts.IsChecked == true;
-            OnlyInAsmConfigs = checkBox.IsChecked == true;
-            ListToRun = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
-        }
 
         private List<PartsListXml2> ListToRun { get; set; }
 
@@ -437,7 +380,87 @@ namespace AirVentsCadWpf.DataControls.Specification
             Export.Start();
         }
 
+        static void GetFiles(IEnumerable<PartsListXml2> list, out List<VaultSystem.PdmFilesAfterGet> pdmFilesAfterGet)
+        {
+            ModelSw.BatchGet(Settings.Default.PdmBaseName, list.Select(x => new VaultSystem.BatchParams
+            {
+                CurrentVersion = x.CurrentVersion,
+                FilePath = x.Путь,
+                IdPdm = x.IdPmd
+            }).ToList(),
+            out pdmFilesAfterGet);
+        }
+
         List<VaultSystem.PdmFilesAfterGet> _pdmFilesAfterGet;
+
+        void AutoCompleteTextBox1_TextChanged(object sender, RoutedEventArgs e)
+        {
+            EnabledExport();
+
+            var items = AutoCompleteTextBox1.ItemsSource as List<string>;
+            if (items == null) return;
+
+            GetList.IsEnabled = items.Contains(AutoCompleteTextBox1.Text);
+        }
+
+        void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ПолучитьПереченьДеталей();
+
+            if (PartsListXml2sDataGrid_Copy.Items.Count == 0)
+            {
+                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Collapsed;
+                XmlParts1_Copy.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Visible;
+                XmlParts1_Copy.Visibility = Visibility.Visible;
+            }
+        }
+
+        static IEnumerable<PartsListXml2> InnerPartsList()
+        {
+            var sqlBaseData = new SqlBaseData();
+            var table = sqlBaseData.PartTechParams();
+            var list = (from DataRow row in table.Rows
+                        select new PartsListXml2
+                        {
+                            PartNumber = row["PartNumber"].ToString(),
+                            Конфигурация = row["Конфигурация"].ToString(),
+                            ЗаготовкаШирина = row["Заготовка Ширина"].ToString(),
+                            ЗаготовкаВысота = row["Заготовка Высота"].ToString(),
+                            Гибы = row["Гибы"].ToString(),
+                            Толщина = row["Толщина"].ToString(),
+                            ПлощадьПокрытия = row["Площадь покрытия"].ToString()
+                        }).ToList();
+            return list;
+        }
+
+        void CollectParams()
+        {
+            OnlyParts = checkBoxOnlyParts.IsChecked == true;
+            OnlyInAsmConfigs = checkBox.IsChecked == true;
+            ListToRun = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
+        }
+
+        bool IsBusy
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Busy)) return false;
+                MessageBox.Show(Busy, "Система занята", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return true;
+            }
+        }
+
+        #region XML
+
+        void XmlParts1_Click(object sender, RoutedEventArgs e)
+        {
+            CollectParams();
+            ExportTaskRun(ExportToXml);
+        }      
 
         void ExportToXml()
         {
@@ -495,32 +518,52 @@ namespace AirVentsCadWpf.DataControls.Specification
             Busy = null;
         }
 
-        bool IsBusy
+        #endregion
+
+        #region DXF
+
+        static bool ExistLastDxf(int idPdm, int currentVersion, string configuration, out Exception exc)
         {
-            get
+            exc = null;
+            bool exist;
+            try
             {
-                if (string.IsNullOrEmpty(Busy)) return false;
-                MessageBox.Show(Busy, "Система занята", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return true;
+                exist = Dxf.ExistDxf(idPdm, currentVersion, configuration, out exc);
             }
+            catch (Exception)
+            {
+                exist = false;
+            }
+            return exist;
         }
 
-        static void GetFiles(IEnumerable<PartsListXml2> list, out List<VaultSystem.PdmFilesAfterGet> pdmFilesAfterGet)
+        void DeleteDxf(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            ModelSw.BatchGet(Settings.Default.PdmBaseName, list.Select(x => new VaultSystem.BatchGetParams
+            var item = PartsListXml2sDataGrid.SelectedItem as PartsListXml2;
+            if (item == null) return;
+            if (!item.Dxf) return;
+
+            try
             {
-                CurrentVersion = x.CurrentVersion,
-                FilePath = x.Путь,
-                IdPdm = x.IdPmd
-            }).ToList(),
-            out pdmFilesAfterGet);
+                if (MessageBox.Show(
+                    $"Удалить развертку для\n Детали - {item.НаименованиеБезРасширения}\n Конфигурация - {item.Конфигурация}\n Версия - {item.CurrentVersion}",
+                    "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Exception exc;
+                    Database.DeleteDxf(item.IdPmd, item.Конфигурация, item.CurrentVersion, out exc);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
         }
 
         void DxfParts1_Click(object sender, RoutedEventArgs e)
         {
-            CollectParams();            
+            CollectParams();
             ExportTaskRun(ExportToDxf);
-        }       
+        }
 
         private string FolderToSaveDxf { get; set; }
 
@@ -541,7 +584,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                 var listToExportLocal = new List<PartsListXml2>();
                 var files = "";
 
-                foreach (var item in ListToRun.Where(x=>x.Dxf))
+                foreach (var item in ListToRun.Where(x => x.Dxf))
                 {
                     try
                     {
@@ -553,7 +596,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                         if (blob != null)
                         {
                             Dxf.SaveByteToFile(blob, Path.Combine(pathToSave, item.НаименованиеБезРасширения.ToUpper().Replace("ВНС-", "")
-                                + "-" + item.Конфигурация + (string.IsNullOrEmpty(matId) ? "" : "-" + matId) 
+                                + "-" + item.Конфигурация + (string.IsNullOrEmpty(matId) ? "" : "-" + matId)
                                 + ((thikness == null || thikness == 0) ? "" : "-" + string.Format("{0:0.0}", thikness)).Replace(",", ".") + ".dxf"));
                         }
                         else
@@ -565,8 +608,8 @@ namespace AirVentsCadWpf.DataControls.Specification
                     catch (Exception exc)
                     {
                         listToExportLocal.Add(item);
-                    }                
-                }                               
+                    }
+                }
 
                 listToExportLocal.AddRange(ListToRun.Where(x => !x.Dxf).ToList());
 
@@ -575,10 +618,10 @@ namespace AirVentsCadWpf.DataControls.Specification
                 var exeptions = new List<string>();
 
                 foreach (var part in listToExportLocal)
-                { 
+                {
                     Exception exception;
                     List<Dxf.ResultList> resultList;
-                    List<Dxf.DxfFile> dxfFiles;                  
+                    List<Dxf.DxfFile> dxfFiles;
                     Dxf.Save(Path.GetFullPath(part.Путь), pathToSave, OnlyInAsmConfigs ? part.Конфигурация : null, out exception, part.IdPmd, part.CurrentVersion, out dxfFiles, true, true);
                     if (exception != null)
                     {
@@ -586,14 +629,14 @@ namespace AirVentsCadWpf.DataControls.Specification
                         {
                             MessageBox.Show(exception.Message + "\n" + exception.StackTrace, "Exception");
                         }
-                        catch (Exception) { }                      
+                        catch (Exception) { }
                     }
                     Dxf.AddToSql(dxfFiles, false, out resultList);
                     foreach (var item in resultList)
                     {
                         if (item != null)
                         {
-                            exeptions.Add($"id - {item.dxfFile.IdPdm}");                           
+                            exeptions.Add($"{item.dxfFile.IdPdm}");
                         }
                     }
                 }
@@ -608,7 +651,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                         }
                     }
                 }
-                
+
 
                 foreach (var process in Process.GetProcessesByName("SLDWORKS"))
                 {
@@ -623,53 +666,10 @@ namespace AirVentsCadWpf.DataControls.Specification
             MessageBox.Show($"Выгрузка разверток {Path.GetFileNameWithoutExtension(ПутьКСборке)} завершена");
             Busy = null;
         }
-        
+
         bool OnlyInAsmConfigs { get; set; }
 
-        void AutoCompleteTextBox1_TextChanged(object sender, RoutedEventArgs e)
-        {
-            EnabledExport();
-
-            var items = AutoCompleteTextBox1.ItemsSource as List<string>;
-            if (items == null) return;
-
-            GetList.IsEnabled = items.Contains(AutoCompleteTextBox1.Text);
-        }
-
-        void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ПолучитьПереченьДеталей();
-
-            if (PartsListXml2sDataGrid_Copy.Items.Count == 0)
-            {
-                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Collapsed;
-                XmlParts1_Copy.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                PartsListXml2sDataGrid_Copy.Visibility = Visibility.Visible;
-                XmlParts1_Copy.Visibility = Visibility.Visible;
-            }
-        }
-
-        static IEnumerable<PartsListXml2> InnerPartsList()
-        {
-            var sqlBaseData = new SqlBaseData();
-            var table = sqlBaseData.PartTechParams();
-            var list = (from DataRow row in table.Rows
-                        select new PartsListXml2
-                        {
-                            PartNumber = row["PartNumber"].ToString(),
-                            Конфигурация = row["Конфигурация"].ToString(),
-                            ЗаготовкаШирина = row["Заготовка Ширина"].ToString(),
-                            ЗаготовкаВысота = row["Заготовка Высота"].ToString(),
-                            Гибы = row["Гибы"].ToString(),
-                            Толщина = row["Толщина"].ToString(),
-                            ПлощадьПокрытия = row["Площадь покрытия"].ToString()
-                        }).ToList();
-            return list;
-        }
-        
+        #endregion
 
         #region Инфо для бухгалтерии и технологов
 

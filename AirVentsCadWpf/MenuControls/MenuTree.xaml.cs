@@ -27,10 +27,6 @@ namespace AirVentsCadWpf.MenuControls
             if (item == null){return;}
             switch (item.Header.ToString()) 
             {
-                case "Работа с деталями":
-                    Switcher.SwitchData(new BomServiceUc());
-                    break;
-
                 case "Заказы":
                     Switcher.SwitchData(new OrdersUc());
                     break;

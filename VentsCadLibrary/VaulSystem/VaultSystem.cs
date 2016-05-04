@@ -14,9 +14,9 @@ namespace VentsCadLibrary
             SwEpdm.VaultName = vaultName;
         }       
 
-        public static void AddToPdmByPath(string path)//, string vaultName)
+        public static void AddToPdmByPath(string path)
         {
-            SwEpdm.AddToPdmByPath(path);//, vaultName);
+            SwEpdm.AddToPdmByPath(path);
         }
 
         public class SearchInVault : SwEpdm.EpdmSearch
@@ -40,14 +40,14 @@ namespace VentsCadLibrary
             public string LocalPartFileInfo { get; set; }
         }
 
-        public static void GoToFile(string path)//, string vaultName)
+        public static void GoToFile(string path)
         {
-            SwEpdm.OpenContainingFolder(path);//, vaultName);
+            SwEpdm.OpenContainingFolder(path);
         }
 
-        public static void BatchUnLock1(List<string> filesPathesList)//, string vaultName)
+        public static void BatchUnLock1(List<string> filesPathesList)
         {
-            SwEpdm.BatchUnLock1(filesPathesList);//, vaultName);
+            SwEpdm.BatchUnLock1(filesPathesList);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace VentsCadLibrary
         /// <returns></returns>
         public static string GetSwEpdRootFolderPath(string vaultName)
         {
-            return SwEpdm.GetSwEpdRootFolderPath();//vaultName);
+            return SwEpdm.GetSwEpdRootFolderPath();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace VentsCadLibrary
         /// <param name="vaultName"></param>
         public static void CreateDistDirectory(string path, string vaultName)
         {
-            SwEpdm.CreateDistDirectory(path);//, vaultName);
+            SwEpdm.CreateDistDirectory(path);
         }
 
         /// <summary>
@@ -75,18 +75,17 @@ namespace VentsCadLibrary
         /// </summary>
         /// <param name="path"></param>
         /// <param name="vaultName"></param>
-        public static void GetLastVersionOfFile(string path)//, string vaultName)
+        public static void GetLastVersionOfFile(string path)
         {
-            SwEpdm.GetLastVersionOfFile(path);//, vaultName);
-        }       
-     
+            SwEpdm.GetLastVersionOfFile(path);
+        }    
 
         public static void GetAsmFilesAsBuild(string path, string vaultName)
         {
-            SwEpdm.GetAsmFilesAsBuild(path);//, vaultName);
+            SwEpdm.GetAsmFilesAsBuild(path);
         }
 
-        public class BatchGetParams
+        public class BatchParams
         {
             public string FilePath { get; set; }
             public int IdPdm { get; set; }
@@ -94,7 +93,7 @@ namespace VentsCadLibrary
 
         }
 
-        public static void BatchGet(string vaultName, List<BatchGetParams> list, out List<PdmFilesAfterGet> pdmFilesAfterGets)
+        public static void BatchGet(string vaultName, List<BatchParams> list, out List<PdmFilesAfterGet> pdmFilesAfterGets)
         {
             var taskParams = list.Select(batchGetParamse => new AddinConvertTo.Classes.FilesData.TaskParam
             {
@@ -135,7 +134,7 @@ namespace VentsCadLibrary
         /// <param name="vaultName"></param>
         public static void CheckInOutPdm(List<FileInfo> filesList, bool registration, string vaultName)
         {
-            SwEpdm.CheckInOutPdm(filesList, registration);//, vaultName);
+            SwEpdm.CheckInOutPdm(filesList, registration);
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace VentsCadLibrary
         /// <param name="vaultName"></param>
         public static void CheckInOutPdm(string filePath, bool registration, string vaultName)
         {
-            SwEpdm.CheckInOutPdm(filePath, registration);//, vaultName);
+            SwEpdm.CheckInOutPdm(filePath, registration);
         }
 
         /// <summary>
@@ -160,7 +159,7 @@ namespace VentsCadLibrary
         /// <param name="vaultName"></param>
         public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configurations, bool getFileCopy, string vaultName)
         {
-            SwEpdm.GetIdPdm(path, out fileName, out fileIdPdm, out currentVerison, out configurations, getFileCopy);//, vaultName);
+            SwEpdm.GetIdPdm(path, out fileName, out fileIdPdm, out currentVerison, out configurations, getFileCopy);
         }
         
         /// <summary>
@@ -179,12 +178,10 @@ namespace VentsCadLibrary
         /// <param name="registration"></param>
         /// <param name="vaultName"></param>
         /// <param name="newFilesList"></param>
-        public static void CheckInOutPdmNew(List<VentsCadFiles> filesList, bool registration, //string vaultName,
+        public static void CheckInOutPdmNew(List<VentsCadFiles> filesList, bool registration, 
             out List<VentsCadFiles> newFilesList)
         {
-            SwEpdm.CheckInOutPdmNew(filesList, registration, 
-                //vaultName,
-                out newFilesList);
+            SwEpdm.CheckInOutPdmNew(filesList, registration, out newFilesList);
         }
     }
 }

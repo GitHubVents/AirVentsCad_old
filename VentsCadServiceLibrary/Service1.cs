@@ -40,7 +40,7 @@ namespace VentsCadServiceLibrary
                         }
                         },
 
-                        Materials = new List<string[]> { parameters.Materials[0] }
+                        Materials = null// new List<string[]> { parameters.Materials[0] }
                     });
 
                 MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());

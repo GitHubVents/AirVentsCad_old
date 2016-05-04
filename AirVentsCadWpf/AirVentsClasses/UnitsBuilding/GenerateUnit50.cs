@@ -23,6 +23,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
     /// </summary>
     public partial class ModelSw : IDisposable
     {
+        #region Static Methods
 
         public static void Open(int fileId, int projectId, string fileName)
         {
@@ -36,11 +37,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }                        
         }
 
-
-        /// <summary>
-        /// Пользовательская база PDM.
-        /// </summary>
-        private readonly string _pdmFolder = Settings.Default.SourceFolder;
+        #endregion
 
         private SldWorks _swApp;
 
@@ -56,15 +53,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     (int)swOpenDocOptions_e.swOpenDocOptions_LoadModel, "", 0, 0);
             return _swApp;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void ExitSw()
-        {
-            _swApp?.ExitApp();
-        }
-
+      
         /// <summary>
         /// Список сгенерированных файлов при построении данной модели.
         /// </summary>
@@ -105,161 +94,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// Папка для сохранения компонентов "Рамы монтажной" 
         /// </summary>
         public string BaseFrameDestinationFolder = @"\Проекты\Blauberg\10 - Рама монтажная";
-
-        #endregion
-
-        #region AssemblyUnits
-
-        /// <summary>
-        /// Assemblies the units.
-        /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="side">The side.</param>
-        /// <param name="unit1">The unit1.</param>
-        /// <param name="unit2">The unit2.</param>
-        public void AssemblyUnits(string size, string type, string side, string unit1, string unit2)
-        {
-            if (!InitializeSw(true)) return;
-
-            Логгер.Информация($"Начало генерации установки {$"{size}-{type}"}", null, "", "AssemblyUnits");
-
-            try
-            {
-                AssemblyUnitsSTr(size, type, side, unit1, unit2);
-            }
-            catch (Exception e)
-            {
-                Логгер.Ошибка($"Ошибка во время генерации блока {$"{size}-{type}"}. {e.Message}", e.StackTrace, null, "AssemblyUnits");
-            }
-        }
-
-        /// <summary>
-        /// Assemblies the units s tr.
-        /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="side">The side.</param>
-        /// <param name="unit1">The unit1.</param>
-        /// <param name="unit2">The unit2.</param>
-        /// <returns></returns>
-        public string AssemblyUnitsSTr(string size, string type, string side, string unit1, string unit2)
-        {
-            #region Start
-
-            #region UnitName
-
-            var typeUnit = "";
-            if (type != "Пустой")
-            {
-                typeUnit = $"-{type}";
-            }
-
-            #region Сторона обслуживания
-
-            var sideletter = "";
-            if (side == "левая") // & typeOfPanel != "")
-            {
-                sideletter = "-L";
-            }
-
-            #endregion
-
-            var newUnit50Name =
-                $"{"Assembly "}{typeUnit}{sideletter}_({Path.GetFileNameWithoutExtension(new FileInfo(unit1).FullName)})_({Path.GetFileNameWithoutExtension(new FileInfo(unit2).FullName)})";
-
-            if (
-                MessageBox.Show("Построить блок - " + newUnit50Name + "?", "", MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Question) != MessageBoxResult.Yes)
-            {
-                return "";
-            }
-
-            #endregion
-
-            var newUnit50Path = $@"{Settings.Default.DestinationFolder}{Unit50FolderD}\{newUnit50Name}.SLDASM";
-            if (File.Exists(newUnit50Path))
-            {
-                GetLastVersionPdm(new FileInfo(newUnit50Path).FullName, Settings.Default.TestPdmBaseName);
-                _swApp.OpenDoc6(newUnit50Path, (int) swDocumentTypes_e.swDocASSEMBLY,
-                    (int) swOpenDocOptions_e.swOpenDocOptions_LoadModel, "00", 0, 0);
-                return newUnit50Path;
-            }
-
-            var unitAsMmodel = $@"{Settings.Default.SourceFolder}{Unit50FolderS}\{"01-000-500-1.SLDASM"}";
-            var components = new[]
-            {
-                unitAsMmodel
-            };
-            GetLastVersionPdm(components, Settings.Default.PdmBaseName);
-
-            var swDoc = _swApp.OpenDoc6(unitAsMmodel, (int) swDocumentTypes_e.swDocASSEMBLY,
-                (int) swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
-            _swApp.Visible = true;
-            var swAsm = (AssemblyDoc) swDoc;
-            swAsm.ResolveAllLightWeightComponents(false);
-
-            #endregion
-
-            #region Unit1
-
-            if (unit1 != "")
-            {
-                swAsm = (AssemblyDoc) swDoc;
-                swAsm.ResolveAllLightWeightComponents(true);
-                swDoc = ((ModelDoc2) (_swApp.ActivateDoc2("01-000-500-1.SLDASM", true, 0)));
-                swDoc.Extension.SelectByID2("AV04-1000-1@01-000-500-1", "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                swAsm.ReplaceComponents(unit1, "", false, true);
-                _swApp.CloseDoc(new FileInfo(unit1).Name);
-            }
-            else
-            {
-                swDoc.Extension.SelectByID2("AV04-1000-1@01-000-500-1", "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditDelete();
-            }
-
-            #endregion
-
-            #region Unit2
-
-            if (unit2 != "")
-            {
-                swAsm = (AssemblyDoc) swDoc;
-                swAsm.ResolveAllLightWeightComponents(true);
-                swDoc = ((ModelDoc2) (_swApp.ActivateDoc2("01-000-500-1.SLDASM", true, 0)));
-                swDoc.Extension.SelectByID2("AV04-1000-2@01-000-500-1", "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                swAsm.ReplaceComponents(unit2, "", false, true);
-                _swApp.CloseDoc(new FileInfo(unit2).Name);
-            }
-            else
-            {
-                swDoc.Extension.SelectByID2("AV04-1000-2@01-000-500-1", "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                swDoc.EditDelete();
-            }
-
-
-            swDoc.Extension.SelectByID2("AV04-1000-3@01-000-500-1", "COMPONENT", 0, 0, 0, false, 0, null, 0);
-            swDoc.EditDelete();
-
-            #endregion
-
-            #region  Сохранение
-
-            _swApp.IActivateDoc2("01-000-500-1.SLDASM", false, 0);
-            swDoc = ((ModelDoc2) (_swApp.ActiveDoc));
-            swDoc.ForceRebuild3(true);
-            swDoc.SaveAs2($@"{Settings.Default.DestinationFolder}{Unit50FolderD}\{newUnit50Name}.SLDASM",
-                (int) swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
-            NewComponents.Add(new FileInfo(newUnit50Path));
-
-            _swApp.CloseDoc(new FileInfo(newUnit50Path).Name);
-            _swApp = null;
-            CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);
-
-            return newUnit50Path;
-
-            #endregion
-        }
 
         #endregion
 
@@ -4167,309 +4001,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             _swApp.IActiveDoc2.Save();
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class PanelsVault
-        {
-            /// <summary>
-            /// Gets or sets the new name.
-            /// </summary>
-            /// <value>
-            /// The new name.
-            /// </value>
-            public string NewName { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part identifier.
-            /// </summary>
-            /// <value>
-            /// The part identifier.
-            /// </value>
-            public int PartId { get; set; }
-
-            /// <summary>
-            /// Имя типа детали
-            /// </summary>
-            /// <value>
-            /// The name of the panel type.
-            /// </value>
-            public int PanelTypeId { get; set; }
-
-            /// <summary>
-            /// Тип детали в сборке
-            /// </summary>
-            /// <value>
-            /// The type of the element.
-            /// </value>
-            public int ElementType { get; set; }
-
-            /// <summary>
-            /// Ширина панели
-            /// </summary>
-            /// <value>
-            /// The width.
-            /// </value>
-            public int Width { get; set; }
-
-            /// <summary>
-            /// Высота панели 
-            /// </summary>
-            /// <value>
-            /// The lenght.
-            /// </value>
-            public int Height { get; set; }
-
-            /// <summary>
-            /// Код материала детали
-            /// </summary>
-            /// <value>
-            /// The panel mat.
-            /// </value>
-            public int PartMat { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part thick.
-            /// </summary>
-            /// <value>
-            /// The part thick.
-            /// </value>
-            public int PartThick { get; set; }
-
-            /// <summary>
-            /// Толщина материала детали
-            /// </summary>
-            /// <value>
-            /// The panel mat thick.
-            /// </value>
-            public double PartMatThick { get; set; }
-
-            /// <summary>
-            /// Наличие усиления
-            /// </summary>
-            /// <value>
-            /// The Reinforcing.
-            /// </value>
-            public bool Reinforcing { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public string AirHole { get; set; }
-
-            /// <summary>
-            /// Цвет покраски RAL
-            /// </summary>
-            /// <value>
-            /// The ral.
-            /// </value>
-            public string Ral { get; set; }
-
-            /// <summary>
-            ///Тип покрытия
-            /// </summary>
-            /// <value>
-            /// The type of the coating.
-            /// </value>
-            public string CoatingType { get; set; }
-
-            /// <summary>
-            /// Gets or sets the coating class.
-            /// </summary>
-            /// <value>
-            /// The coating class.
-            /// </value>
-            public int? CoatingClass { get; set; }
-
-            /// <summary>
-            /// Зеркальность детали или сборки
-            /// </summary>
-            /// <value>
-            /// The mirror.
-            /// </value>
-            public bool Mirror { get; set; }
-
-            /// <summary>
-            /// Gets or sets the coating type out.
-            /// </summary>
-            /// <value>
-            /// The coating type out.
-            /// </value>
-            public string CoatingTypeOut { get; set; }
-
-            /// <summary>
-            /// Gets or sets the coating class out.
-            /// </summary>
-            /// <value>
-            /// The coating class out.
-            /// </value>
-            public int CoatingClassOut { get; set; }
-
-            /// <summary>
-            /// Gets or sets the coating type in.
-            /// </summary>
-            /// <value>
-            /// The coating type in.
-            /// </value>
-            public string CoatingTypeIn { get; set; }
-
-            /// <summary>
-            /// Gets or sets the coating class in.
-            /// </summary>
-            /// <value>
-            /// The coating class in.
-            /// </value>
-            public int CoatingClassIn { get; set; }
-
-            /// <summary>
-            /// Gets or sets the ral out.
-            /// </summary>
-            /// <value>
-            /// The ral out.
-            /// </value>
-            public string RalOut { get; set; }
-
-            /// <summary>
-            /// Gets or sets the ral in.
-            /// </summary>
-            /// <value>
-            /// The ral in.
-            /// </value>
-            public string RalIn { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part mat thick out.
-            /// </summary>
-            /// <value>
-            /// The part mat thick out.
-            /// </value>
-            public double PanelMatThickOut { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part mat thick in.
-            /// </summary>
-            /// <value>
-            /// The part mat thick in.
-            /// </value>
-            public double PanelMatThickIn { get; set; }
-
-            /// <summary>
-            /// Gets or sets the panel thick.
-            /// </summary>
-            /// <value>
-            /// The panel thick.
-            /// </value>
-            public int PanelThick { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part mat out.
-            /// </summary>
-            /// <value>
-            /// The part mat out.
-            /// </value>
-            public int PanelMatOut { get; set; }
-
-            /// <summary>
-            /// Gets or sets the part mat in.
-            /// </summary>
-            /// <value>
-            /// The part mat in.
-            /// </value>
-            public int PanelMatIn { get; set; }
-
-            /// <summary>
-            /// Gets or sets the panel number.
-            /// </summary>
-            /// <value>
-            /// The panel number.
-            /// </value>
-            public int PanelNumber { get; set; }
-
-            /// <summary>
-            /// Запрос на добавление детали бескаркасной панели
-            /// </summary>
-            public int AirVents_AddPanel()
-            {
-                var id = 0;
-                try
-                {
-                    var sqlBaseData = new SqlBaseData();
-                    id = sqlBaseData.AirVents_AddPanel(
-                        partId: PartId,
-                        panelTypeId: PanelTypeId,
-                        width: Width,
-                        height: Height,
-                        panelMatOut: PanelMatOut,
-                        panelMatIn: PanelMatIn,
-                        panelThick: PanelThick,
-
-                        panelMatThickOut: PanelMatThickOut,
-                        panelMatThickIn: PanelMatThickIn,
-
-                        //ralOut: RalOut,
-                        //ralIn: RalIn,
-                        //coatingTypeOut: CoatingTypeOut,
-                        //coatingTypeIn: CoatingTypeIn,
-                        //coatingClassOut: CoatingClassOut,
-                        //coatingClassIn: CoatingClassIn,
-
-                        mirror: Mirror,
-                        step: "0",
-                        stepInsertion: "0",
-                        reinforcing01: Reinforcing,
-                        stickyTape: false,
-
-                        airHole: AirHole,
-
-                        panelNumber: PanelNumber
-                        );
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.StackTrace);
-                }
-                return id;
-            }
-
-            /// <summary>
-            /// Airs the vents_ add part of panel.
-            /// </summary>
-            public int AirVents_AddPartOfPanel()
-            {
-                var id = 0;
-                try
-                {
-                    var sqlBaseData = new SqlBaseData();
-                    id = sqlBaseData.AirVents_AddPartOfPanel(
-                        //pdmId: null,
-                        panelTypeId: PanelTypeId,
-                        elementType: ElementType,
-                        width: Width,
-                        height: Height,
-                        partThick: PartThick,
-                        partMat: PartMat,
-                        partMatThick: PartMatThick,
-                        reinforcing: Reinforcing,
-                        stickyTape: false,
-
-                        //ral: Ral,
-                        //coatingType: CoatingType,
-                        //coatingClass: CoatingClass,
-
-                        mirror: Mirror, //.HasValue ? Mirror : false,
-                        step: "0",
-                        stepInsertion: "0",
-                        airHole: AirHole);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.StackTrace);
-                }
-                return id;
-            }
-        }
-
+    
         #endregion
 
         #region Montage Frame
@@ -4487,17 +4019,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         public void MontageFrame(string widthS, string lenghtS, string thiknessS, string typeOfMf, string frameOffset,
             string material, string[] покрытие)
         {
-            var path = MontageFrameS(widthS, lenghtS, thiknessS, typeOfMf, frameOffset, material, покрытие, false);
-            //  if (path == "")
-            //  {
-            //      return;
-            //  }
-            //  if (MessageBox.Show(string.Format("Модель находится по пути:\n {0}\n Открыть модель?", new FileInfo(path).Directory),
-            //       string.Format(" {0} ",
-            //           Path.GetFileNameWithoutExtension(new FileInfo(path).FullName)), MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
-            //{
-            //    MontageFrameS(widthS, lenghtS, thiknessS, typeOfMf, frameOffset, material, покрытие);
-            //}
+            var path = MontageFrameS(widthS, lenghtS, thiknessS, typeOfMf, frameOffset, material, покрытие, false);         
         }
 
         /// <summary>
@@ -5198,18 +4720,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             var newMontageFrameName = $"10-{thiknessS}-{widthS}-{lenghtS}{typeOfMfs}{frameOffcetStr}.SLDASM";
 
-            //var newMontageFrameName = String.Format("10-{0}-{1}-{2}{3}-{4}{5}{6}{7}.SLDASM",
-            //    thiknessS,
-            //    widthS,
-            //    lenghtS,
-            //    typeOfMfs,
-            //    material,
-            //    string.IsNullOrEmpty(покрытие[3]) ? null : "-" + покрытие[0],
-            //    string.IsNullOrEmpty(покрытие[1]) ? "" : "-" + покрытие[1],
-            //    string.IsNullOrEmpty(покрытие[2]) ? "" : "-" + покрытие[2]
-            //    );
-
-
             var newMontageFramePath =
                 $@"{Settings.Default.DestinationFolder}\{BaseFrameDestinationFolder}\{newMontageFrameName}";
             if (File.Exists(newMontageFramePath))
@@ -5220,22 +4730,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 return newMontageFramePath;
             }
             var modelMontageFramePath = $@"{Settings.Default.SourceFolder}{BaseFrameFolder}\{"10-4"}.SLDASM";
-
-            var components = new[]
-            {
-                modelMontageFramePath,
-                $@"{_pdmFolder}{BaseFrameFolder}\{"10-01-4.SLDASM"}",
-                $@"{_pdmFolder}{BaseFrameFolder}\{"10-04-4.SLDPRT"}",
-                $@"{_pdmFolder}{BaseFrameFolder}\{"10-03-4.SLDASM"}",
-                $@"{_pdmFolder}{BaseFrameFolder}\{"10-01-01-4.SLDPRT"}",
-                $@"{_pdmFolder}{BaseFrameFolder}\{"10-03-01-4.SLDPRT"}",
-                $@"{_pdmFolder}{@"Vents-PDM\Библиотека проектирования\Стандартные изделия\"}{"Washer 11371_gost.SLDPRT"}",
-                $@"{_pdmFolder}{@"Vents-PDM\Библиотека проектирования\Прочие изделия\Крепежные изделия\"}{"Регулируемая ножка.SLDASM"}",
-                $@"{_pdmFolder}{@"Vents-PDM\Библиотека проектирования\Стандартные изделия\"}{"Washer 6402_gost.SLDPRT"}",
-                $@"{_pdmFolder}{@"Vents-PDM\Библиотека проектирования\Стандартные изделия\"}{"Hex Bolt 7805_gost.SLDPRT"}",
-                $@"{_pdmFolder}{@"Vents-PDM\Библиотека проектирования\Стандартные изделия\"}{"Hex Nut 5915_gost.SLDPRT"}"
-            };
-            GetLastVersionPdm(components, Settings.Default.PdmBaseName);
+            
+            GetLatestVersionAsmPdm(modelMontageFramePath, Settings.Default.PdmBaseName);           
 
 
             if (!Warning()) return "";
@@ -6075,7 +5571,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="list"></param>
         /// <param name="pdmFilesAfterGet"></param>
         /// <param name="getList"></param>
-        public static void BatchGet(string vaultName, List<VaultSystem.BatchGetParams> list, out List<VaultSystem.PdmFilesAfterGet> pdmFilesAfterGet)
+        public static void BatchGet(string vaultName, List<VaultSystem.BatchParams> list, out List<VaultSystem.PdmFilesAfterGet> pdmFilesAfterGet)
         {
             pdmFilesAfterGet = null;
             //Логгер.Информация($"Получение последней версии по пути {}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
@@ -6858,110 +6354,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 default:
                     kFactor = 0.367; bendRadius = 1.6; break;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="inPdm"></param>
-        public void CreateEprt(string filePath, bool inPdm)
-        {
-            try
-            {
-                SldWorks swApp = null;
-                try
-                {
-                    swApp = (SldWorks) Marshal.GetActiveObject("SldWorks.Application");
-                }
-                catch (Exception)
-                {
-                    swApp = new SldWorks {Visible = true};
-                }
-                if (swApp == null)
-                {
-                    return;
-                }
-
-                IModelDoc2 swModel;
-                try
-                {
-                    swModel = swApp.OpenDoc6(filePath, (int) swDocumentTypes_e.swDocPART,
-                        (int) swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
-                    swModel.Extension.ViewDisplayRealView = false;
-                    swModel.EditRebuild3();
-                    swModel.ForceRebuild3(false);
-                }
-                catch (Exception e)
-                {
-                    Логгер.Ошибка(string.Format("Ошибка при обработке детали {2}: {0} Строка: {1}", e.Message, e.StackTrace,
-                            Path.GetFileName(filePath)), e.Source, null, "CreateFlattPatternUpdateCutlistAndEdrawing");
-                    return;
-                }
-
-                try
-                {
-                    if (!IsSheetMetalPart((IPartDoc) swModel))
-                    {
-                        swApp.CloseDoc(Path.GetFileName(swModel.GetPathName()));
-                        swApp.ExitApp();
-                        swApp = null;
-                        return;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Логгер.Ошибка(string.Format("Ошибка2 при обработке детали {2}: {0} Строка: {1}", e.Message, e.StackTrace,
-                            Path.GetFileName(filePath)), null, e.Source, "CreateFlattPatternUpdateCutlistAndEdrawing");
-                }
-
-                #region Сохранение детали в eDrawing
-
-                var modelName = Path.GetFileNameWithoutExtension(swModel.GetPathName());
-                var eDrwFileName = Path.GetDirectoryName(swModel.GetPathName()) + "\\" + modelName + ".eprt";
-
-                try
-                {
-                    if (swApp != null)
-                    {
-                        swApp.SetUserPreferenceIntegerValue(
-                            (int) swUserPreferenceIntegerValue_e.swEdrawingsSaveAsSelectionOption,
-                            (int) swEdrawingSaveAsOption_e.swEdrawingSaveAll);
-                        swApp.SetUserPreferenceToggle(((int) (swUserPreferenceToggle_e.swEDrawingsOkayToMeasure)), true);
-                    }
-                    if (!new FileInfo(eDrwFileName).Exists)
-                    {
-                        swModel.Extension.SaveAs(eDrwFileName, (int) swSaveAsVersion_e.swSaveAsCurrentVersion,
-                            (int) swSaveAsOptions_e.swSaveAsOptions_Silent, null, 0, 0);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Логгер.Ошибка(e.StackTrace, "", null, "File.Delete(_eDrwFileName);");
-                }
-
-                #endregion
-
-                try
-                {
-                    if (swApp == null) return;
-                    swApp.CloseDoc(swApp.IActiveDoc2.GetTitle() + ".sldprt");
-                    swApp.ExitApp();
-                    Логгер.Информация("Обработка файла " + swApp.IActiveDoc2.GetTitle() + ".sldprt" + ".sldprt" + " успешно завершена",
-                        "", null, "CreateFlattPatternUpdateCutlistAndEdrawing");
-                }
-                catch (Exception e)
-                {
-                    Логгер.Ошибка(e.StackTrace, "", null, "File.Delete(_eDrwFileName);");
-                }
-            }
-            catch (Exception e)
-            {
-                Логгер.Ошибка(
-                    $"Общая ошибка метода: {e.Message} Строка: {e.StackTrace} e.Source - ", e.Source, null,
-                    "CreateFlattPatternUpdateCutlistAndEdrawing");
-            }
-        }
+        }   
 
         #region DISPOSE CLASS
 
