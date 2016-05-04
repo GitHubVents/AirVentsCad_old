@@ -3702,11 +3702,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     goto m1;
 
                     #endregion
-            }
-
-
-
-
+            }            
 
             #region typeOfPanel == "Панель двойная несъемная"
 
@@ -3938,13 +3934,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             _swApp.CloseDoc(new FileInfo(newPanel30Path).Name);
             _swApp.Visible = true;
             CheckInOutPdm(NewComponents, true, Settings.Default.TestPdmBaseName);
+            
+            #region Выгрузка XML
 
             foreach (var newComponent in NewComponents)
             {
                 //  PartInfoToXml(newComponent.FullName);
             }
 
-            //MessageBox.Show(newPanel30Path, "Модель построена");
+            #endregion
         }
 
         private void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
@@ -5534,7 +5532,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 Логгер.Информация($"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
 
-                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);
             }
             catch (Exception e)
             {
@@ -5599,7 +5597,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             try
             {
                 Логгер.Информация($"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
-                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);
             }
             catch (Exception e)
             {
@@ -5624,7 +5622,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     Логгер.Информация(
                     $"Получение последней версии по пути {path[i]}\nБаза - {vaultName}", "", null,
                         "GetLastVersionPdm");
-                    VaultSystem.GetLastVersionOfFile(path[i]);//, vaultName);
+                    VaultSystem.GetLastVersionOfFile(path[i]);
                 }
                 catch (Exception e)
                 {
@@ -5650,7 +5648,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 Логгер.Информация(
                 $"Получение последней версии по пути {path}\nБаза - {vaultName}", "", null, "GetLastVersionPdm");
-                VaultSystem.GetLastVersionOfFile(path);//, vaultName);
+                VaultSystem.GetLastVersionOfFile(path);
             }
             catch (Exception e)
             {
@@ -5748,8 +5746,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             foreach (var param in newStringParams)
             {
                 try
-                {
-                    // ReSharper disable once UnusedVariable
+                {                    
                     var y = Convert.ToInt32(param);
                 }
                 catch (Exception)
@@ -5765,8 +5762,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             foreach (var value in newStringParams)
             {
                 try
-                {
-                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                {                    
                     Convert.ToDouble(value);
                 }
                 catch (Exception ex)
@@ -5784,7 +5780,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             try
             {
                 Логгер.Отладка($"Начало изменения детали {partName}", "", "", "SwPartParamsChangeWithNewName");
-                //Logger.Log(LogLevel.Debug, string.Format("Начало изменения детали {0}", partName));
                 var swDoc = _swApp.OpenDoc6(partName + ".SLDPRT", (int) swDocumentTypes_e.swDocPART,
                     (int) swOpenDocOptions_e.swOpenDocOptions_Silent, "", 0, 0);
                 var modName = swDoc.GetPathName();
@@ -6322,39 +6317,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         }
 
         #endregion
-
-        void GetBendParams(string thikness, out double kFactor, out double bendRadius)
-        {
-            switch (thikness)
-            {
-                case ("0.5"):
-                    kFactor = 0.441; bendRadius = 0.4; break;
-                case ("0.6"):
-                    kFactor = 0.426; bendRadius = 0.48; break;
-                case ("0.8"):
-                    kFactor = 0.421; bendRadius = 0.64; break;
-                case ("1"):
-                    kFactor = 0.413; bendRadius = 0.8; break;
-                case ("1.2"):
-                    kFactor = 0.4; bendRadius = 0.96; break;
-                case ("1.5"):
-                    kFactor = 0.379; bendRadius = 1.2; break;
-                case ("1.8"):
-                    kFactor = 0.367; bendRadius = 1.44; break;
-                case ("2"):
-                    kFactor = 0.367; bendRadius = 1.6; break;
-                case ("2.5"):
-                    kFactor = 0.356; bendRadius = 2.0; break;
-                case ("2.8"):
-                    kFactor = 0.356; bendRadius = 2.24; break;
-                case ("3"):
-                    kFactor = 0.35; bendRadius = 2.4; break;
-                case ("4"):
-                    kFactor = 0.35; bendRadius = 4.5; break;
-                default:
-                    kFactor = 0.367; bendRadius = 1.6; break;
-            }
-        }   
+         
 
         #region DISPOSE CLASS
 

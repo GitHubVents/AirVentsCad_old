@@ -193,9 +193,6 @@
     <Compile Include="DataControls\OrdersUc.xaml.cs">
       <DependentUpon>OrdersUc.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataControls\PartsPropertyListUc.xaml.cs">
-      <DependentUpon>PartsPropertyListUc.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DataControls\PartsListUc.xaml.cs">
       <DependentUpon>PartsListUc.xaml</DependentUpon>
     </Compile>
@@ -291,10 +288,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="DataControls\OrdersUc.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DataControls\PartsPropertyListUc.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

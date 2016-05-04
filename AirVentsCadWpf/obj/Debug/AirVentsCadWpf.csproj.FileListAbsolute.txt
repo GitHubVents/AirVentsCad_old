@@ -38,11 +38,9 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\Admin
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\SettingsW.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\AirVentsUnits50Uc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Bom.baml
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\BomServiceUc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\FrameLessUnit\FramelessUnitUc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Loggers\LoggerUc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\OrdersUc.baml
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\PartsPropertyListUc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\PartsListUc.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\DamperUC.baml
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\GenerateUnit50Control.baml
@@ -67,11 +65,9 @@ D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\Admin
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\AdminkaWindows\SettingsW.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\AirVentsUnits50Uc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Bom.g.cs
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\BomServiceUc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\FrameLessUnit\FramelessUnitUc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\Loggers\LoggerUc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\OrdersUc.g.cs
-D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\PartsPropertyListUc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\PartsListUc.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\DamperUC.g.cs
 D:\Projects VisualStudio\Source\Repos\AirVentsCad\AirVentsCadWpf\obj\Debug\DataControls\GenerateUnit50Control.g.cs
