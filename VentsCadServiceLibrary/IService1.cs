@@ -11,7 +11,7 @@ namespace VentsCadServiceLibrary
         void Build(Parameters parameters, out ProductPlace place);
 
         [OperationContract]
-        bool IsBusy();       
+        bool IsBusy();
 
         [OperationContract]
         void BuildSp(string type, string width, string height, out ProductPlace place);
@@ -26,12 +26,31 @@ namespace VentsCadServiceLibrary
         [DataMember]
         public string Name;
         [DataMember]
-        public string Type;        
+        public Type Type;
         [DataMember]
         public List<Sizes> Sizes;
         [DataMember]
-        public List<string[]> Materials;
+        public List<Material> Materials;
     }
+
+    public class Type
+    {
+        [DataMember]
+        public string SubType;
+        [DataMember]
+        public bool AddBoolParam1; 
+        [DataMember]
+        public bool AddBoolParam2;
+        [DataMember]
+        public bool AddBoolParam3;
+        [DataMember]
+        public string AddParam1;
+        [DataMember]
+        public string AddParam2;
+        [DataMember]
+        public string AddParam3;
+    }
+
 
     [DataContract]
     public class Sizes
@@ -42,6 +61,16 @@ namespace VentsCadServiceLibrary
         public string Height;
         [DataMember]
         public string Lenght;
+        [DataMember]
+        public string Depth;
+        [DataMember]
+        public string Thikness;
+        [DataMember]
+        public string Additional1;
+        [DataMember]
+        public string Additional2;
+        [DataMember]
+        public string Additional3;
     }
    
     [DataContract]
@@ -51,6 +80,19 @@ namespace VentsCadServiceLibrary
         public int IdPdm;
         [DataMember]
         public int ProjectId;
+    }
+
+    [DataContract]
+    public class Material
+    {
+        [DataMember]
+        public string Value;
+        [DataMember]
+        public string Thikness;
+        [DataMember]
+        public string Name;
+        [DataMember]
+        public string Code;
     }
 
     #region Example

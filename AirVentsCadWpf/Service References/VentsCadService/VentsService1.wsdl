@@ -5,7 +5,6 @@
       <xsd:import schemaLocation="http://192.168.14.86/?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://192.168.14.86/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://192.168.14.86/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary" />
-      <xsd:import schemaLocation="http://192.168.14.86/?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IVentsCadService_Build_InputMessage">

@@ -50,11 +50,6 @@
             InitializeComponent
             </summary>
         </member>
-        <member name="T:AirVentsCadWpf.AirVentsClasses.PartProperty">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:AirVentsCadWpf.AirVentsClasses.SqlBaseData">
             <summary>
             Класс реализующий работу с базой данных
@@ -884,11 +879,6 @@
         <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.AddingPanel.Add">
             <summary>
             Adds this instance.
-            </summary>
-        </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.AddingPanel.AddAsm">
-            <summary>
-            Adds the asm.
             </summary>
         </member>
         <member name="T:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.FramelessPanelVault">

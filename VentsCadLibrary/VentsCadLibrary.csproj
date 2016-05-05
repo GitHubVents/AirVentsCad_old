@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Products\Attachments\Dumper.cs" />
     <Compile Include="Products\Attachments\Panels.cs" />
+    <Compile Include="Products\Attachments\MontageFrame.cs" />
     <Compile Include="Products\Attachments\Spigot.cs" />
     <Compile Include="Functions\SwDoc.cs" />
     <Compile Include="Logger\Logger.cs" />

@@ -14,13 +14,27 @@ namespace VentsCadLibrary
             {                
                 public string Name { get; set; }
                 
-                public string Type { get; set; }
+                public Type Type { get; set; }
 
                 public List<Sizes> Sizes { get; set; }
 
-                public List<string[]> Materials { get; set; }
+                public List<Material> Materials { get; set; }
             }
 
+            public class Type
+            {
+                public string SubType { get; set; }
+
+                public bool AddBoolParam1 { get; set; }
+
+                public bool AddBoolParam2 { get; set; }
+
+                public bool AddBoolParam3 { get; set; }
+
+                public string AddParam1 { get; set; }
+                public string AddParam2 { get; set; }
+                public string AddParam3 { get; set; }
+            }
           
 
             public class Sizes
@@ -30,8 +44,28 @@ namespace VentsCadLibrary
                 public string Height { get; set; }
 
                 public string Lenght { get; set; }
+                
+                public string Depth { get; set; }
+
+                public string Thikness { get; set; }
+
+                public string Additional1 { get; set; }
+
+                public string Additional2 { get; set; }
+
+                public string Additional3 { get; set; }
             }
 
+            public class Material
+            {                
+                public string Value { get; set; }
+
+                public string Thikness { get; set; }
+
+                public string Name { get; set; }
+
+                public string Code { get; set; }
+            }
 
 
             public ProductFactory(Parameters parameters)
@@ -43,10 +77,11 @@ namespace VentsCadLibrary
                         switch (parameters.Name)
                         {
                             case "spigot":
-                                product = new Spigot(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height);
+                                product = new Spigot(parameters.Type.SubType, parameters.Sizes[0].Width, parameters.Sizes[0].Height);
                                 break;
                             case "dumper":
-                                product = new Dumper(parameters.Type, parameters.Sizes[0].Width, parameters.Sizes[0].Height, true, parameters.Materials[0]);
+                                var material = new string[] { parameters.Materials[0].Value, parameters.Materials[0].Thikness, parameters.Materials[0].Name, parameters.Materials[0].Code };
+                                product = new Dumper(parameters.Type.SubType, parameters.Sizes[0].Width, parameters.Sizes[0].Height, true, material);
                                 break;
                             default:
                                 break;

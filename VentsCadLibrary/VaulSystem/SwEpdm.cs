@@ -251,7 +251,7 @@ namespace VentsCadLibrary
             }
         }    
 
-        public static void GetLastVersionOfFile(string path)//, string vaultName)
+        public static void GetLastVersionOfFile(string path)
         {
             try
             {
@@ -328,7 +328,7 @@ namespace VentsCadLibrary
             return vaults;
         }
 
-        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configs, bool getFileCopy)//, string vaultName)
+        public static void GetIdPdm(string path, out string fileName, out int fileIdPdm, out int currentVerison, out List<string> configs, bool getFileCopy)
         {
             fileName = null;
             fileIdPdm = 0;
@@ -429,8 +429,7 @@ namespace VentsCadLibrary
             }
         }
        
-        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, //string vaultName,
-            out List<VaultSystem.VentsCadFiles> newFilesList)
+        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, out List<VaultSystem.VentsCadFiles> newFilesList)
         {                     
 
             BatchAddFiles(filesList, edmVault5);            
@@ -462,7 +461,7 @@ namespace VentsCadLibrary
             }
         }
         
-        public static void BatchUnLock1(List<string> filesPathesList)//, string vaultName)
+        public static void BatchUnLock1(List<string> filesPathesList)
         {
             IEdmPos5 aPos;
 
@@ -470,9 +469,7 @@ namespace VentsCadLibrary
             var i = 0;
             var ppoSelection = new EdmSelItem[filesPathesList.Count];
             foreach (var file in filesPathesList)
-            {
-                //var path = new FileInfo(file.LocalPartFileInfo).FullName;
-                //MessageBox.Show(vaultB.Name + " - " + vaultB.IsLoggedIn + "\nLocalPartFileInfo - " + file.LocalPartFileInfo, "BatchUnLock");
+            {               
 
                 IEdmFolder5 ppoRetParentFolder;
                 var aFile = edmVault5.GetFileFromPath(file, out ppoRetParentFolder);
@@ -521,7 +518,6 @@ namespace VentsCadLibrary
         }
 
         const bool UseDll = false;
-
 
         internal static void BatchAddFiles(List<VaultSystem.VentsCadFiles> filesList, EdmVault5 edmVault5)
         {

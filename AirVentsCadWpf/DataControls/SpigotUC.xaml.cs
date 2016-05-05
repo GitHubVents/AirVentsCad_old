@@ -62,17 +62,13 @@ namespace AirVentsCadWpf.DataControls
 
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
-            //type = TypeOfSpigot.Text;
-            //width = WidthSpigot.Text;
-            //height = HeightSpigot.Text;
-            //new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text).build(); 
-            //serv = new ServiceV(TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text);//.build();
-            //ExportTaskRun(build);
-
              var serv = new ServiceV(new VentsCadService.Parameters
             {
                 Name = "spigot",
-                Type  = TypeOfSpigot.Text,
+                Type  = new VentsCadService.Type
+                {
+                    SubType = TypeOfSpigot.Text
+                },
                 Sizes = new VentsCadService.Sizes[]
                 {
                     new VentsCadService.Sizes
@@ -80,9 +76,7 @@ namespace AirVentsCadWpf.DataControls
                             Width = WidthSpigot.Text,
                             Height = HeightSpigot.Text
                     }
-                }
-                ,
-                Materials = null
+                }               
             });           
             var Build = new Task(serv.build);
             Build.Start();                     

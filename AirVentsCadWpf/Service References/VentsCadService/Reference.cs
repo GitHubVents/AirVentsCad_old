@@ -23,7 +23,7 @@ namespace AirVentsCadWpf.VentsCadService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string[][] MaterialsField;
+        private AirVentsCadWpf.VentsCadService.Material[] MaterialsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NameField;
@@ -32,7 +32,7 @@ namespace AirVentsCadWpf.VentsCadService {
         private AirVentsCadWpf.VentsCadService.Sizes[] SizesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TypeField;
+        private AirVentsCadWpf.VentsCadService.Type TypeField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -45,7 +45,7 @@ namespace AirVentsCadWpf.VentsCadService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string[][] Materials {
+        public AirVentsCadWpf.VentsCadService.Material[] Materials {
             get {
                 return this.MaterialsField;
             }
@@ -84,7 +84,7 @@ namespace AirVentsCadWpf.VentsCadService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Type {
+        public AirVentsCadWpf.VentsCadService.Type Type {
             get {
                 return this.TypeField;
             }
@@ -92,6 +92,240 @@ namespace AirVentsCadWpf.VentsCadService {
                 if ((object.ReferenceEquals(this.TypeField, value) != true)) {
                     this.TypeField = value;
                     this.RaisePropertyChanged("Type");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Type", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
+    [System.SerializableAttribute()]
+    public partial class Type : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool AddBoolParam1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool AddBoolParam2Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool AddBoolParam3Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AddParam1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AddParam2Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AddParam3Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SubTypeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool AddBoolParam1 {
+            get {
+                return this.AddBoolParam1Field;
+            }
+            set {
+                if ((this.AddBoolParam1Field.Equals(value) != true)) {
+                    this.AddBoolParam1Field = value;
+                    this.RaisePropertyChanged("AddBoolParam1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool AddBoolParam2 {
+            get {
+                return this.AddBoolParam2Field;
+            }
+            set {
+                if ((this.AddBoolParam2Field.Equals(value) != true)) {
+                    this.AddBoolParam2Field = value;
+                    this.RaisePropertyChanged("AddBoolParam2");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool AddBoolParam3 {
+            get {
+                return this.AddBoolParam3Field;
+            }
+            set {
+                if ((this.AddBoolParam3Field.Equals(value) != true)) {
+                    this.AddBoolParam3Field = value;
+                    this.RaisePropertyChanged("AddBoolParam3");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AddParam1 {
+            get {
+                return this.AddParam1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AddParam1Field, value) != true)) {
+                    this.AddParam1Field = value;
+                    this.RaisePropertyChanged("AddParam1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AddParam2 {
+            get {
+                return this.AddParam2Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AddParam2Field, value) != true)) {
+                    this.AddParam2Field = value;
+                    this.RaisePropertyChanged("AddParam2");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AddParam3 {
+            get {
+                return this.AddParam3Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AddParam3Field, value) != true)) {
+                    this.AddParam3Field = value;
+                    this.RaisePropertyChanged("AddParam3");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SubType {
+            get {
+                return this.SubTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SubTypeField, value) != true)) {
+                    this.SubTypeField = value;
+                    this.RaisePropertyChanged("SubType");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Material", Namespace="http://schemas.datacontract.org/2004/07/VentsCadServiceLibrary")]
+    [System.SerializableAttribute()]
+    public partial class Material : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ThiknessField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ValueField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Code {
+            get {
+                return this.CodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeField, value) != true)) {
+                    this.CodeField = value;
+                    this.RaisePropertyChanged("Code");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Thikness {
+            get {
+                return this.ThiknessField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ThiknessField, value) != true)) {
+                    this.ThiknessField = value;
+                    this.RaisePropertyChanged("Thikness");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ValueField, value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
                 }
             }
         }
@@ -116,10 +350,25 @@ namespace AirVentsCadWpf.VentsCadService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Additional1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Additional2Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Additional3Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DepthField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string HeightField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string LenghtField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ThiknessField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string WidthField;
@@ -131,6 +380,58 @@ namespace AirVentsCadWpf.VentsCadService {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Additional1 {
+            get {
+                return this.Additional1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Additional1Field, value) != true)) {
+                    this.Additional1Field = value;
+                    this.RaisePropertyChanged("Additional1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Additional2 {
+            get {
+                return this.Additional2Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Additional2Field, value) != true)) {
+                    this.Additional2Field = value;
+                    this.RaisePropertyChanged("Additional2");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Additional3 {
+            get {
+                return this.Additional3Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Additional3Field, value) != true)) {
+                    this.Additional3Field = value;
+                    this.RaisePropertyChanged("Additional3");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Depth {
+            get {
+                return this.DepthField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DepthField, value) != true)) {
+                    this.DepthField = value;
+                    this.RaisePropertyChanged("Depth");
+                }
             }
         }
         
@@ -156,6 +457,19 @@ namespace AirVentsCadWpf.VentsCadService {
                 if ((object.ReferenceEquals(this.LenghtField, value) != true)) {
                     this.LenghtField = value;
                     this.RaisePropertyChanged("Lenght");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Thikness {
+            get {
+                return this.ThiknessField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ThiknessField, value) != true)) {
+                    this.ThiknessField = value;
+                    this.RaisePropertyChanged("Thikness");
                 }
             }
         }

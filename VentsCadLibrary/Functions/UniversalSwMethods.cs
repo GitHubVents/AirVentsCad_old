@@ -230,6 +230,19 @@ namespace VentsCadLibrary
             NewComponents.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = path });
         }
 
+        internal static void AddMaterial(ProductFactory.Material material, string newName)
+        {
+            try
+            {
+                VentsMatdll(new[] { material.Value, material.Thikness, material.Name, material.Code }, null, newName);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+
         internal static void AddMaterial(string[] material, string newName)
         {
             try

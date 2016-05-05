@@ -164,7 +164,6 @@
     <Compile Include="AdminkaWindows\SettingsW.xaml.cs">
       <DependentUpon>SettingsW.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AirVentsClasses\PartProperty.cs" />
     <Compile Include="AirVentsClasses\Totals.cs" />
     <Compile Include="AirVentsClasses\SQLBaseData2.cs" />
     <Compile Include="AirVentsClasses\GenerateUnitNames.cs" />
@@ -415,9 +414,6 @@
     <None Include="AirVentsCadWpf_TemporaryKey.pfx" />
     <None Include="Service References\VentsCadService\AirVentsCadWpf.VentsCadService.ProductPlace.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\VentsCadService\item3.xsd">
-      <SubType>Designer</SubType>
     </None>
     <None Include="Service References\VentsCadService\VentsService1.wsdl" />
     <Resource Include="DataControls\Pictures\Бескаркасная установка\01 - Frameless Design 40mm - 01.JPG" />

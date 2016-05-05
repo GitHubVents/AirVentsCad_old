@@ -37,6 +37,9 @@ namespace AirVentsCadWpf.DataControls
             var row1 = viewRowMat1.Row;
             if (row1 != null)
                 mat1Code = row1.Field<string>("CodeMaterial");
+
+
+
             var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
 
             goto m2;
@@ -115,7 +118,10 @@ namespace AirVentsCadWpf.DataControls
                     new VentsCadService.Parameters
                     {
                         Name = "dumper",
-                        Type = TypeOfDumper.Text,
+                        Type = new VentsCadService.Type
+                        {
+                            SubType = TypeOfDumper.Text
+                        },
                         Sizes = new VentsCadService.Sizes[]
                         {
                             new VentsCadService.Sizes
@@ -124,7 +130,16 @@ namespace AirVentsCadWpf.DataControls
                                 Height = HeightDamper.Text
                             }
                         },
-                        Materials = new [] { materialP1 }
+                        Materials = new VentsCadService.Material[]
+                        {
+                            new VentsCadService.Material
+                            {                             
+                                Code = materialP1[3],
+                                Name = materialP1[2],
+                                Thikness = materialP1[1],
+                                Value = materialP1[0],
+                            }
+                        }
                     });
                 var Build = new Task(serv.build);
                 Build.Start();

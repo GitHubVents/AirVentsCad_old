@@ -1215,7 +1215,6 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
 
             var колЗаклепокШирина = колСаморезВинтШирина + 1000;
-            //var колЗаклепокШирина = (Math.Truncate(ширинаПанели / шагЗаклепокШирина) + 1) * 1000;
 
             #endregion
 
@@ -3463,6 +3462,7 @@ ScrewsByLenght - {ScrewsByLenght}");
         }
 
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -3754,24 +3754,7 @@ ScrewsByLenght - {ScrewsByLenght}");
                     Логгер.Ошибка("Ошибка во время добавления панели:" + e.Message, e.StackTrace, "Add", "AddingPanel");
                 }
                 return id;
-            }
-
-            /// <summary>
-            /// Adds the asm.
-            /// </summary>
-            public void AddAsm()
-            {
-                try
-                {
-                    Логгер.Отладка("Добавление сборки панели: " + Name, "", "Add", "AddingPanel");
-                    AirVents_AddPanelAsm();
-                    Логгер.Отладка("Добавление панели прошло успешно!", "", "Add", "AddingPanel");
-                }
-                catch (Exception e)
-                {
-                    Логгер.Ошибка("Ошибка во время добавления панели:" + e.Message, e.StackTrace, "Add", "AddingPanel");
-                }
-            }
+            }                   
         }
         
         // ReSharper disable once UnusedMember.Local
@@ -3929,12 +3912,10 @@ ScrewsByLenght - {ScrewsByLenght}");
             /// </value>
             public string StepInsertion { get; set; }
 
-
             /// <summary>
             /// 
             /// </summary>
-            public string AirHole { get; set; }
-            
+            public string AirHole { get; set; }            
 
             /// <summary>
             /// Gets or sets the coating type out.
@@ -4408,10 +4389,7 @@ ScrewsByLenght - {ScrewsByLenght}");
             static public double Wp1;
             static public double Wp2;
             static public double Wp3;
-            static public double Wp4;
-
-            private static double _psSize1;
-            private static double _psSize2;
+            static public double Wp4;           
 
             //Типы промежуточных профилей
             static public string Tp1;
@@ -4426,12 +4404,7 @@ ScrewsByLenght - {ScrewsByLenght}");
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(values))
-                    {
-                       
-                       
-                    }
-                    else
+                    if (!string.IsNullOrEmpty(values))
                     {
                         var val = values.Split(';');
 
@@ -4449,38 +4422,23 @@ ScrewsByLenght - {ScrewsByLenght}");
 
                         var p4 = val[3].Split('_');
                         Tp4 = p4[0];
-                        double.TryParse(p4[1], out Wp4);
-
-                       // var ps1 = val[4].Split('_');
-                      //  PsTy1 = ps1[0];
-                        //double.TryParse(ps1[1], out _psSize1);
-
-                      //  var ps2 = val[5].Split('_');
-                     //   PsTy2 = ps2[0];
-                        //double.TryParse(ps2[1], out _psSize2);
+                        double.TryParse(p4[1], out Wp4);                     
                     }
+
+                    #region To Delete
 
                     //MessageBox.Show("Tp1 - " + Tp1 + " Wp1 - " + Wp1 +
                     //                "\nTp2 - " + Tp2 + " Wp2 - " + Wp2 +
                     //                "\nTp3 - " + Tp3 + " Wp3 - " + Wp3 +
-                    //                "\nTp4 - " + Tp4 + " Wp4 - " + Wp4 +
-                    //                "\nPsTy1 - " + PsTy1 + " _psSize1 - " + _psSize1 +
-                    //                "\nPsTy2 - " + PsTy2 + " _psSize2 - " + _psSize2);
-
-                    //MessageBox.Show(p1[0] + p1[1] + p2[0] + p2[1] + p3[0] + p3[1]);
+                    //                "\nTp4 - " + Tp4 + " Wp4 - " + Wp4 );
+                    
+                    #endregion
                 }
                 catch (Exception)
                 {
                   //
                 }
             }
-            
-            //public string InValUpDown()
-            //{
-            //    return
-            //        $"П1 - {Tp1 + "-" + Wp1}\n П2 - {Tp2 + "-" + Wp2}\n П3 - {Tp3 + "-" + Wp3}\n П4 - {Tp4 + "-" + Wp4}\n П5 - {PsTy1 + "-" + _psSize1}\n П6 - {PsTy2 + "-" + _psSize2}";
-            //}
-
         }
 
         struct BackProfils

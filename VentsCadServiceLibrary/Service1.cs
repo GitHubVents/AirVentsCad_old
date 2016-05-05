@@ -23,24 +23,93 @@ namespace VentsCadServiceLibrary
         public void Build(Parameters parameters, out ProductPlace place)
         {
             place = null;
+
             try
             {
+                #region Get Type Params
+
+                VentsCad.ProductFactory.Type type = null;
+
+                if (parameters.Type != null)
+                {
+                    type = new VentsCad.ProductFactory.Type
+                    {
+                        SubType = parameters.Type.SubType,
+                        AddBoolParam1 = parameters.Type.AddBoolParam1,
+                        AddBoolParam2 = parameters.Type.AddBoolParam2,
+                        AddBoolParam3 = parameters.Type.AddBoolParam3,
+                        AddParam1 = parameters.Type.AddParam1,
+                        AddParam2 = parameters.Type.AddParam2,
+                        AddParam3 = parameters.Type.AddParam3
+                    };                    
+                }
+
+                #endregion
+
+
+                #region Get Sizes
+
+                List<VentsCad.ProductFactory.Sizes> sizes = null;
+
+                if (parameters.Sizes?.Count > 0)
+                {
+                    sizes = new List<VentsCad.ProductFactory.Sizes>();
+                    for (int i = 0; i < parameters.Materials.Count; i++)
+                    {
+                        sizes.Add(new VentsCad.ProductFactory.Sizes
+                        {
+                            Width = parameters.Sizes[i]?.Width,
+                            Height = parameters.Sizes[i]?.Height,
+                            Lenght = parameters.Sizes[i]?.Lenght,
+                            Depth = parameters.Sizes[i]?.Depth,
+                            Thikness = parameters.Sizes[i]?.Thikness,
+                            Additional1 = parameters.Sizes[i]?.Additional1,
+                            Additional2 = parameters.Sizes[i]?.Additional2,
+                            Additional3 = parameters.Sizes[i]?.Additional3,
+                        });
+                    }
+                }
+
+                #endregion
+
+                #region Get Materials
+
+                List<VentsCad.ProductFactory.Material> materials = null;
+                if (parameters.Materials?.Count > 0)
+                {
+                    materials = new List<VentsCad.ProductFactory.Material>();
+                    for (int i = 0; i < parameters.Materials.Count; i++)
+                    {
+                        materials.Add(new VentsCad.ProductFactory.Material
+                        {
+                            Name = parameters.Materials[i]?.Name,
+                            Code = parameters.Materials[i]?.Code,
+                            Thikness = parameters.Materials[i]?.Thikness,
+                            Value = parameters.Materials[i]?.Value
+                        });
+                    }
+                }
+
+                #endregion
+
                 VentsCad.ProductFactory serviceObj = new VentsCad.ProductFactory(
                     new VentsCad.ProductFactory.Parameters
                     {
                         Name = parameters.Name,
-                        Type = parameters.Type,
-                        Sizes = new List<VentsCad.ProductFactory.Sizes>
-                        {
-                        new VentsCad.ProductFactory.Sizes
-                        {
-                            Width = parameters.Sizes[0]?.Width,
-                            Height = parameters.Sizes[0]?.Height,
-                            Lenght = parameters.Sizes[0]?.Lenght
-                        }
-                        },
+                        Type = type,
+                        Sizes = sizes,
 
-                        Materials = null// new List<string[]> { parameters.Materials[0] }
+                        //new List<VentsCad.ProductFactory.Sizes>
+                        //{
+                        //new VentsCad.ProductFactory.Sizes
+                        //{
+                        //    Width = parameters.Sizes[0]?.Width,
+                        //    Height = parameters.Sizes[0]?.Height,
+                        //    Lenght = parameters.Sizes[0]?.Lenght
+                        //}
+                        //},
+
+                        Materials = materials
                     });
 
                 MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
