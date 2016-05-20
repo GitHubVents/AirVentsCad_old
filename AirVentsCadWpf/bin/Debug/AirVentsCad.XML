@@ -551,13 +551,13 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.FramelessBlock(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String[],System.String[],AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BlockDimensions,System.String[])">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.FramelessBlock(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.String[],System.String[],AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BlockDimensions,System.String[])">
             <summary>
             Framelesses the block.
             </summary>
             <param name="size">The size.</param>
             <param name="order">The order.</param>
-            <param name="side">The side.</param>
+            <param name="leftSide">The side.</param>
             <param name="section">The section.</param>
             <param name="pDown">The p down.</param>
             <param name="pFixed">The p fixed.</param>
@@ -567,13 +567,13 @@
             <param name="dimensions">The height.</param>
             <param name="троцевыеПанели"></param>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.FramelessBlockStr(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String[],System.String[],AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BlockDimensions,System.String[])">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.FramelessBlockStr(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.String[],System.String[],AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.BlockDimensions,System.String[])">
             <summary>
             Framelesses the block string.
             </summary>
             <param name="size">The size.</param>
             <param name="order">The order.</param>
-            <param name="side">The side.</param>
+            <param name="leftSide">The side.</param>
             <param name="section">The section.</param>
             <param name="панельНижняя">The p down.</param>
             <param name="панельНесъемная">The p fixed.</param>
@@ -589,7 +589,7 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFrameless(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String[],System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFrameless(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.Boolean,System.String,System.String[],System.String,System.String[],System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
             <summary>
             Panelses the frameless.
             </summary>
@@ -600,7 +600,7 @@
             <param name="materialP2">The meterial p2.</param>
             <param name="скотч">if set to <c>true</c> [СКОТЧ].</param>
             <param name="усиление">if set to <c>true</c> [УСИЛЕНИЕ].</param>
-            <param name="config">The configuration.</param>
+            <param name="isLeftSide">The configuration.</param>
             <param name="расположениеПанелей">The РАСПОЛОЖЕНИЕ ПАНЕЛЕЙ.</param>
             <param name="покрытие">The ПОКРЫТИЕ.</param>
             <param name="расположениеВставок">The РАСПОЛОЖЕНИЕ ВСТАВОК.</param>
@@ -664,7 +664,7 @@
             
             </summary>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetExistingFile(System.String,System.String@,System.Int32@,System.Int32@,System.String)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.GetExistingFile(System.String,System.String@,System.Int32@,System.Int32@,System.DateTime@,System.String)">
             <summary>
             
             </summary>
@@ -673,9 +673,10 @@
             <param name="fileId"></param>
             <param name="projectId"></param>
             <param name="vaultName"></param>
+            <param name="fileDate"></param>
             <returns></returns>
         </member>
-        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFramelessStr(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.String,System.String,System.String[],System.String,System.String[],System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
+        <member name="M:AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.PanelsFramelessStr(System.String[],System.String,System.String,System.String[],System.String[],System.String,System.Boolean,System.Boolean,System.String,System.String[],System.String,System.String[],System.String,System.String,AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.Screws,System.Collections.Generic.List{System.String}@,System.Collections.Generic.List{AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw.ExistingAsmsAndParts}@,System.Boolean)">
             <summary>
             Panelses the frameless string.
             </summary>
@@ -686,7 +687,7 @@
             <param name="materialP2">The material p2.</param>
             <param name="скотч">The СКОТЧ.</param>
             <param name="усиление">if set to <c>true</c> [УСИЛЕНИЕ].</param>
-            <param name="config">configuration</param>
+            <param name="isLeftSide">configuration</param>
             <param name="расположениеПанелей">Расположение панелей</param>
             <param name="покрытие">ПОКРЫТИЕ</param>
             <param name="расположениеВставок">Расположение вставок</param>

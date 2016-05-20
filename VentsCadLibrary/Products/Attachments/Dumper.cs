@@ -57,7 +57,9 @@ namespace VentsCadLibrary
 
                 Dimension myDimension;
                 var modelSpigotDrw = $@"{sourceRootFolder}{TemplateFolder}\{drawing}.SLDDRW";
-                
+
+                NewComponents.Clear();
+
                 GetLastVersionAsmPdm(modelSpigotDrw, VaultName);
 
                 if (!InitializeSw(true)) return;
@@ -1014,7 +1016,7 @@ namespace VentsCadLibrary
 
                 ComponentToAdd(new[] { newDrw, newAsm });               
 
-                List<VaultSystem.VentsCadFiles> outList;
+                List<VaultSystem.VentsCadFile> outList;
                 VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
                     out outList);
 

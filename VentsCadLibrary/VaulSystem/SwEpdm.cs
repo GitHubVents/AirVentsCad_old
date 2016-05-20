@@ -96,6 +96,21 @@ namespace VentsCadLibrary
             }
         }
 
+        public static string GetSwEpdRootFolderPath(string vaulName)
+        {
+            try
+            {
+                EdmVault5 vault = new EdmVault5();
+                vault.LoginAuto(vaulName, 0);
+                return vault.RootFolderPath;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+                return null;
+            }
+        }
+
         public static void CreateDistDirectory(string path)
         {
             try
@@ -108,7 +123,7 @@ namespace VentsCadLibrary
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+               // MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
             }
         }
 
@@ -221,7 +236,7 @@ namespace VentsCadLibrary
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                        //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                         retryCount--;
                         Thread.Sleep(200);
                         if (retryCount == 0)
@@ -429,7 +444,7 @@ namespace VentsCadLibrary
             }
         }
        
-        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFiles> filesList, bool registration, out List<VaultSystem.VentsCadFiles> newFilesList)
+        public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFile> filesList, bool registration, out List<VaultSystem.VentsCadFile> newFilesList)
         {                     
 
             BatchAddFiles(filesList, edmVault5);            
@@ -443,7 +458,7 @@ namespace VentsCadLibrary
                 MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
             
-            newFilesList = new List<VaultSystem.VentsCadFiles>();
+            newFilesList = new List<VaultSystem.VentsCadFile>();
 
             foreach (var file in filesList)
             {
@@ -451,7 +466,7 @@ namespace VentsCadLibrary
                 int fileIdPdm;
                 GetIdPdm(file.LocalPartFileInfo, out fileName, out fileIdPdm, edmVault5);
 
-                newFilesList.Add(new VaultSystem.VentsCadFiles
+                newFilesList.Add(new VaultSystem.VentsCadFile
                 {
                     PartName = fileName,
                     PartIdPdm = fileIdPdm,
@@ -505,7 +520,7 @@ namespace VentsCadLibrary
             AddinConvertTo.Classes.Batches.BatchAddFiles(edmVault7, list);
         }
 
-        internal static List<AddinConvertTo.Classes.FilesData.TaskParam> ConvertVentsCadFiles(List<VaultSystem.VentsCadFiles> filesList)
+        internal static List<AddinConvertTo.Classes.FilesData.TaskParam> ConvertVentsCadFiles(List<VaultSystem.VentsCadFile> filesList)
         {
             if (filesList?.Count == 0) return null;
             
@@ -519,7 +534,7 @@ namespace VentsCadLibrary
 
         const bool UseDll = false;
 
-        internal static void BatchAddFiles(List<VaultSystem.VentsCadFiles> filesList, EdmVault5 edmVault5)
+        internal static void BatchAddFiles(List<VaultSystem.VentsCadFile> filesList, EdmVault5 edmVault5)
         {
             goto m1;
 
@@ -555,9 +570,7 @@ namespace VentsCadLibrary
             foreach (var file in stringList.Distinct())
             {
                 files = files + "\n" + file;
-            }
-
-            MessageBox.Show(files);
+            }            
 
             files = "";
 
@@ -569,33 +582,10 @@ namespace VentsCadLibrary
                 {
                     var fileInfo = new FileInfo(file);
                     var directoryName = fileInfo.Directory.FullName;
-
                     files = files + $"\n File - {fileInfo.FullName} directory - {directoryName}";
-                    //var directoryName = fileInfo.FullName.Replace(file.PartWithoutExtension, "");                    
-
-                    //if (!string.IsNullOrEmpty(file))
-                    //{                     
-                    //    if (!fileInfo.Exists)
-                    //    {
-                    //        MessageBox.Show(file + " Not Exists");
-                    //        continue;
-                    //    }
-                    //    try
-                    //    {
                     poAdder.AddFileFromPathToPath(fileInfo.FullName, directoryName);
-                    //    }
-                    //    catch (Exception e)
-                    //    {
-                    //        MessageBox.Show(e.StackTrace, "1");
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show(file);
-                    //}
                 }
-                
-                
+                                
                 try
                 {
                     //MessageBox.Show(poAdder.CommitAdd(0, null).ToString());
@@ -612,13 +602,13 @@ namespace VentsCadLibrary
             }
             finally
             {
-                MessageBox.Show(files);
+               // MessageBox.Show(files);
             }
 
             #endregion
         }
 
-        internal static void BatchUnLock(List<VaultSystem.VentsCadFiles> filesList, EdmVault5 edmVault5)
+        internal static void BatchUnLock(List<VaultSystem.VentsCadFile> filesList, EdmVault5 edmVault5)
         {
             IEdmPos5 aPos;
 
@@ -642,16 +632,27 @@ namespace VentsCadLibrary
                     MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                     continue;
                 }
-                
-                aPos = aFile.GetFirstFolderPosition();
-                var aFolder = aFile.GetNextFolder(aPos);
 
-                ppoSelection[i] = new EdmSelItem
+                if (aFile != null)
                 {
-                    mlDocID = aFile.ID,
-                    mlProjID = aFolder.ID
-                };
-                i++;
+                    try
+                    {
+                        aPos = aFile.GetFirstFolderPosition();
+                        var aFolder = aFile.GetNextFolder(aPos);
+
+                        ppoSelection[i] = new EdmSelItem
+                        {
+                            mlDocID = aFile.ID,
+                            mlProjID = aFolder.ID
+                        };
+                        i++;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    }
+                    
+                }
             }
 
             // Add selections to the batch of files to check in
@@ -759,13 +760,15 @@ namespace VentsCadLibrary
                 SwDocLike = 4,
             }
 
-            public class FindedDocuments
+            public class FindedDocuments : VaultSystem.VentsCadFile
             {
-                public string Path { get; set; }
+                //public string Path { get; set; }
 
-                public int FileId { get; set; }
+                //public int FileId { get; set; }
 
-                public int ProjectId { get; set; }
+                //public int ProjectId { get; set; }
+
+                //public DateTime Time { get; set; }
             }
 
             public static void SearchDoc(string fileName, SwDocType swDocType, out List<FindedDocuments> fileList, string vaultName)
@@ -814,9 +817,13 @@ namespace VentsCadLibrary
                         files.Add(
                             new FindedDocuments
                             {
-                                FileId = edmSearchResult5.ID,
+                                PartIdPdm = edmSearchResult5.ID,
+                                PartName = edmSearchResult5.Name,
+                                PartSize = edmSearchResult5.FileSize,
+                                //FileId = edmSearchResult5.ID,
                                 ProjectId = edmSearchResult5.ParentFolderID,
-                                Path = edmSearchResult5.Path
+                                Path = edmSearchResult5.Path,
+                                Time = (DateTime)edmSearchResult5.FileDate
                             });
 
                         edmSearchResult5 = edmSearch5.GetNextResult();

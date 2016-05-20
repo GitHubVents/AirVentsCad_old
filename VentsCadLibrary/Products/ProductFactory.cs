@@ -76,12 +76,15 @@ namespace VentsCadLibrary
                     {
                         switch (parameters.Name)
                         {
-                            case "spigot":
+                            case "spigot":                                
                                 product = new Spigot(parameters.Type.SubType, parameters.Sizes[0].Width, parameters.Sizes[0].Height);
                                 break;
                             case "dumper":
                                 var material = new string[] { parameters.Materials[0].Value, parameters.Materials[0].Thikness, parameters.Materials[0].Name, parameters.Materials[0].Code };
                                 product = new Dumper(parameters.Type.SubType, parameters.Sizes[0].Width, parameters.Sizes[0].Height, true, material);
+                                break;
+                            case "montageFrame":                                
+                                product = new MontageFrame(parameters.Type.SubType, parameters.Sizes[0].Width, parameters.Sizes[0].Lenght, parameters.Sizes[0].Additional1, parameters.Materials[0]);
                                 break;
                             default:
                                 break;
@@ -90,7 +93,7 @@ namespace VentsCadLibrary
                 }
                 catch (System.Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                 }
 
                 

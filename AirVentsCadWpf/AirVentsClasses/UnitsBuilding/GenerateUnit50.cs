@@ -3954,7 +3954,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 ToSQL.Conn = Settings.Default.ConnectionToSQL;
                 var toSql = new ToSQL();
 
-                MessageBox.Show($"Conn - {ToSQL.Conn} SetMaterials {setMaterials == null} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
+   //             MessageBox.Show($"Conn - {ToSQL.Conn} SetMaterials {setMaterials == null} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
 
                 setMaterials.ApplyMaterial("", "00", Convert.ToInt32(materialP1[0]), _swApp);
                 _swApp.IActiveDoc2.Save();
@@ -3987,12 +3987,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll");
+  //                  MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll");
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll 2");
+   //             MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll 2");
             }
 
             GabaritsForPaintingCamera(_swApp.IActiveDoc2);
@@ -5822,7 +5822,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 {
                     // todo проверить
                     //if (!string.IsNullOrEmpty(copies)) return;
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile
                     {
                         LocalPartFileInfo = new FileInfo(newName + ".SLDPRT").FullName,
                         PartIdSql = Convert.ToInt32(newName.Substring(newName.LastIndexOf('-') + 1))

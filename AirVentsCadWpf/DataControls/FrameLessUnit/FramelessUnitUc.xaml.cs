@@ -414,8 +414,6 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
 
         void BUILDING_Click(object sender, RoutedEventArgs args)
         {
-            //MessageBox.Show(ProfilsConfig());return;
-
             PartsPdmTable.ItemsSource = null;
             if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели2, 2)) return;
             if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели3, 3)) return;
@@ -438,7 +436,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                         $@"{Settings.Default.DestinationFolder}\{ModelSw.UnitFramelessOreders}\{SizeOfUnit.Text}\{SizeOfUnit.Text} {OrderTextBox.Text}B";
                     var framelessBlockNewPath = new FileInfo($@"{orderFolder}\{framelessBlockNewName}.SLDASM").FullName;
 
-                    if (ModelSw.OpenIfExist(framelessBlockNewPath)) return;                    
+                    if (ModelSw.OpenIfExist(framelessBlockNewPath, VaultSystem.VentsCadFile.Type.Assembly, null)) return;                    
                 }
 
                 #endregion
@@ -461,9 +459,9 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 string panelDown = null;
                 string panelFixed = null;
 
-                var config = Левая.IsChecked == true ? "01" : "02";
+               // var config = Левая.IsChecked == true ? "01" : "02";
                 var configDown = Левая.IsChecked == true ? "02" : "01";
-                var сторонаОбслуживания = Левая.IsChecked == true ? "левая" : "правая";
+                var leftSide = Левая.IsChecked == true;
                 
                 
                 var addingConstructParameters = new AddingConstructParameters();
@@ -544,7 +542,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 materialP1: materialP1, materialP2: materialP2, 
                                 скотч: ПрименениеСкотча.Text,
                                 усиление: _panelBack,
-                                config: config,
+                                isLeftSide: leftSide,
                                 расположениеПанелей: "",
                                 покрытие: покрытие,
                                 расположениеВставок: "",
@@ -579,7 +577,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 materialP1: materialP1, materialP2: materialP2,
                                 скотч: ПрименениеСкотча.Text,
                                 усиление: _panelBack,
-                                config: config,
+                                isLeftSide: leftSide,
                                 расположениеПанелей: "",
                                 покрытие: покрытие,
                                 расположениеВставок: "",
@@ -625,7 +623,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                             materialP1: materialP1, materialP2: materialP2,
                             скотч: ПрименениеСкотча.Text,
                             усиление: PanelUpChk.IsChecked == true,
-                            config: config,
+                            isLeftSide: leftSide,
                             расположениеПанелей: PanelsConfig(),
                             покрытие: покрытие,
                             расположениеВставок: ProfilsConfig(),
@@ -687,7 +685,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                             materialP1: materialP1, materialP2: materialP2,
                             скотч: ПрименениеСкотча.Text,
                             усиление: PanelDownChk.IsChecked == true,
-                            config: configDown,
+                            isLeftSide: !leftSide,  // REVERSE
                             расположениеПанелей: PanelsConfig(),
                             покрытие: покрытие,
                             расположениеВставок: ProfilsConfig(),
@@ -755,7 +753,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 materialP1: materialP1, materialP2: materialP2,
                                 скотч: ПрименениеСкотча.Text,
                                 усиление: УсилениеСъемнойПанели1.IsChecked == true,
-                                config: "00",
+                                isLeftSide: false,
                                 расположениеПанелей: "",
                                 покрытие: покрытие,
                                 расположениеВставок: null,
@@ -790,7 +788,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 materialP1: materialP1, materialP2: materialP2,
                                 скотч: ПрименениеСкотча.Text,
                                 усиление: УсилениеСъемнойПанели2.IsChecked == true,
-                                config: "00",
+                                isLeftSide: false,
                                 расположениеПанелей: "",
                                 покрытие: покрытие,
                                 расположениеВставок: null,
@@ -826,7 +824,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 materialP1: materialP1, materialP2: materialP2,
                                 скотч: ПрименениеСкотча.Text,
                                 усиление: УсилениеСъемнойПанели3.IsChecked == true,
-                                config: "00",
+                                isLeftSide: false,
                                 расположениеПанелей: "",
                                 покрытие: покрытие,
                                 расположениеВставок: null,
@@ -871,7 +869,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                     materialP1: materialP1, materialP2: materialP2,
                                     скотч: ПрименениеСкотча.Text,
                                     усиление: false,
-                                    config: "00",
+                                    isLeftSide: false,
                                     расположениеПанелей: "",
                                     покрытие: покрытие,
                                     расположениеВставок: null,
@@ -912,20 +910,13 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                         ТипУсилПанели2.SelectedValue.ToString(),
                                         ТипУсилПанели2.Text,
                                         Convert.ToString(SqlBaseData.PanelsTypeId(ТипУсилПанели2.SelectedValue.ToString()))
-
-                                        #region to delete
-                                        //ТипНесъемнойПанели.SelectedValue.ToString(),
-                                        //ТипНесъемнойПанели.Text,
-                                        //Convert.ToString(basedata.PanelsTypeId(ТипНесъемнойПанели.SelectedValue.ToString()))
-                                        #endregion
-
                                     },
 
                                     width: Convert.ToString(130), height: Convert.ToString(height - 40),
                                     materialP1: materialP1, materialP2: materialP2,
                                     скотч: ПрименениеСкотча.Text,
                                     усиление: false,
-                                    config: "00",
+                                    isLeftSide: false,
                                     расположениеПанелей: "",
                                     покрытие: покрытие,
                                     расположениеВставок: null,
@@ -992,7 +983,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                             materialP1: materialP1, materialP2: materialP2,
                             скотч: ПрименениеСкотча.Text,
                             усиление: PanelUnremChk.IsChecked == true,
-                            config: "00",
+                            isLeftSide: false,
                             расположениеПанелей: "",
                             покрытие: покрытие,
                             расположениеВставок: ProfilsConfig(),
@@ -1062,9 +1053,9 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                                 : modelSw.Profil(Convert.ToDouble(HeightU.Text) - 80, ТипПроф4.Text, ironwares.ScrewsByHeight + 1000)
                         };
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // ignored
+                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                     }
                 }
                 
@@ -1121,7 +1112,7 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 modelSw.FramelessBlock(
                     size: ((DataRowView) SizeOfUnit.SelectedItem)["Type"].ToString(),
                     order: OrderTextBox.Text,
-                    side: сторонаОбслуживания,
+                    leftSide: leftSide,
                     section: SectionTextBox.Text,
                     pDown: panelDown,
                     pFixed: panelFixed,
@@ -1277,23 +1268,56 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
                 $"{(Отступ1.Visibility == Visibility.Visible ? Отступ1.Text : "")}{(ШиринаПанели1.Visibility == Visibility.Visible ? ";" + ШиринаПанели1.Text : "")}{(Отступ2.Visibility == Visibility.Visible ? ";" + Отступ2.Text : "")}{(ШиринаПанели2.Visibility == Visibility.Visible ? ";" + ШиринаПанели2.Text : "")}{(Отступ3.Visibility == Visibility.Visible ? ";" + Отступ3.Text : "")}{(ШиринаПанели3.Visibility == Visibility.Visible ? ";" + ШиринаПанели3.Text : "")}";
         }
 
+
+        public class ProfilsConfiguration
+        {
+            public Profil Profil1 { get; set; }
+            public Profil Profil2 { get; set; }
+            public Profil Profil3 { get; set; }
+            public Profil Profil4 { get; set; }
+
+            ProfilsConfiguration(Profil profil1, Profil profil2, Profil profil3, Profil profil4)
+            {
+                Profil1 = profil1;
+                Profil2 = profil2;
+                Profil3 = profil3;
+                Profil4 = profil4;
+            }
+
+            public enum TypeOfProf
+            {                
+                p00,
+                p01,
+                p02,
+                p05
+            }
+
+            public class Profil
+            {
+                TypeOfProf type { get; set; }
+
+                double width { get; set; }
+            }               
+
+        }
+
         string ProfilsConfig()
         {
             //MessageBox.Show($" ТипПроф1- {ТипПроф1.Text}\nТипПроф2- {ТипПроф2.Text}\nТипПроф3- {ТипПроф3.Text}\nТипПроф4 - {ТипПроф4.Text}"\nШиринаПрофиля1- {ШиринаПрофиля1.Text}\nШиринаПрофиля2- {ШиринаПрофиля2.Text}\nШиринаПрофиля3- {ШиринаПрофиля3.Text}\nШиринаПрофиля4- {ШиринаПрофиля4.Text}\n");
 
-            if (ТипПроф1.Text == "-" & ТипПроф2.Text == "-" &
-                ТипПроф3.Text == "-" & ТипПроф4.Text == "-" 
-                &
-                ТипУсилПанели1.Visibility != Visibility.Visible &
-                ТипУсилПанели2.Visibility != Visibility.Visible)
-            {
-                return null;
-            }
-            else
-            {
+            //if (ТипПроф1.Text == "-" & ТипПроф2.Text == "-" &
+            //    ТипПроф3.Text == "-" & ТипПроф4.Text == "-" 
+            //    &
+            //    ТипУсилПанели1.Visibility != Visibility.Visible &
+            //    ТипУсилПанели2.Visibility != Visibility.Visible)
+            //{
+            //    return null;
+            //}
+            //else
+            //{
                 return
-                    $"{ТипПроф1.Text + "_" + ШиринаПрофиля1.Text};{ТипПроф2.Text + "_" + ШиринаПрофиля2.Text};{ТипПроф3.Text + "_" + ШиринаПрофиля3.Text};{ТипПроф4.Text + "_" + ШиринаПрофиля4.Text}";                    
-            }
+                    $"{ТипПроф1.Text + "_" + ШиринаПрофиля1.Text};{ТипПроф2.Text + "_" + ШиринаПрофиля2.Text};{ТипПроф3.Text + "_" + ШиринаПрофиля3.Text};{ТипПроф4.Text + "_" + ШиринаПрофиля4.Text}";                        
+            //}
         }
 
         string ParmsOfBackPanel1()

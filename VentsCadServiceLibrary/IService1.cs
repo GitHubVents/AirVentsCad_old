@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
@@ -20,6 +21,7 @@ namespace VentsCadServiceLibrary
         void BuildSpigot(string type, string width, string height, out int projectId, out int idPdm);
     }
 
+    [Serializable]
     [DataContract]
     public class Parameters
     {

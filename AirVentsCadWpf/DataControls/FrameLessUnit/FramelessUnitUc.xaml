@@ -478,7 +478,7 @@
                                         <ComboBox x:Name="ТипПроф2" SelectedIndex="0" HorizontalAlignment="Center" PreviewTextInput="NumberValidationTextBox"
                                     		VerticalAlignment="Center" ToolTip="Промежуточная стойка"
                                     		HorizontalContentAlignment="Center" MinWidth="30" TabIndex="5" KeyDown="EnterKeyDown"
-                                    		Grid.Row="0" Grid.Column="1" Margin="2" Background="{x:Null}">
+                                    		Grid.Row="0" Grid.Column="1" Margin="10,10,4,20" Background="{x:Null}" Grid.RowSpan="2">
                                             <ComboBoxItem Content="-" ToolTip="Отсутствует" Tag="130"/>
                                             <ComboBoxItem Content="00" ToolTip="Профиль 00" Tag="90"/>
                                             <ComboBoxItem Content="01" ToolTip="Профиль 01" Tag="110"/>

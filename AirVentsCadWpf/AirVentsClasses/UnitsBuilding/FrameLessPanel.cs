@@ -24,7 +24,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <summary>
         /// 
         /// </summary>
-        public List<VentsCadFiles> NewComponentsFull = new List<VentsCadFiles>();
+        public List<VentsCadFile> NewComponentsFull = new List<VentsCadFile>();
 
         #region PanelsFrameless
 
@@ -38,7 +38,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="materialP2">The meterial p2.</param>
         /// <param name="скотч">if set to <c>true</c> [СКОТЧ].</param>
         /// <param name="усиление">if set to <c>true</c> [УСИЛЕНИЕ].</param>
-        /// <param name="config">The configuration.</param>
+        /// <param name="isLeftSide">The configuration.</param>
         /// <param name="расположениеПанелей">The РАСПОЛОЖЕНИЕ ПАНЕЛЕЙ.</param>
         /// <param name="покрытие">The ПОКРЫТИЕ.</param>
         /// <param name="расположениеВставок">The РАСПОЛОЖЕНИЕ ВСТАВОК.</param>
@@ -49,11 +49,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="existingAsmsAndParts"></param>
         /// <param name="onlySearch"></param>
         public void PanelsFrameless(string[] typeOfPanel, string width, string height, string[] materialP1,
-            string[] materialP2, string скотч, bool усиление, string config, string расположениеПанелей,
+            string[] materialP2, string скотч, bool усиление, bool isLeftSide, string расположениеПанелей,
             string[] покрытие, string расположениеВставок, string[] первыйТип, string типТорцевой,
             Screws screws, out List<string> partsToDeleteList, out List<ExistingAsmsAndParts> existingAsmsAndParts, bool onlySearch)
         {
-            var path = PanelsFramelessStr(typeOfPanel, width, height, materialP1, materialP2, скотч, усиление, config,
+            var path = PanelsFramelessStr(typeOfPanel, width, height, materialP1, materialP2, скотч, усиление, isLeftSide,
                 расположениеПанелей, покрытие, расположениеВставок, первыйТип, null, "00",
                 screws, out partsToDeleteList, out existingAsmsAndParts, onlySearch);
             if (path == "")  return; 
@@ -63,7 +63,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 PanelsFramelessStr
                     (
-                    typeOfPanel, width, height, materialP1, materialP2, скотч, усиление, config,
+                    typeOfPanel, width, height, materialP1, materialP2, скотч, усиление, isLeftSide,
                     расположениеПанелей, покрытие, расположениеВставок, первыйТип, null, "00",
                     screws, out partsToDeleteList, out existingAsmsAndParts, onlySearch
                     );
@@ -207,6 +207,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             public string ExistInSistem { get; set; }
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -215,26 +217,32 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="fileId"></param>
         /// <param name="projectId"></param>
         /// <param name="vaultName"></param>
+        /// <param name="fileDate"></param>
         /// <returns></returns>
-        public static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId, string vaultName)
+        public static bool GetExistingFile(string partName, out string path, out int fileId, out int projectId, out DateTime fileDate, string vaultName)
         {
-            fileId = 0;projectId = 0;path = null;
+            fileId = 0;projectId = 0;path = null; fileDate = new DateTime();
 
             List<SwEpdm.EpdmSearch.FindedDocuments> найденныеФайлы;
-            SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, vaultName);
-            
+
+            SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocDrawing, out найденныеФайлы, vaultName);
+            if (найденныеФайлы?.Count > 0) goto m1;
+
+            SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocAssembly, out найденныеФайлы, vaultName);            
             if (найденныеФайлы?.Count > 0) goto m1;
 
             SearchDoc(partName, SwEpdm.EpdmSearch.SwDocType.SwDocPart, out найденныеФайлы, vaultName);
-            if (найденныеФайлы?.Count > 0) goto m1;
+            if (найденныеФайлы?.Count > 0) goto m1;            
 
             return false;
             m1:
             try
             {
-                GetLastVersionAsmPdm(найденныеФайлы[0].Path, Settings.Default.PdmBaseName);
-                fileId = найденныеФайлы[0].FileId;
+                path = найденныеФайлы[0].Path;
+                GetLastVersionAsmPdm(path, Settings.Default.PdmBaseName);
+                fileId = найденныеФайлы[0].PartIdPdm;
                 projectId = найденныеФайлы[0].ProjectId;
+                fileDate = найденныеФайлы[0].Time;
                 return true;
             }
             catch (Exception e)
@@ -246,6 +254,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         
         bool GetExistingFile(string fileName, int type)
         {
+            if (new FileInfo(fileName).Exists)
+            {
+                fileName = Path.GetFileNameWithoutExtension(fileName);
+            }
+
             List<VaultSystem.SearchInVault.FindedDocuments> найденныеФайлы;
             switch (type)
 
@@ -326,7 +339,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="materialP2">The material p2.</param>
         /// <param name="скотч">The СКОТЧ.</param>
         /// <param name="усиление">if set to <c>true</c> [УСИЛЕНИЕ].</param>
-        /// <param name="config">configuration</param>
+        /// <param name="isLeftSide">configuration</param>
         /// <param name="расположениеПанелей">Расположение панелей</param>
         /// <param name="покрытие">ПОКРЫТИЕ</param>
         /// <param name="расположениеВставок">Расположение вставок</param>
@@ -341,7 +354,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         public string PanelsFramelessStr(
             string[] typeOfPanel, string width, string height,
             string[] materialP1, string[] materialP2, string скотч,
-            bool усиление, string config, string расположениеПанелей,
+            bool усиление, bool isLeftSide, string расположениеПанелей,
             string[] покрытие, string расположениеВставок,
             string[] первыйТип, string типТорцевой, string типДвойной,
             Screws screws, out List<string> partsToDeleteList, 
@@ -354,9 +367,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (screws == null){screws = new Screws { ByWidth = 0, ByHeight = 0 };}
 
             InValPanels.StringValue(расположениеПанелей);
+
+           // MessageBox.Show($"type - {typeOfPanel[0]}\n расположениеВставок - {расположениеВставок}");
+
             ValProfils.StringValue(расположениеВставок);
             BackProfils.StringValue(типТорцевой);
             
+        //    MessageBox.Show($"type - {typeOfPanel[0]}\nWp1 - {ValProfils.Wp1}\nWp2 - {ValProfils.Wp2}");
+          //  return null;
+
             #region Начальные проверки и пути
 
             if (IsConvertToInt(new[] {width, height}) == false) return "-";
@@ -432,7 +451,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     Ral = покрытие[0],
                     CoatingType = покрытие[1],
                     CoatingClass = Convert.ToInt32(покрытие[2]),
-                    Mirror = config.Contains("01"),
+                    Mirror = isLeftSide,
                     StickyTape = скотч.Contains("Со скотчем"),
                     StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                     AirHole = типТорцевой
@@ -440,7 +459,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             var id = панельВнешняя.AddPart();
 
             панельВнешняя.PartQuery =
-                $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {1}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {config.Contains("01")}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+                $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {1}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {isLeftSide}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
 
             if (типДвойной == "00")
             {
@@ -463,7 +482,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     Ral = покрытие[3],
                     CoatingType = покрытие[4],
                     CoatingClass = Convert.ToInt32(покрытие[5]),
-                    Mirror = config.Contains("01"),
+                    Mirror = isLeftSide,
                     Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                     StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                     AirHole = типТорцевой
@@ -477,7 +496,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             панельВнутренняя.NewName = "02-" + pType + "-2-" + id;
             панельВнутренняя.PartQuery =
-                $" PanelTypeId = {Convert.ToInt32(typeOfPanel[2])},ElementType = 2\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)}\nPartThick = {40}, PartMat = {Convert.ToInt32(materialP2[0])}, PartMatThick = {Convert.ToDouble(materialP2[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[3]}, CoatingType = {покрытие[4]}, CoatingClass = {Convert.ToInt32(покрытие[5])}\nMirror = {config.Contains("01")}, Step = {(needToAddStepInsertionAndStep ? расположениеПанелей : null)}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+                $" PanelTypeId = {Convert.ToInt32(typeOfPanel[2])},ElementType = 2\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)}\nPartThick = {40}, PartMat = {Convert.ToInt32(materialP2[0])}, PartMatThick = {Convert.ToDouble(materialP2[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[3]}, CoatingType = {покрытие[4]}, CoatingClass = {Convert.ToInt32(покрытие[5])}\nMirror = {isLeftSide}, Step = {(needToAddStepInsertionAndStep ? расположениеПанелей : null)}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
 
             // Сшитые панели Внешняя тип + первая/вторая = 11, 12 или 21, 22 тоже и с нижней
 
@@ -507,7 +526,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         Ral = покрытие[0],
                         CoatingType = покрытие[1],
                         CoatingClass = Convert.ToInt32(покрытие[2]),
-                        Mirror = config.Contains("01"),
+                        Mirror = isLeftSide,
                         StickyTape = скотч.Contains("Со скотчем"),
                         StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                         AirHole = типТорцевой
@@ -519,7 +538,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 имяДвойнойВерхней1 = панельВнешняяДвойная1.NewName;
 
                 панельВнешняяДвойная1.PartQuery =
-                $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "1")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {config.Contains("01")}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+                $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "1")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {isLeftSide}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
 
                 панельВнешняяДвойная2 =
                     new AddingPanel
@@ -535,7 +554,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         Ral = покрытие[0],
                         CoatingType = покрытие[1],
                         CoatingClass = Convert.ToInt32(покрытие[2]),
-                        Mirror = config.Contains("01"),
+                        Mirror = isLeftSide,
                         StickyTape = скотч.Contains("Со скотчем"),
                         StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                         AirHole = типТорцевой
@@ -545,7 +564,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 панельВнешняяДвойная2.NewName = "02-" + pType + "-1-" + id;
                 имяДвойнойВерхней2 = панельВнешняяДвойная2.NewName;
                 панельВнешняяДвойная2.PartQuery =
-                    $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "2")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {config.Contains("01")}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
+                    $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = {Convert.ToInt32(типДвойной.Remove(1, 1) + "2")}\nWidth = {Convert.ToInt32(width)}, Height = {Convert.ToInt32(height)},\nPartThick = 40, PartMat = {Convert.ToInt32(materialP1[0])}, PartMatThick = {Convert.ToDouble(materialP1[1].Replace('.', ','))}\nReinforcing = {усиление}, Ral = {покрытие[0]}, CoatingClass = {Convert.ToInt32(покрытие[2])}\nMirror = {isLeftSide}, StickyTape = {скотч.Contains("Со скотчем")}\nStepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}, AirHole = {типТорцевой}";
 
 
                 if (типДвойной.Remove(0, 1) != "0")
@@ -564,7 +583,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             Ral = покрытие[3],
                             CoatingType = покрытие[4],
                             CoatingClass = Convert.ToInt32(покрытие[5]),
-                            Mirror = config.Contains("01"),
+                            Mirror = isLeftSide,
                             Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                             StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                             AirHole = типТорцевой
@@ -588,7 +607,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             Ral = покрытие[3],
                             CoatingType = покрытие[4],
                             CoatingClass = Convert.ToInt32(покрытие[5]),
-                            Mirror = config.Contains("01"),
+                            Mirror = isLeftSide,
                             Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                             StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                             AirHole = типТорцевой
@@ -689,7 +708,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         PartThick = 40,
                         PartMat = 1800,
                         PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                        Mirror = config.Contains("01"),
+                        Mirror = isLeftSide,
                         Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                         StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
 
@@ -713,7 +732,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             PartThick = 40,
                             PartMat = 1800,
                             PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                            Mirror = config.Contains("01"),
+                            Mirror = isLeftSide,
                             Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                             StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
 
@@ -736,7 +755,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         PartThick = 40,
                         PartMat = 1800,
                         PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                        Mirror = config.Contains("01"),
+                        Mirror = isLeftSide,
                         Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                         StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
 
@@ -766,7 +785,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         PartThick = 40,
                         PartMat = 1800,
                         PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                        Mirror = config.Contains("01"),
+                        Mirror = isLeftSide,
 
                         Ral = "Без покрытия",
                         CoatingType = "0",
@@ -775,8 +794,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     id = кронштейнДверной.AddPart();
                     partIds.Add(new KeyValuePair<int, int>(9, id));
                     кронштейнДверной.NewName = "02-" + id;
-                    кронштейнДверной.PartQuery = $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = 9\nHeight = {Convert.ToInt32(height)}, Width = 20\nPartThick = 40, PartMat = 1800\nPartMatThick = {Convert.ToDouble("1".Replace('.', ','))}, Mirror = {config.Contains("01")}\n,Ral = Без покрытия, CoatingType = 0\nCoatingClass = {Convert.ToInt32("0")}";
-                }
+                    кронштейнДверной.PartQuery = $"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}, ElementType = 9\nHeight = {Convert.ToInt32(height)}, Width = 20\nPartThick = 40, PartMat = 1800\nPartMatThick = {Convert.ToDouble("1".Replace('.', ','))}, Mirror = {isLeftSide}\n,Ral = Без покрытия, CoatingType = 0\nCoatingClass = {Convert.ToInt32("0")}";                }
             }
 
             AddingPanel профильТорцевойРамкиВертикальный = null;
@@ -793,7 +811,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     PartThick = 40,
                     PartMat = 1800,
                     PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                    Mirror = config.Contains("01"),
+                    Mirror = isLeftSide,
 
                     Ral = "Без покрытия",
                     CoatingType = "0",
@@ -815,7 +833,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     PartThick = 40,
                     PartMat = 1800,
                     PartMatThick = Convert.ToDouble("1".Replace('.', ',')),
-                    Mirror = config.Contains("01"),
+                    Mirror = isLeftSide,
 
                     Ral = "Без покрытия",
                     CoatingType = "0",
@@ -859,7 +877,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 CoatingClassOut = Convert.ToInt32(покрытие[2]),
                 CoatingClassIn = Convert.ToInt32(покрытие[2]),
 
-                Mirror = config.Contains("01"),
+                Mirror = isLeftSide,
                 Step = needToAddStepInsertionAndStep ? расположениеПанелей : null,
                 StepInsertion = needToAddStepInsertionAndStep ? расположениеВставок : null,
                 Reinforcing = усиление,
@@ -891,6 +909,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         IdAsm = обозначениеНовойПанели + " - " + typeOfPanel[1],
                         PartQuery = $@"PanelTypeId = {Convert.ToInt32(typeOfPanel[2])}
                         Width = {Convert.ToInt32(width)} Height = {Convert.ToInt32(height)}" +
+
+                        #region to delete
                         //PanelMatOut = {Convert.ToInt32(materialP1[0])}
                         //PanelMatIn = {Convert.ToInt32(materialP2[0])}
                         //PanelMatThickOut = {Convert.ToDouble(materialP1[1].Replace('.', ','))}
@@ -901,7 +921,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         //CoatingTypeIn = {покрытие[1]}
                         //CoatingClassOut = {Convert.ToInt32(покрытие[2])}
                         //CoatingClassIn = {Convert.ToInt32(покрытие[2])}
-                        $@" Mirror = {config.Contains("01")}
+                        #endregion
+
+                        $@" Mirror = {isLeftSide}
                         Step = {(needToAddStepInsertionAndStep ? расположениеПанелей : null)}
                         StepInsertion = {(needToAddStepInsertionAndStep ? расположениеВставок : null)}
                         Reinforcing = {усиление}
@@ -1296,6 +1318,18 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                                                 (int)swDeleteSelectionOptions_e.swDelete_Children;
             var swDocExt = swDoc.Extension;
 
+            var bodyfeat = VentsCad.CompType.BODYFEATURE;
+            var sketch = VentsCad.CompType.SKETCH;
+
+
+            //var ftrfolder = VentsCad.CompType.FTRFOLDER;
+            //var dimension = VentsCad.CompType.DIMENSION;           
+
+
+            var supress = VentsCad.Act.Suppress;
+            var unSupress = VentsCad.Act.Unsuppress;
+            var doNothing = VentsCad.Act.DoNothing;
+
             if (string.IsNullOrEmpty(типТорцевой)) 
             {
                 swDocExt.SelectByID2("Рамка", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
@@ -1337,12 +1371,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 swDocExt.SelectByID2("Threaded Rivets-38@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
-                if (config.Contains("01"))
+                if (isLeftSide)
                 {
                     swDocExt.SelectByID2("Вырез-Вытянуть25@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.EditSuppress2();
                     swDoc.EditRebuild3();
                 }
-                else if (config.Contains("02"))
+                else if (!isLeftSide)
                 {
                     swDocExt.SelectByID2("Вырез-Вытянуть25@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                     swDocExt.SelectByID2("Кривая3@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
@@ -1656,18 +1690,20 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         swDoc.Extension.DeleteSelection2(deleteOption);
                         swDoc.Extension.SelectByID2("Вырез-Вытянуть11@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE",
                             0, 0, 0, false, 0, null, 0);
-                        swDoc.Extension.DeleteSelection2(deleteOption);
+                        swDoc.Extension.DeleteSelection2(deleteOption);                  
                     }
                     break;
 
                     #endregion
 
+                    
+
                 #region Удаление элементов съемной панели
 
                 case "01":case "21":case "22":case "23":
                 case "30":case "31":case "32":case "35":
-                    swDocExt.SelectByID2("Handel-1", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                    swDoc.EditDelete();
+                    
+                    swDocExt.SelectByID2("Handel-1", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                     swDocExt.SelectByID2("Threaded Rivets-25@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0);
                     swDocExt.SelectByID2("Ручка MLA 120-3@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0);
                     swDocExt.SelectByID2("SC GOST 17475_gost-5@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0);
@@ -1727,8 +1763,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             swDoc.EditRebuild3();
                         }
                     }
+                    
                     break;
-
             }
 
             #endregion
@@ -1745,15 +1781,15 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             
             if (pType != "01" && pType != "35")
-            {
+            {                
                 swDocExt.SelectByID2("Вырез-Вытянуть18@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
                 swDocExt.DeleteSelection2(deleteOption);
                 swDocExt.SelectByID2("Вырез-Вытянуть25@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
-                swDocExt.DeleteSelection2(deleteOption);
+                swDocExt.DeleteSelection2(deleteOption);             
             }
 
             if (pType == "01" || pType == "35")
-            {
+            {                
                 //Удаление торцевых отверстий под клепальные гайки
                 swDoc.Extension.SelectByID2("Под клепальные гайки", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
                 swDoc.EditDelete();
@@ -1766,11 +1802,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 swDoc.Extension.SelectByID2("Эскиз32@" + "02-11-06-40-" + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
                 swDoc.Extension.SelectByID2("Эскиз32@" + "02-11-06_2-40-" + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditDelete();
+                swDoc.EditDelete();               
             }
 
             if (pType != "32")
             {
+                
                 for (var i = 5; i <= 20; i++)
                 {
                     swDocExt.SelectByID2("Threaded Rivets-" + i + "@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0);
@@ -1784,6 +1821,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.EditDelete();
             }
 
+
             if (pType != "22" && pType != "31")
             {
                 swDocExt.SelectByID2("Threaded Rivets-33@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0);
@@ -1795,10 +1833,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.EditDelete();
                 swDocExt.SelectByID2("Вырез-Вытянуть16@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDocExt.DeleteSelection2(deleteOption);
+                swDoc.ClearSelection2(true);
             }
 
             if (pType != "04" && pType != "05")
-            {
+            {               
                 swDocExt.SelectByID2("SC GOST 17473_gost-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("SC GOST 17473_gost-2@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
@@ -1806,17 +1845,27 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDocExt.SelectByID2("Threaded Rivets-60@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-61@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-62@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
+                swDoc.ClearSelection2(true);
             }
-
-            if (config.Contains("00"))
+            
+            if (pType != "21" & pType != "20" & pType != "22" & pType != "23" & pType != "30" & pType != "31" & pType != "32" & pType != "33")
             {
-                foreach (var i in new[]{37, 38, 47, 48, 51, 52})
+                foreach (var i in new[] { 37, 38, 47, 48, 51, 52 })
                 {
                     swDocExt.SelectByID2("Threaded Rivets-" + i + "@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
+                    swDoc.ClearSelection2(true);
                 }
-            }
 
-            if (config.Contains("01"))
+                swDocExt.SelectByID2("4-1@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
+                swDoc.EditSuppress2();
+                swDocExt.SelectByID2("4-3@" + nameUpPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
+                swDoc.EditSuppress2();
+
+                swDoc.ClearSelection2(true);
+            }
+                       
+
+            if (isLeftSide)
             {
                 swDocExt.SelectByID2("Threaded Rivets-38@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-48@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
@@ -1841,10 +1890,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("Вырез-Вытянуть16@" + "02-11-06_2-40-" + "-4@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDoc.Extension.SelectByID2("Вырез-Вытянуть17@" + "02-11-06_2-40-" + "-4@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDoc.EditSuppress2();
-            }
 
-            if (config.Contains("02"))
+                swDoc.ClearSelection2(true);
+            }
+                       
+
+            if (!isLeftSide)
             {
+
                 swDocExt.SelectByID2("Threaded Rivets-37@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-47@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-52@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
@@ -1868,8 +1921,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("Вырез-Вытянуть16@" + "02-11-06-40-" + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDoc.Extension.SelectByID2("Вырез-Вытянуть17@" + "02-11-06-40-" + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDoc.EditSuppress2();
-            }
 
+                swDoc.ClearSelection2(true);
+
+            }
+            
             #region Удаление усиления для типоразмера меньше AV09
 
             if (!усиление)
@@ -1901,15 +1957,16 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDocExt.SelectByID2("Вырез-Вытянуть14@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Кривая9@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
 
-                swDoc.ClearSelection2(true);
+                swDoc.ClearSelection2(true);                
             }
-
+            
             #endregion
 
             #region Отверстия под панели L2 L3
 
             if (Convert.ToInt32(OutValPanels.L2) == 28)
             {
+
                 swDocExt.SelectByID2("Threaded Rivets-47@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 swDocExt.SelectByID2("Threaded Rivets-48@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
 
@@ -1925,8 +1982,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 swDoc.Extension.SelectByID2("Вырез-Вытянуть16@" + "02-11-06_2-40-" + "-4@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
                 swDoc.Extension.SelectByID2("Кривая5@" + "02-11-06_2-40-" + "-4@" + nameAsm, "BODYFEATURE", 0, 0, 0, true, 0, null, 0);
-                swDoc.EditSuppress();swDoc.ClearSelection2(true);
+                swDoc.EditSuppress();swDoc.ClearSelection2(true);                
             }
+            
 
             if (Convert.ToInt32(OutValPanels.L3) == 28)
             {
@@ -1950,6 +2008,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.EditSuppress();swDoc.ClearSelection2(true);
             }
 
+            
             #endregion
 
             #region Панели усиливающие
@@ -1957,30 +2016,34 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             string типКрепежнойЧастиУсиливающейПанели = null;
             var типТорцевойЧастиУсиливающейПанели = "T";
 
-            try
+            if (!string.IsNullOrEmpty(типУсиливающей))
             {
-                типТорцевойЧастиУсиливающейПанели = типУсиливающей.Remove(1).Contains("T") ? "T" : "E";
-                if (типУсиливающей.Remove(0, 1).Contains("E"))
+                try
                 {
-                    типКрепежнойЧастиУсиливающейПанели = "E";
+                    типТорцевойЧастиУсиливающейПанели = типУсиливающей.Remove(1).Contains("T") ? "T" : "E";
+                    if (типУсиливающей.Remove(0, 1).Contains("E"))
+                    {
+                        типКрепежнойЧастиУсиливающейПанели = "E";
+                    }
+                    if (типУсиливающей.Remove(0, 1).Contains("D"))
+                    {
+                        типКрепежнойЧастиУсиливающейПанели = "D";
+                    }
+                    if (типУсиливающей.Remove(0, 1).Contains("E"))
+                    {
+                        типКрепежнойЧастиУсиливающейПанели = "E";
+                    }
+                    if (типУсиливающей.Remove(0, 1).Contains("Z"))
+                    {
+                        типКрепежнойЧастиУсиливающейПанели = "Z";
+                    }
                 }
-                if (типУсиливающей.Remove(0, 1).Contains("D"))
+                catch (Exception ex)
                 {
-                    типКрепежнойЧастиУсиливающейПанели = "D";
-                }
-                if (типУсиливающей.Remove(0, 1).Contains("E"))
-                {
-                    типКрепежнойЧастиУсиливающейПанели = "E";
-                }
-                if (типУсиливающей.Remove(0, 1).Contains("Z"))
-                {
-                    типКрепежнойЧастиУсиливающейПанели = "Z";
+                    // MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                 }
             }
-            catch (Exception)
-            {
-                //
-            }
+            
 
             if (Convert.ToInt32(height) < 825)
             {
@@ -2036,6 +2099,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                 swDocExt.SelectByID2("Эскиз56@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, true, 0, null, 0); swDoc.EditSuppress();
             }
+            
 
             #endregion
 
@@ -2043,14 +2107,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (ValProfils.Tp1 == "01" || ValProfils.Tp1 == "00")
             {
-                if (config.Contains("01"))
+                if (isLeftSide)
                 {
                     swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1R@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
                     swDoc.EditSuppress();
                     swDoc.Extension.SelectByID2("Эскиз80@" + nameDownPanel + "-1@" + nameAsm, "SKETCH", 0, 0, 0, false, 0, null, 0);
                     swDoc.EditSuppress();
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
                     swDoc.Extension.SelectByID2("Вырез-ВытянутьTp1L@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
                     swDoc.EditSuppress();
@@ -2060,285 +2124,292 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp1R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp1L@" + nameDownPanel + "-1", supress);
             }
 
             if (ValProfils.Tp2 == "01" || ValProfils.Tp2 == "00")
             {
-                if (config.Contains("01"))
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз61@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз61@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз62@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз62@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp2R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp2L@" + nameDownPanel + "-1", supress);
             }
 
             if (ValProfils.Tp3 == "01" || ValProfils.Tp3 == "00")
             {
-                if (config.Contains("01"))
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз63@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз63@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз64@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз64@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);               
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp3R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp3L@" + nameDownPanel + "-1", supress);               
             }
 
             if (ValProfils.Tp4 == "01" || ValProfils.Tp4 == "00")
             {
-                if (config.Contains("01"))
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз82@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз82@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.SKETCH, "Эскиз83@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", supress);
+                    VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз83@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp4R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Вырез-ВытянутьTp4L@" + nameDownPanel + "-1", supress);
             }
 
             if (ValProfils.Tp1 == "02")
             {
-                if (config.Contains("01"))
+                //VentsCad.DoWithSwDoc(_swApp, bodyfeat, $"Тип-02-{(isLeftSide ? "1R" : "1L")}@{nameDownPanel}-1", supress);
+
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);                    
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-1R@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
-                {                    
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                if (!isLeftSide)
+                {
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-1L@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-1L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-1R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-1L@" + nameDownPanel + "-1", supress);
             }
 
             if (ValProfils.Tp2 == "02")
             {
-                if (config.Contains("01"))
-                {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                }
-                if (config.Contains("02"))
-                {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                }
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat,   $"Тип-02-{(isLeftSide ? "2R" : "2L")}@{nameDownPanel}-1", supress);
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-2R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-2R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-2L@" + nameDownPanel + "-1", supress);
             }
 
             if (ValProfils.Tp3 == "02")
             {
-                if (config.Contains("01"))
+                // VentsCad.DoWithSwDoc(_swApp, bodyfeat, $"Тип-02-{(isLeftSide ? "3R" : "3L")}@{nameDownPanel}-1", supress);
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-3R@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-3L@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-3R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-3R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-3L@" + nameDownPanel + "-1", supress);
             }
 
 
             if (ValProfils.Tp4 == "02")
             {
-                if (config.Contains("01"))
+                //VentsCad.DoWithSwDoc(_swApp, bodyfeat, $"Тип-02-{(isLeftSide ? "4R" : "4L")}@{nameDownPanel}-1", supress);
+
+                if (isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-4R@" + nameDownPanel + "-1", supress);
                 }
-                if (config.Contains("02"))
+                if (!isLeftSide)
                 {
-                    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                    VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-4L@" + nameDownPanel + "-1", supress);
                 }
             }
             else
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4R@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-02-4L@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-4R@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-02-4L@" + nameDownPanel + "-1", supress);
             }
 
             // Полупанель внутрення
 
-            if (ValProfils.Tp1 == "05"){}
-            else
+            if (ValProfils.Tp1 != "05")             
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-1@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз88@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-05-1@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз88@" + nameDownPanel + "-1", supress);
             }
 
-            if (ValProfils.Tp2 == "05"){}
-            else
+            if (ValProfils.Tp2 != "05") 
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-2@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз66@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-05-2@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз66@" + nameDownPanel + "-1", supress);
             }
 
-            if (ValProfils.Tp3 == "05"){}
-            else
+            if (ValProfils.Tp3 != "05") 
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-3@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз67@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-05-3@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз67@" + nameDownPanel + "-1", supress);
             }
 
-            if (ValProfils.Tp4 == "05"){}
-            else
+            if (ValProfils.Tp4 != "05")
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-4@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз89@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Тип-05-4@" + nameDownPanel + "-1", supress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз89@" + nameDownPanel + "-1", supress);
             }
+
+            #region To Delete
+
+            //if (ValProfils.Tp1 == "05"){}
+            //else
+            //{
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-1@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз88@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //}
+
+            //if (ValProfils.Tp2 == "05"){}
+            //else
+            //{
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-2@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз66@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //}
+
+            //if (ValProfils.Tp3 == "05"){}
+            //else
+            //{
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-3@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз67@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //}
+
+            //if (ValProfils.Tp4 == "05"){}
+            //else
+            //{
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Тип-05-4@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //    VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз89@" + nameDownPanel + "-1", VentsCad.Act.Suppress);
+            //}
 
             #endregion
-            
+
+            #endregion
+
             #region Отверстия под усиливающие панели
 
             if (pType == "21" || pType == "22" || pType == "23")
             {
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз59@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз73@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз59@" + nameUpPanel + "-1", unSupress);
+                VentsCad.DoWithSwDoc(_swApp, sketch, "Эскиз73@" + nameUpPanel + "-1", unSupress);
 
-                if (!string.IsNullOrEmpty(ValProfils.Tp1))
+                //  Наличие первой усиливающей панели
+                if (!ValProfils.Tp1.Contains("-"))
                 {
-                    if (config.Contains("02"))
+                    foreach (var name in new[] { "U32", "U31" })
                     {
-                        foreach (var name in new[] { "U32", "U31" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
-                        foreach (var name in new[] { "U33", "U34" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", !isLeftSide ? unSupress : doNothing);
                     }
-                    if (config.Contains("01"))
+                    foreach (var name in new[] { "U33", "U34" })
                     {
-                        foreach (var name in new[] { "U52", "U51" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
-                        foreach (var name in new[] { "U53", "U54" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", !isLeftSide ? unSupress : doNothing);
                     }
+
+                    foreach (var name in new[] { "U52", "U51" })
+                    {
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", isLeftSide ? unSupress : doNothing);
+                    }
+                    foreach (var name in new[] { "U53", "U54" })
+                    {
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", isLeftSide ? unSupress : doNothing);
+                    }                    
                 }
-                if (!string.IsNullOrEmpty(ValProfils.Tp4))
+                if (!ValProfils.Tp4.Contains("-"))
                 {
-                    if (config.Contains("02"))
+                    foreach (var name in new[] { "U42", "U41" })
                     {
-                        foreach (var name in new[] { "U42", "U41" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);                            
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", !isLeftSide ? unSupress : doNothing);
                     }
-                    if (config.Contains("02"))
+                    foreach (var name in new[] { "U43", "U44" })
                     {
-                        foreach (var name in new[] { "U43", "U44" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", !isLeftSide ? unSupress : doNothing);
                     }
-                    if (config.Contains("01"))
+
+                    foreach (var name in new[] { "U62", "U61" })
                     {
-                        foreach (var name in new[] { "U62", "U61" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
-                        foreach (var name in new[] { "U63", "U64" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", isLeftSide ? unSupress : doNothing);
                     }
+                    foreach (var name in new[] { "U63", "U64" })
+                    {
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", isLeftSide ? unSupress : doNothing);
+                    }                    
                 }
             }
 
             if (pType == "30" || pType == "31")
             {
 
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз59@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);                
-                VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, "Эскиз73@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Эскиз59@" + nameUpPanel + "-1", unSupress);                
+                VentsCad.DoWithSwDoc(_swApp, bodyfeat, "Эскиз73@" + nameDownPanel + "-1", unSupress);
 
-                if (!string.IsNullOrEmpty(ValProfils.Tp1))
+                if (!ValProfils.Tp1.Contains("-"))
                 {
-                    if (config.Contains("02"))
-                    {
+                    
                         foreach (var name in new[] { "U32", "U31" })
                         {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", !isLeftSide ? unSupress : doNothing);
                         }
                         foreach (var name in new[] { "U33", "U34" })
                         {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", !isLeftSide ? unSupress : doNothing);
                         }
-                    }
-                    if (config.Contains("01"))
-                    {
+                    
                         foreach (var name in new[] { "U52", "U51" })
                         {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
+                            VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", isLeftSide ? unSupress : doNothing);
                         }
                         foreach (var name in new[] { "U53", "U54" })
                         {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
+                            VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", isLeftSide ? unSupress : doNothing);
                         }
-                    }
+                    
                 }
-                if (!string.IsNullOrEmpty(ValProfils.Tp4))
+                if (!ValProfils.Tp4.Contains("-"))
                 {
-                    if (config.Contains("02"))
+                    foreach (var name in new [] {"U42", "U41" })
                     {
-                        foreach (var name in new [] {"U42", "U41" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
-                        foreach (var name in new[] { "U43", "U44" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", !isLeftSide ? unSupress : doNothing);
                     }
-                    if (config.Contains("01"))
+                    foreach (var name in new[] { "U43", "U44" })
                     {
-                        foreach (var name in new[] { "U62", "U61" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameUpPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
-                        foreach (var name in new[] { "U63", "U64" })
-                        {
-                            VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.BODYFEATURE, name + "@" + nameDownPanel + "-1", VentsCad.Act.Unsuppress);
-                        }
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", !isLeftSide ? unSupress : doNothing);
+                    }                    
+
+                    foreach (var name in new[] { "U62", "U61" })
+                    {
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameUpPanel + "-1", isLeftSide ? unSupress : doNothing);
                     }
+                    foreach (var name in new[] { "U63", "U64" })
+                    {
+                        VentsCad.DoWithSwDoc(_swApp, bodyfeat, name + "@" + nameDownPanel + "-1", isLeftSide ? unSupress : doNothing);
+                    }
+                    
                 }
             }
 
@@ -2348,7 +2419,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             if (скотч != "Со скотчем")
             {
+                MessageBox.Show("Со скотчем");
                 VentsCad.DoWithSwDoc(_swApp, VentsCad.CompType.COMPONENT, "02-11-04-40--1", VentsCad.Act.Delete);
+                MessageBox.Show("Со скотчем 2");
                 swDocExt.SelectByID2("D1@Расстояние1@" + nameAsm + ".SLDASM", "DIMENSION", 0, 0, 0, true, 0, null, 0);
                 ((Dimension)(swDoc.Parameter("D1@Расстояние1"))).SystemValue = 0; 
             }
@@ -2415,8 +2488,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             foreach (var number in new[] {"123", "124", "160", "161", "157", "158", "159"})
                             {
                                 swDocExt.SelectByID2("Rivet Bralo-" + number + "@" + nameAsm, "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
-                            }
-                            
+                            }                            
                             swDoc.Extension.SelectByID2("Cut-ExtrudeHP1@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.Extension.DeleteSelection2(deleteOption);
                             swDoc.Extension.SelectByID2("Cut-ExtrudeH@" + nameDownPanel + "-1@" + nameAsm, "BODYFEATURE", 0, 0, 0, false, 0, null, 0); swDoc.Extension.DeleteSelection2(deleteOption);
                         }
@@ -2600,12 +2672,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     screwsByWidthInner = screws.ByWidthInner < 2000 ? 2000 : screws.ByWidthInner;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
 
-            if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
+            if (GetExistingFile(newPartPath, 1))//   (Path.GetFileNameWithoutExtension(newPartPath), 1))
             {
                 swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
                 swDoc.Extension.SelectByID2(nameUpPanel + "-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
@@ -3251,7 +3323,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(newFramelessPanelPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                                    
-            NewComponentsFull.Add(new VentsCadFiles
+            NewComponentsFull.Add(new VentsCadFile
             {
                 LocalPartFileInfo = new FileInfo(newFramelessPanelPath).FullName,
                 PartIdSql = idAsm
@@ -3266,7 +3338,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 //
             }
 
-            List<VentsCadFiles> outList;
+            List<VentsCadFile> outList;
 
             CheckInOutPdmNew(NewComponentsFull, true, out outList);
             
@@ -3538,7 +3610,7 @@ ScrewsByLenght - {ScrewsByLenght}");
 
             var pdmFolder = Settings.Default.SourceFolder;
 
-            var components = new[]{$@"{pdmFolder}{Profil021108Destination}\{"02-11-08-40-.SLDPRT"}"};
+            var components = new[]{$@"{pdmFolder}{Profil021108}\{"02-11-08-40-.SLDPRT"}"};
 
             GetLastVersionPdm(components, Settings.Default.PdmBaseName);
 
@@ -4408,7 +4480,7 @@ ScrewsByLenght - {ScrewsByLenght}");
                     {
                         var val = values.Split(';');
 
-                        var p1 = val[0].Split('_');
+                        var p1 = val[0]?.Split('_');
                         Tp1 = p1[0];
                         double.TryParse(p1[1], out Wp1);
 
@@ -4433,10 +4505,11 @@ ScrewsByLenght - {ScrewsByLenght}");
                     //                "\nTp4 - " + Tp4 + " Wp4 - " + Wp4 );
                     
                     #endregion
+
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                  //
+                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                 }
             }
         }

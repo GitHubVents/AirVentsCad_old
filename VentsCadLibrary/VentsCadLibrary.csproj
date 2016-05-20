@@ -42,9 +42,6 @@
     <Reference Include="MakeDxfUpdatePartData">
       <HintPath>..\..\..\..\Documents\Visual Studio 2012\Projects\MakeDxfUpdatePartData\MakeDxfUpdatePartData\bin\Debug\MakeDxfUpdatePartData.dll</HintPath>
     </Reference>
-    <Reference Include="Materials">
-      <HintPath>Functions\Materials.dll</HintPath>
-    </Reference>
     <Reference Include="SolidWorks.Interop.sldworks">
       <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>

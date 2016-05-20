@@ -106,24 +106,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="material"></param>
         public void Dumper(string type, string width, string height, bool isOutDoor, string[] material)
         {
-            var path = DumperS(type, width, height, isOutDoor, material);
-            #region
-            // this.Dispatcher.Invoke((Action)(() => { tb.Text = "новое значение"; }));
-            //Parallel.Invoke(() => DumperS(typeOfFlange, width, height),
-            //() =>SpigotStr(typeOfFlange, width, height)
-            //);
-
-            //if (path == "")
-            //{
-            //    return;
-            //}
-            //if (MessageBox.Show(string.Format("Модель находится по пути:\n {0}\n Открыть модель?", new FileInfo(path).Directory),
-            //       string.Format(" {0} ",
-            //           Path.GetFileNameWithoutExtension(new FileInfo(path).FullName)), MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
-            //{
-            //    DumperS(typeOfFlange, width, height);
-            //}
-            #endregion
+            var path = DumperS(type, width, height, isOutDoor, material);          
         }
 
         /// <summary>
@@ -143,22 +126,27 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             string modelDamperPath = null; 
             string nameAsm = null;
 
+            var replaced = Replaced.Instance;
+            replaced.Clear();
+
+            DateTime? lastChangedDate = null; 
+
             switch (typeOfFlange)
             {
                 case "20":
                     modelName = "11-20";
                     modelDamperPath = DamperFolder;
                     nameAsm = "11 - Damper";
+                    lastChangedDate = new DateTime(2016, 5, 28);
                     break;
                 case "30":
                     modelName = "11-30";
                     modelDamperPath = DamperFolder;
-                    nameAsm = "11-30";
+                    nameAsm = "11-30";                    
                     break;             
             }
 
-            if (string.IsNullOrEmpty(modelName)) return null; 
-            
+            if (string.IsNullOrEmpty(modelName)) return null;             
 
             var modelType = $"{(material[3] == "AZ" ? "" : "-" + material[3])}{(material[3] == "AZ" ? "" : material[1])}";
             
@@ -167,9 +155,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             { drawing = modelName; }
             var newDamperName = modelName + "-" + width + "-" + height + modelType + (isOutDoor ? "-O" : "");
             var newDamperPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newDamperName}.SLDDRW";
-
-            if (OpenIfExist(newDamperPath)) return null;            
+            var newDamperAsmPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newDamperName}.SLDASM";
             
+            if (OpenIfExist(newDamperPath, VaultSystem.VentsCadFile.Type.Drawing, lastChangedDate)) return null;
+
+            MessageBox.Show(replaced.List[0].FilePath); return null;
+
+            //VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newDamperPath), new FileInfo(newDamperAsmPath) }, false);
+
             var modelDamperDrw = $@"{Settings.Default.SourceFolder}{modelDamperPath}\{drawing}.SLDDRW";
             var modelLamel = $@"{Settings.Default.SourceFolder}{modelDamperPath}\{"11-100"}.SLDDRW";
 
@@ -242,13 +235,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
-                        swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                        swDoc.Extension.SelectByID2("11-005-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swAsm.ReplaceComponents(newPartPath, "", false, true);
-                        _swApp.CloseDoc("11-005.SLDPRT");
+                        VaultSystem.CheckInOutPdm(new List<FileInfo> {new FileInfo(newPartPath) }, false);                        
+                        //swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                        //swDoc.Extension.SelectByID2("11-005-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                        //swAsm.ReplaceComponents(newPartPath, "", false, true);
+                        //_swApp.CloseDoc("11-005.SLDPRT");
                     }
-                    else
-                    {
+                    //else
+                    //{
                         SwPartParamsChangeWithNewName("11-005",
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
@@ -265,21 +259,22 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         AddMaterial(material, newName);
 
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                    }
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    //}
 
                     // 11-006 
                     newName = "11-06-" + height + modelType;
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
-                        swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                        swDoc.Extension.SelectByID2("11-006-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swAsm.ReplaceComponents(newPartPath, "", false, true);
-                        _swApp.CloseDoc("11-006.SLDPRT");
+                        VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newPartPath) }, false);
+                        //swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                        //swDoc.Extension.SelectByID2("11-006-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                        //swAsm.ReplaceComponents(newPartPath, "", false, true);
+                        //_swApp.CloseDoc("11-006.SLDPRT");
                     }
-                    else
-                    {
+                    //else
+                    //{
                         SwPartParamsChangeWithNewName("11-006",
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
@@ -293,8 +288,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                         AddMaterial(material, newName);
 
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                    }
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    //}
                 }
                 else
                 {
@@ -330,25 +325,26 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
-                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                    swDoc.Extension.SelectByID2("11-001-7@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                    swAsm.ReplaceComponents(newPartPath, "", false, true);
-                    _swApp.CloseDoc("11-001.SLDPRT");
+                    VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newPartPath) }, false);
+                    //swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                    //swDoc.Extension.SelectByID2("11-001-7@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    //swAsm.ReplaceComponents(newPartPath, "", false, true);
+                    //_swApp.CloseDoc("11-001.SLDPRT");
                 }
-                else
-                {
+                //else
+                //{
                     SwPartParamsChangeWithNewName("11-001",
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                         new[,]
                         {
-                            {"D2@Эскиз1", Convert.ToString(heightD + 8.04)}, {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
+                            {"D2@Эскиз1", Convert.ToString(heightD + 7.94)}, {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
                             {"D2@Эскиз27", Convert.ToString(100*Math.Truncate(countL/2000))}, {"D1@Кривая1", Convert.ToString(countL)},
                             {"D1@Кривая2", Convert.ToString(rivetH)},  {"Толщина@Листовой металл", thiknessStr}
                         }, false, null);
                     AddMaterial(material, newName);
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     _swApp.CloseDoc(newName + ".SLDPRT");
-                }
+                //}
 
                 #region OutDoor
 
@@ -375,18 +371,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
-                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                    swDoc.Extension.SelectByID2("11-002-4@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                    swAsm.ReplaceComponents(newPartPath, "", true, true);
-                    _swApp.CloseDoc("11-002.SLDPRT");
+                    VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newPartPath) }, false);
+                    //swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                    //swDoc.Extension.SelectByID2("11-002-4@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    //swAsm.ReplaceComponents(newPartPath, "", true, true);
+                    //_swApp.CloseDoc("11-002.SLDPRT");
                 }
-                else
-                {
+                //else
+                //{
                     SwPartParamsChangeWithNewName("11-002",
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                         new[,]
                         {
-                            {"D2@Эскиз1", Convert.ToString(widthD - 3.96)},
+                            {"D2@Эскиз1", Convert.ToString(widthD - 0.96)},
                             {"D1@Кривая1", Convert.ToString(rivetW)},
 
                             {"D1@Кривая3", Convert.ToString(rivetH)},
@@ -397,8 +394,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         null);
 
                     AddMaterial(material, newName);
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                }
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                //}
                                              
 
                 if (!isOutDoor)
@@ -408,18 +405,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                     if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                     {
-                        swDoc = ((ModelDoc2) (_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                        swDoc.Extension.SelectByID2("11-003-6@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swAsm.ReplaceComponents(newPartPath, "", false, true);
-                        _swApp.CloseDoc("11-003.SLDPRT");
+                        VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newPartPath) }, false);
+                        //swDoc = ((ModelDoc2) (_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                        //swDoc.Extension.SelectByID2("11-003-6@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                        //swAsm.ReplaceComponents(newPartPath, "", false, true);
+                        //_swApp.CloseDoc("11-003.SLDPRT");
                     }
-                    else
-                    {
+                    //else
+                    //{
                         SwPartParamsChangeWithNewName("11-003",
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                             new[,]
                             {
-                                {"D2@Эскиз1", Convert.ToString(heightD + 8.04)},
+                                {"D2@Эскиз1", Convert.ToString(heightD + 7.94)},
                                 {"D1@Эскиз27", Convert.ToString(countL/10 - 100)},
                                 {"D1@Кривая1", Convert.ToString(countL)},
                                 {"D1@Кривая2", Convert.ToString(rivetH)},
@@ -429,11 +427,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             null);
 
                         AddMaterial(material, newName);
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile
                         {
                             LocalPartFileInfo = new FileInfo(newPartPath).FullName
                         });
-                    }
+                    //}
                 }
 
                 // 11-004
@@ -441,13 +439,14 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
                 if (GetExistingFile(Path.GetFileNameWithoutExtension(newPartPath), 1))
                 {
-                    swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
-                    swDoc.Extension.SelectByID2("11-004-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                    swAsm.ReplaceComponents(newPartPath, "", true, true);
-                    _swApp.CloseDoc("11-004.SLDPRT");
+                    VaultSystem.CheckInOutPdm(new List<FileInfo> { new FileInfo(newPartPath) }, false);
+                    //swDoc = ((ModelDoc2)(_swApp.ActivateDoc2(nameAsm + ".SLDASM", true, 0)));
+                    //swDoc.Extension.SelectByID2("11-004-1@" + nameAsm, "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    //swAsm.ReplaceComponents(newPartPath, "", true, true);
+                    //_swApp.CloseDoc("11-004.SLDPRT");
                 }
-                else
-                {
+                //else
+                //{
                     SwPartParamsChangeWithNewName("11-004",
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}",
                         new[,]
@@ -464,8 +463,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         null);
 
                     AddMaterial(material, newName);
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                }
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                //}
 
                 //11-100 Сборка лопасти
                 var newNameAsm = "11-" + width;
@@ -506,7 +505,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         // ToDo Delete
                         _swApp.CloseDoc(newName + ".sldasm");
 
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(
                             $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.sldasm").FullName });
                     }
 
@@ -530,8 +529,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
                         $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
 
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
 
                         
                     }
@@ -599,7 +598,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             null);
                         AddMaterial(material, newName);
 
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
 
                     // 11-006 
@@ -625,7 +624,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             false,
                             null);
                         AddMaterial(material, newName);
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                     }
                 }
                 else
@@ -777,7 +776,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         null);
                     AddMaterial(material, newName);
 
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 // 11-30-002 
@@ -810,7 +809,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                     AddMaterial(material, newName);
 
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 // 11-30-004 
@@ -843,10 +842,9 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                     AddMaterial(material, newName);
 
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
-
-
+                
                 // 11-30-003 
                 newName = "11-30-04-" + Math.Truncate(lp) + "-" + hC + modelType;
                 newPartPath = $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newName}.SLDPRT";
@@ -873,7 +871,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
                     AddMaterial(material, newName);
 
-                    NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                    NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                 }
 
                 #endregion
@@ -922,7 +920,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                             swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                             _swApp.CloseDoc(newName);
-                            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                         }
 
                         #endregion
@@ -968,7 +966,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             swDoc = ((ModelDoc2)(_swApp.ActiveDoc));
                             swDoc.SaveAs2(newPartPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                             _swApp.CloseDoc(newName);
-                            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
+                            NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPath).FullName });
                         }
 
                         #endregion
@@ -996,8 +994,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 _swApp.CloseDoc(Path.GetFileNameWithoutExtension(new FileInfo(
                     $@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName) + " - DRW1");
 
-                NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(newPartPathAsm).FullName });
-                NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
+                NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(newPartPathAsm).FullName });
+                NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}.SLDDRW").FullName });
 
                 #endregion
 
@@ -1047,7 +1045,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             AddMaterial(material, newName);
 
                             _swApp.CloseDoc(newName);
-                            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
+                            NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
                         }
 
                         #endregion
@@ -1093,7 +1091,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                             }
 
                             _swApp.CloseDoc(newName);
-                            NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
+                            NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
                         }
 
                         #endregion
@@ -1103,7 +1101,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                         swDoc.ForceRebuild3(false);swDoc.ForceRebuild3(true);
                         swDoc.SaveAs2(newPartPathAsm, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
                         _swApp.CloseDoc(newNameAsm);
-                        NewComponentsFull.Add(new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
+                        NewComponentsFull.Add(new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo($@"{Settings.Default.DestinationFolder}\{DamperDestinationFolder}\{newNameAsm}").FullName });
 
                 #endregion
 
@@ -1135,13 +1133,13 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             _swApp.CloseDoc(newDamperPath);
             _swApp.ExitApp();
 
-            NewComponentsFull.AddRange(new List<VaultSystem.VentsCadFiles>
+            NewComponentsFull.AddRange(new List<VaultSystem.VentsCadFile>
                         {
-                            new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDASM").FullName },
-                            new VaultSystem.VentsCadFiles { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName },
+                            new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(name + ".SLDASM").FullName },
+                            new VaultSystem.VentsCadFile { LocalPartFileInfo = new FileInfo(name + ".SLDDRW").FullName },
                          });            
 
-            List<VaultSystem.VentsCadFiles> outList;
+            List<VaultSystem.VentsCadFile> outList;
             VaultSystem.CheckInOutPdmNew(NewComponentsFull, true, //Settings.Default.TestPdmBaseName,
                 out outList);
 

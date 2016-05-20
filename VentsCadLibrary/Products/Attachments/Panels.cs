@@ -900,14 +900,14 @@ namespace VentsCadLibrary
             swDoc.ForceRebuild3(true);
             swDoc.SaveAs2(new FileInfo(newPanel50Path).FullName, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, false, true);
             NewComponents.Add(
-                new VaultSystem.VentsCadFiles
+                new VaultSystem.VentsCadFile
                 {
                     LocalPartFileInfo = newPanel50Path
                 });
             _swApp.CloseDoc(new FileInfo(newPanel50Path).Name);
             _swApp.Visible = true;
 
-            List<VaultSystem.VentsCadFiles> newFilesList;
+            List<VaultSystem.VentsCadFile> newFilesList;
             VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName, 
                 out newFilesList);
 

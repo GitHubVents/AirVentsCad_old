@@ -7,6 +7,8 @@ using AirVentsCadWpf.AirVentsClasses;
 using AirVentsCadWpf.Properties;
 using VentsMaterials;
 using ModelSw = AirVentsCadWpf.AirVentsClasses.UnitsBuilding.ModelSw;
+using AirVentsCadWpf.ServiceVents;
+using System.Threading.Tasks;
 
 namespace AirVentsCadWpf.DataControls
 {
@@ -65,6 +67,10 @@ namespace AirVentsCadWpf.DataControls
                 }
             }
 
+            //goto m2;
+
+            //ModelSw
+
             var sw = new ModelSw();
 
             sw.MontageFrame(
@@ -79,6 +85,76 @@ namespace AirVentsCadWpf.DataControls
                     Ral1.Text, CoatingType1.Text, CoatingClass1.Text,
                     Ral1.SelectedValue?.ToString() ?? ""
                 });
+
+            FrameOffset.Text = "";
+
+            return;
+
+            m1: // VentsCadLibrary
+
+            try
+            {
+                using (var server = new VentsCadLibrary.VentsCad())
+                {
+                    var newDumper = new VentsCadLibrary.VentsCad.MontageFrame(TypeOfFrame.Text, WidthBaseFrame.Text, LenghtBaseFrame.Text, FrameOffset.Text,
+                        new VentsCadLibrary.VentsCad.ProductFactory.Material
+                        {
+                            Name = MaterialMontageFrame.Text,
+                            Thikness = Thikness.Text,
+                            Value = MaterialMontageFrame.SelectedValue.ToString(),
+                        });
+                    if (!newDumper.Exist)
+                    {
+                        newDumper.Build();
+                    }
+                    var place = newDumper.GetPlace();
+                    MessageBox.Show(place.Path + "\n" + place.IdPdm + "\n" + place.ProjectId);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            return;
+
+            m2:  // VentsCadService
+
+            MessageBox.Show("VentsCadService");
+
+            try
+            {
+                var serv = new ServiceV(
+                    new VentsCadService.Parameters
+                    {
+                        Name = "montageFrame",   
+                        Type = new VentsCadService.Type { SubType = TypeOfFrame.Text },                   
+                        Sizes = new VentsCadService.Sizes[]
+                        {
+                            new VentsCadService.Sizes
+                            {
+                                Width = TypeOfFrame.Text,
+                                Lenght = WidthBaseFrame.Text,
+                                Additional1 = FrameOffset.Text
+                            }
+                        },
+                        Materials = new VentsCadService.Material[]
+                        {
+                            new VentsCadService.Material
+                            {
+                                Name = MaterialMontageFrame.Text,
+                                Thikness = Thikness.Text,
+                                Value = MaterialMontageFrame.SelectedValue.ToString(),
+                            }
+                        }
+                    });
+                var Build = new Task(serv.build);
+                Build.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             FrameOffset.Text = "";
         }

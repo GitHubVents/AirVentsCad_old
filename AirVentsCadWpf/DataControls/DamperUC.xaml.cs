@@ -23,8 +23,7 @@ namespace AirVentsCadWpf.DataControls
         public DamperUc()
         {
             InitializeComponent();
-
-           // ToSQL.Conn = Settings.Default.ConnectionToSQL;
+            //ToSQL.Conn = Settings.Default.ConnectionToSQL;
             Totals.SetMaterial(MaterialP1);
             ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
@@ -38,11 +37,9 @@ namespace AirVentsCadWpf.DataControls
             if (row1 != null)
                 mat1Code = row1.Field<string>("CodeMaterial");
 
-
-
             var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
-
-            goto m2;
+            
+            //goto m2;
 
             #region ModelSw
 

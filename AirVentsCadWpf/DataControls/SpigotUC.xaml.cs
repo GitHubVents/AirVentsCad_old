@@ -62,39 +62,39 @@ namespace AirVentsCadWpf.DataControls
 
         void BuildSpigot_Click(object sender, RoutedEventArgs e)
         {
-             var serv = new ServiceV(new VentsCadService.Parameters
-            {
-                Name = "spigot",
-                Type  = new VentsCadService.Type
-                {
-                    SubType = TypeOfSpigot.Text
-                },
-                Sizes = new VentsCadService.Sizes[]
-                {
-                    new VentsCadService.Sizes
-                    {
-                            Width = WidthSpigot.Text,
-                            Height = HeightSpigot.Text
-                    }
-                }               
-            });           
-            var Build = new Task(serv.build);
-            Build.Start();                     
+            // var serv = new ServiceV(new VentsCadService.Parameters
+            //{
+            //    Name = "spigot",
+            //    Type  = new VentsCadService.Type
+            //    {
+            //        SubType = TypeOfSpigot.Text
+            //    },
+            //    Sizes = new VentsCadService.Sizes[]
+            //    {
+            //        new VentsCadService.Sizes
+            //        {
+            //                Width = WidthSpigot.Text,
+            //                Height = HeightSpigot.Text
+            //        }
+            //    }               
+            //});           
+            //var Build = new Task(serv.build);
+            //Build.Start();                     
 
-            MessageBox.Show("Чекайте повідомлення після закінчення генерації");
+            //MessageBox.Show("Чекайте повідомлення після закінчення генерації");
 
-            return;         
+            //return;         
 
-            m1:
+            //m1:
 
-            VentsCadLibrary.VentsCad.ProductFactory serviceObj = new VentsCadLibrary.VentsCad.ProductFactory(new[] { "spigot", TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text } );
+            //VentsCadLibrary.VentsCad.ProductFactory serviceObj = new VentsCadLibrary.VentsCad.ProductFactory(new[] { "spigot", TypeOfSpigot.Text, WidthSpigot.Text, HeightSpigot.Text } );
 
-            MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
-            serviceObj.product.Build();
+            //MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
+            //serviceObj.product.Build();
 
-            MessageBox.Show(serviceObj.product.Exist.ToString());
-            MessageBox.Show(serviceObj.product.Place?.IdPdm.ToString());
-            return;
+            //MessageBox.Show(serviceObj.product.Exist.ToString());
+            //MessageBox.Show(serviceObj.product.Place?.IdPdm.ToString());
+            //return;
 
             #region VentsCadLibrary         
 

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace VentsCadLibrary
 {
@@ -11,8 +13,15 @@ namespace VentsCadLibrary
     {
         public static void SetPmdVaultName(string vaultName)
         {
+            SwEpdm.VaultName = null;
             SwEpdm.VaultName = vaultName;
-        }       
+            MessageBox.Show(vaultName, "Set VaultName");
+        }
+
+        public static string GetSwEpdRootFolder(string vaultName)
+        {
+            return SwEpdm.GetSwEpdRootFolderPath(vaultName);            
+        }
 
         public static void AddToPdmByPath(string path)
         {
@@ -27,15 +36,85 @@ namespace VentsCadLibrary
             }
         }
 
-        public class VentsCadFiles
+        public class VentsCadFile : SearchInVault
         {
+            public enum Type
+            {
+                Drawing,
+                Assembly,
+                Part,
+                None
+            }
+
+            public static List<VentsCadFile> Get(string Name, Type type, string vaultName)
+            {
+                List<VentsCadFile> cadFiles = null;
+                List<FindedDocuments> найденныеФайлы;
+                SwDocType doctype;
+
+                switch (type)
+                {
+                    case Type.Drawing:
+                        doctype = SwDocType.SwDocDrawing;
+                        break;
+                    case Type.Assembly:
+                        doctype = SwDocType.SwDocAssembly;
+                        break;
+                    case Type.Part:
+                        doctype = SwDocType.SwDocPart;
+                        break;
+                    case Type.None:
+                        doctype = SwDocType.SwDocNone;
+                        break;
+                    default:
+                        doctype = SwDocType.SwDocLike;
+                        break;
+                }               
+
+                SearchDoc(Name, doctype, out найденныеФайлы, vaultName);
+
+                if (найденныеФайлы?.Count > 0)
+                {
+                    cadFiles = new List<VentsCadFile>();
+                    try
+                    {
+                        foreach (var item in найденныеФайлы)
+                        {
+                            var cadFile = new VentsCadFile
+                            {
+                                PartIdPdm = item.PartIdPdm,
+                                Time = item.Time,
+                                ProjectId = item.ProjectId,
+                                Path = item.Path,
+                                PartName = item.PartName,
+                                PartSize = item.PartSize
+                            };
+                            cadFiles.Add(item);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.ToString());
+                    }
+                }
+                return cadFiles;
+            }
+
             public int PartIdSql { get; set; }
+
+            public int PartSize { get; set; }
+
+            public int PartIdPdm { get; set; }
+
+            public int ProjectId { get; set; }
 
             public string PartName { get; set; }
 
-            public string PartWithoutExtension => LocalPartFileInfo.Substring(LocalPartFileInfo.LastIndexOf('\\'));
+            public string Path { get; set; }            
+            
+            public DateTime Time { get; set; }
 
-            public int PartIdPdm { get; set; }
+            public string PartWithoutExtension => LocalPartFileInfo?.Substring((int)LocalPartFileInfo?.LastIndexOf('\\'));            
 
             public string LocalPartFileInfo { get; set; }
         }
@@ -137,6 +216,11 @@ namespace VentsCadLibrary
             SwEpdm.CheckInOutPdm(filesList, registration);
         }
 
+        public static void CheckInOutPdm(List<FileInfo> filesList, bool registration)
+        {
+            SwEpdm.CheckInOutPdm(filesList, registration);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -178,8 +262,8 @@ namespace VentsCadLibrary
         /// <param name="registration"></param>
         /// <param name="vaultName"></param>
         /// <param name="newFilesList"></param>
-        public static void CheckInOutPdmNew(List<VentsCadFiles> filesList, bool registration, 
-            out List<VentsCadFiles> newFilesList)
+        public static void CheckInOutPdmNew(List<VentsCadFile> filesList, bool registration, 
+            out List<VentsCadFile> newFilesList)
         {
             SwEpdm.CheckInOutPdmNew(filesList, registration, out newFilesList);
         }

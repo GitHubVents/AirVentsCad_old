@@ -51,7 +51,7 @@ namespace VentsCadLibrary
             {
                 if (Exist) return;
 
-                MessageBox.Show(DateTime.Now.Hour.ToString());
+               // MessageBox.Show(DateTime.Now.Hour.ToString());
 
                 var drawing = "12-00";
                 if (modelName == "12-30")
@@ -328,7 +328,7 @@ namespace VentsCadLibrary
                 _swApp.ExitApp();
                 _swApp = null;
 
-                List<VaultSystem.VentsCadFiles> newFilesList;
+                List<VaultSystem.VentsCadFile> newFilesList;
                 VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
                     out newFilesList);
 

@@ -6,7 +6,6 @@ namespace VentsCadLibrary
 {
     public partial class VentsCad
     {
-
         public enum CompType
         {
             COMPONENT,
@@ -40,14 +39,21 @@ namespace VentsCadLibrary
             Delete,
             DeletWithOption,
             Unsuppress,
-            Suppress           
+            Suppress,
+            DoNothing           
         }
 
         public static void DoWithSwDoc(SldWorks swApp, CompType docType, string docId, Act doWithDoc)
-        {
+        {   
             var doc = swApp.IActiveDoc2;            
-            doc.Extension.SelectByID2(docId + "@" + doc.GetTitle(), DocCompName(docType), 0, 0, 0, true, 0, null, 0);
-
+            var select = doc.Extension.SelectByID2(docId + "@" + doc.GetTitle(), DocCompName(docType), 0, 0, 0, true, 0, null, 0);
+            if (!select) return;
+            
+            if (doWithDoc == Act.DoNothing)
+            {
+                doc.ClearSelection2(true);
+                return;
+            }
             switch (doWithDoc)
             {
                 case Act.Delete:

@@ -98,21 +98,10 @@ namespace VentsCadServiceLibrary
                         Name = parameters.Name,
                         Type = type,
                         Sizes = sizes,
-
-                        //new List<VentsCad.ProductFactory.Sizes>
-                        //{
-                        //new VentsCad.ProductFactory.Sizes
-                        //{
-                        //    Width = parameters.Sizes[0]?.Width,
-                        //    Height = parameters.Sizes[0]?.Height,
-                        //    Lenght = parameters.Sizes[0]?.Lenght
-                        //}
-                        //},
-
                         Materials = materials
                     });
 
-                MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
+                //MessageBox.Show(serviceObj.product.Exist.ToString(), "idPdm - " + serviceObj.product.Place?.IdPdm.ToString());
                 serviceObj.product.Build();
 
                 var getPlace = serviceObj.product.GetPlace();
@@ -126,7 +115,7 @@ namespace VentsCadServiceLibrary
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
         }
 

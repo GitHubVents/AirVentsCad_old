@@ -44,22 +44,21 @@ namespace AirVentsCadWpf.AdminkaWindows
         void SaveSettingsClick(object sender, RoutedEventArgs e)
         {
             Логгер.Информация("Сохранение настроек программы", "", "Сохранение настроек программы", "SettingsW");
-
-            VaultSystem.SetPmdVaultName("Tets_debag");
-
-            if (string.IsNullOrEmpty(SwEpdm.GetSwEpdRootFolderPath())) return;
-            var testVaultSwEpdmRootPath = SwEpdm.GetSwEpdRootFolderPath();
-
-
-            VaultSystem.SetPmdVaultName(VaultsComboBox.Text);
-            var pdmRootPath = SwEpdm.GetSwEpdRootFolderPath();
+                                   
+            var testVaultSwEpdmRootPath = VaultSystem.GetSwEpdRootFolder("Tets_debag");
+            
+            //VaultSystem.SetPmdVaultName(VaultsComboBox.Text);
+            var pdmRootPath = VaultSystem.GetSwEpdRootFolder(VaultsComboBox.Text);
 
             switch (VaultsComboBox.Text)
             {
                 case "Tets_debag":
-                    Settings.Default.SourceFolder = testVaultSwEpdmRootPath;
+                    //Settings.Default.SourceFolder = testVaultSwEpdmRootPath;
                     MessageBox.Show(testVaultSwEpdmRootPath);
                     Settings.Default.DestinationFolder = testVaultSwEpdmRootPath + "\\Vents-PDM";
+                    Settings.Default.PdmBaseName = "Vents-PDM";
+                        //VaultsComboBox.Text;
+                    Settings.Default.TestPdmBaseName = VaultsComboBox.Text;
                     Settings.Default.Save();
                     MessageBox.Show(Settings.Default.DestinationFolder);
 
@@ -81,15 +80,15 @@ namespace AirVentsCadWpf.AdminkaWindows
                     break;
             }
 
-            switch (SQLBase.Text)
-            {
-                case "Тестовая":
-                    Settings.Default.ConnectionToSQL = App.SqlTestConnectionString;
-                    break;
-                default:
-                    Settings.Default.ConnectionToSQL = App.SqlConnectionString;
-                    break;   
-            }
+            //switch (SQLBase.Text)
+            //{
+            //    case "Тестовая":
+            //        Settings.Default.ConnectionToSQL = App.SqlTestConnectionString;
+            //        break;
+            //    default:
+            //        Settings.Default.ConnectionToSQL = App.SqlConnectionString;
+            //        break;   
+            //}
 
             var selectedItem = (KeyValuePair<string, int>) VaultsComboBox.SelectedItem;
             Settings.Default.VaultSystemType = selectedItem.Value;

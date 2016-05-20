@@ -174,7 +174,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// </summary>
         /// <param name="size">The size.</param>
         /// <param name="order">The order.</param>
-        /// <param name="side">The side.</param>
+        /// <param name="leftSide">The side.</param>
         /// <param name="section">The section.</param>
         /// <param name="pDown">The p down.</param>
         /// <param name="pFixed">The p fixed.</param>
@@ -183,19 +183,19 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// <param name="промежуточныеСтойки">The ПРОМЕЖУТОЧНЫЕ СТОЙКИ.</param>
         /// <param name="dimensions">The height.</param>
         /// <param name="троцевыеПанели"></param>
-        public void FramelessBlock(string size, string order, string side, string section, string pDown, string pFixed,
+        public void FramelessBlock(string size, string order, bool leftSide, string section, string pDown, string pFixed,
             string pUp, string[] съемныеПанели, string[] промежуточныеСтойки, BlockDimensions dimensions, string[] троцевыеПанели)
         {
             Логгер.Информация($"Бескаркасная установка {size}-{order}  {section}", "", "FramelessBlock", "FramelessBlock");
             
             if (!InitializeSw(true)) return;
 
-            var path = FramelessBlockStr(size, order, side, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
+            var path = FramelessBlockStr(size, order, leftSide, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
             
             _swApp.ExitApp();
             DeleteAllPartsToDelete();          
 
-            if (OpenIfExist(path)) return;          
+            if (OpenIfExist(path, VentsCadLibrary.VaultSystem.VentsCadFile.Type.Part, null)) return;          
 
             try
             {
@@ -219,17 +219,24 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     MessageBox.Show(e.Message);
                 }               
             }
-            FramelessBlockStr(size, order, side, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
+            FramelessBlockStr(size, order, leftSide, section, pDown, pFixed, pUp, съемныеПанели, промежуточныеСтойки, dimensions, троцевыеПанели);
             Логгер.Информация("Блок згенерирован", "" , "FramelessBlock", "FramelessBlock");
         }
 
         void CloseSldAsm(string pDown)
         {
-            var fileName = Path.GetFileName(pDown);
-            var namePrt = fileName != null && fileName.ToLower().Contains(".sldasm")
-                ? Path.GetFileName(pDown)
-                : Path.GetFileName(pDown) + ".sldasm";
-            _swApp.CloseDoc(namePrt);
+            try
+            {
+                var fileName = Path.GetFileName(pDown);
+                var namePrt = fileName != null && fileName.ToLower().Contains(".sldasm")
+                    ? Path.GetFileName(pDown)
+                    : Path.GetFileName(pDown) + ".sldasm";
+                _swApp.CloseDoc(namePrt);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }            
         }
 
 
@@ -238,7 +245,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         /// </summary>
         /// <param name="size">The size.</param>
         /// <param name="order">The order.</param>
-        /// <param name="side">The side.</param>
+        /// <param name="leftSide">The side.</param>
         /// <param name="section">The section.</param>
         /// <param name="панельНижняя">The p down.</param>
         /// <param name="панельНесъемная">The p fixed.</param>
@@ -251,7 +258,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
         public string FramelessBlockStr(
             string size,
             string order,
-            string side,
+            bool leftSide,
             string section,
             string панельНижняя,
             string панельНесъемная,
@@ -310,12 +317,12 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("Панель торцевая входа", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Панель торцевая входа массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();                   
                 }
-                else if (side != "левая")
+                else if (!leftSide)
                 {
                     swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-171@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-206@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 }
-                else if (side != "правая")
+                else if (leftSide)
                 {
                     swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-172@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-207@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
@@ -338,18 +345,17 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("Панель торцевая выхода", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Панель торцевая выхода массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 }
-                else if (side != "левая")
+                else if (!leftSide)
                 {
                     swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-189@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-224@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 }
-                else if (side != "правая")
+                else if (leftSide)
                 {
                     swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-190@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0); swDoc.EditDelete();
                     swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-225@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0); swDoc.EditDelete();
                 }
             }
-
 
             switch (панелиСъемные[3])
             {
@@ -370,247 +376,246 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     swDoc.Extension.SelectByID2("Threaded Rivets-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);swDoc.EditDelete();
                     break;
             }
-            
-            switch (side)
+
+            if (leftSide)
             {
-                case "левая":
+                #region Верхняя и нижняя панели
 
-                    #region Верхняя и нижняя панели
+                try
+                {
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-18@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-53@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-53@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
 
-                    try
+                #endregion
+
+                #region Передняя и задняя панели
+
+                try
+                {
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-74@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-39@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-75@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-40@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-40@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Винт и заглушка правая панель", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("ЗеркальныйКомпонент8", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Винт и заглушка правая панель массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
+
+                #endregion
+
+                #region Съемные панели
+
+                if (string.IsNullOrEmpty(панелиСъемные[2]))
+                {
+                    // Удаление 3-й панели
+                    swDoc.Extension.SelectByID2("Третья панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-41@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+
+                    if (string.IsNullOrEmpty(панелиСъемные[1]))
                     {
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-18@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-53@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-53@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                    }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
-
-                    #endregion
-
-                    #region Передняя и задняя панели
-
-                    try
-                    {
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-74@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-39@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-75@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-40@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-40@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Винт и заглушка правая панель", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("ЗеркальныйКомпонент8", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Винт и заглушка правая панель массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                    }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
-
-            #endregion
-
-            #region Съемные панели
-
-            if (string.IsNullOrEmpty(панелиСъемные[2]))
-                    {
-                        // Удаление 3-й панели
-                        swDoc.Extension.SelectByID2("Третья панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-41@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        if (string.IsNullOrEmpty(панелиСъемные[1]))
-                        {
-                            // Удаление 2-й панели
-                            swDoc.Extension.SelectByID2("Вторая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditDelete();
-                            swDoc.Extension.SelectByID2("SC GOST 17473_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Washer 11371_gost-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets Increased-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditDelete();
-                        }
-                    }
-
-                    try
-                    {
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.ShowConfiguration2("Рифленая клепальная гайка М8");
-                        swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Третья панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-32@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Первая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Третья панель лево зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern6", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern7", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern7", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                    }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
-
-                    #endregion
-
-                    break;
-                case "правая":
-
-                    #region Съемные панели
-
-                    if (string.IsNullOrEmpty(панелиСъемные[2]))
-                    {
-                        // Удаление 3-й панели
-                        swDoc.Extension.SelectByID2("Третья панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        if (string.IsNullOrEmpty(панелиСъемные[1]))
-                        {
-                            // Удаление 2-й панели
-                            swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditDelete();
-                            swDoc.Extension.SelectByID2("SC GOST 17473_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                            swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                            swDoc.EditDelete();
-                        }
-                    }
-
-                    try
-                    {
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-31@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Первая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                        // Удаление 2-й панели
+                        swDoc.Extension.SelectByID2("Вторая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
                         swDoc.EditDelete();
                         swDoc.Extension.SelectByID2("SC GOST 17473_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
                         swDoc.Extension.SelectByID2("Washer 11371_gost-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
                         swDoc.Extension.SelectByID2("Threaded Rivets Increased-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
                         swDoc.Extension.SelectByID2("Threaded Rivets-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Вторая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Washer 11371_gost-41@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Третья панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Первая панель право зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Третья панель право зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern4", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern5", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("DerivedCrvPattern5", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                        swDoc.Extension.SelectByID2("Threaded Rivets-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
                         swDoc.EditDelete();
                     }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
-                    
-                    #endregion
+                }
 
-                    #region Верхняя и нижняя панели
+                try
+                {
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
 
-                    try
-                    {
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                    }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
+                    swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
 
-                    #endregion
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.ShowConfiguration2("Рифленая клепальная гайка М8");
+                    swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Третья панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-32@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Первая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Третья панель лево зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
 
-                    #region Передняя и задняя панели
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern6", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern7", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern7", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
 
-                    try
-                    {
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-72@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-73@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("Винт и заглушка левая панель", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("ЗеркальныйКомпонент6", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.Extension.SelectByID2("Винт и заглушка левая панель массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                        swDoc.Extension.SelectByID2("ЗеркальныйКомпонент6", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
-                        swDoc.EditDelete();
-                    }
-                    catch (Exception excepiton)
-                    {
-                        MessageBox.Show(excepiton.ToString());
-                    }
-            
-                    #endregion
-
-                    break;
+                #endregion
             }
+
+            else
+            {
+
+                #region Съемные панели
+
+                if (string.IsNullOrEmpty(панелиСъемные[2]))
+                {
+                    // Удаление 3-й панели
+                    swDoc.Extension.SelectByID2("Третья панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-42@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+
+                    if (string.IsNullOrEmpty(панелиСъемные[1]))
+                    {
+                        // Удаление 2-й панели
+                        swDoc.Extension.SelectByID2("Вторая панель лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                        swDoc.EditDelete();
+                        swDoc.Extension.SelectByID2("SC GOST 17473_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.Extension.SelectByID2("Threaded Rivets Increased-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.Extension.SelectByID2("Threaded Rivets-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                        swDoc.EditDelete();
+                    }
+                }
+
+                try
+                {
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-31@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Первая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Вторая панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("SC GOST 17473_gost-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Washer 11371_gost-41@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets Increased-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Threaded Rivets-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Третья панель право", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Первая панель право зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Третья панель право зерк", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern4", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern5", "COMPPATTERN", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("DerivedCrvPattern5", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
+
+                #endregion
+
+                #region Верхняя и нижняя панели
+
+                try
+                {
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Лево", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
+
+                #endregion
+
+                #region Передняя и задняя панели
+
+                try
+                {
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-37@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-72@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Заглушка пластикова для т.о. 16х13 сір.-73@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт саморез DIN 7504 K-38@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("Винт и заглушка левая панель", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("ЗеркальныйКомпонент6", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.Extension.SelectByID2("Винт и заглушка левая панель массив", "FTRFOLDER", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                    swDoc.Extension.SelectByID2("ЗеркальныйКомпонент6", "COMPPATTERN", 0, 0, 0, false, 0, null, 0);
+                    swDoc.EditDelete();
+                }
+                catch (Exception excepiton)
+                {
+                    MessageBox.Show(excepiton.ToString());
+                }
+
+                #endregion
+
+            }
+            
 
             #endregion
 
@@ -618,8 +623,8 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #region Сторона обслуживания
 
-            var panelLeft1 = side != "правая" ? панельНесъемная : панелиСъемные[0];
-            var panelRight1 = side != "правая" ? панелиСъемные[0] : панельНесъемная;
+            var panelLeft1 = leftSide ? панельНесъемная : панелиСъемные[0];
+            var panelRight1 = leftSide ? панелиСъемные[0] : панельНесъемная;
 
             var panelLeft2 = панелиСъемные.Length > 1 ? панелиСъемные[1] : "-";
             var panelLeft3 = панелиСъемные.Length > 2 ? панелиСъемные[2] : "-";
@@ -676,7 +681,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             catch (Exception e) { MessageBox.Show(e.Message); }
 
-            if (side == "правая")
+            if (!leftSide)
             {
                 swDoc.Extension.SelectByID2("Совпадение1709", "MATE", 0, 0, 0, false, 0, null, 0);
                 swDoc.EditSuppress2();swDoc.ClearSelection2(true);
@@ -697,7 +702,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 swDoc.Extension.SelectByID2("02-11-40-1-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0,
                     false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -711,7 +716,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 swDoc.Extension.SelectByID2("02-11-40-1-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0,
                     false, 0, null, 0);
 
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -735,7 +740,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (panelLeft3 != "-")
             {
                 swDoc.Extension.SelectByID2("02-11-40-1-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -747,7 +752,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 else { swDoc.EditDelete(); }
                 
                 swDoc.Extension.SelectByID2("02-11-40-1-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -775,7 +780,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (промежуточныеСтойки[0] != "-" || промежуточныеСтойки[0] != "05")
             {
                 swDoc.Extension.SelectByID2("02-11-08-40--1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -787,7 +792,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 else { swDoc.EditDelete(); }
 
                 swDoc.Extension.SelectByID2("02-11-08-40--5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -817,7 +822,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (промежуточныеСтойки[1] != "-" || промежуточныеСтойки[1] != "05")
             {
                 swDoc.Extension.SelectByID2("02-11-08-40--2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -829,7 +834,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 else { swDoc.EditDelete(); }
 
                 swDoc.Extension.SelectByID2("02-11-08-40--6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -863,7 +868,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (промежуточныеСтойки[2] != "-" || промежуточныеСтойки[2] != "05")
             {
                 swDoc.Extension.SelectByID2("02-11-08-40--3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -875,7 +880,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 else { swDoc.EditDelete(); }
 
                 swDoc.Extension.SelectByID2("02-11-08-40--7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -909,7 +914,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (промежуточныеСтойки[3] != "-" || промежуточныеСтойки[3] != "05")
             {
                 swDoc.Extension.SelectByID2("02-11-08-40--4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -921,7 +926,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 else { swDoc.EditDelete(); }
 
                 swDoc.Extension.SelectByID2("02-11-08-40--8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -966,7 +971,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             {
                 swDoc.Extension.SelectByID2("ЗеркальныйКомпонент12", "COMPPATTERN", 0, 0, 0, false, 0, null, 0); swDoc.EditUnsuppress2();
                 swDoc.Extension.SelectByID2("02-11-40-1-9@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -1007,7 +1012,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
 
                 swDoc.Extension.SelectByID2("02-11-40-1-11@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -1083,7 +1088,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             if (!string.IsNullOrEmpty(панелиСъемные[5]))
             {
                 swDoc.Extension.SelectByID2("02-11-40-1-10@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side == "правая")
+                if (!leftSide)
                 {
                     try
                     {
@@ -1124,7 +1129,7 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                 }
                
                 swDoc.Extension.SelectByID2("02-11-40-1-12@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, false, 0, null, 0);
-                if (side != "правая")
+                if (leftSide)
                 {
                     try
                     {
@@ -1225,65 +1230,79 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
             #region Ножки опорные
 
-            if (Path.GetFileNameWithoutExtension(панельНижняя).Remove(5).Contains("32"))
+            string value = null;
+            try
             {
-                try
+                value = Path.GetFileNameWithoutExtension(панельНижняя).Remove(5);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+            }
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value.Contains("32"))
                 {
-                    swDoc.Extension.SelectByID2("ВНС-901.92.001-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Регулируемая ножка-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("ВНС-901.92.001-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0,0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT",0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Регулируемая ножка-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("ВНС-901.92.001-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Регулируемая ножка-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("ВНС-901.92.001-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Washer 11371_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Hex Nut 5915_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2();swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
-                    swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
-                    swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                    try
+                    {
+                        swDoc.Extension.SelectByID2("ВНС-901.92.001-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Регулируемая ножка-1@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("ВНС-901.92.001-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Регулируемая ножка-2@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("ВНС-901.92.001-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-5@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-6@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Регулируемая ножка-3@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("ВНС-901.92.001-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Washer 11371_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-7@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Hex Nut 5915_gost-8@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                        swDoc.Extension.SelectByID2("Регулируемая ножка-4@" + ModelName.Replace(".SLDASM", ""), "COMPONENT", 0, 0, 0, true, 0, null, 0);
+                        swDoc.EditUnsuppress2(); swDoc.ClearSelection2(true);
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
                 }
-                catch (Exception)
-                {
-                    //
-                }
+
             }
 
             #endregion
