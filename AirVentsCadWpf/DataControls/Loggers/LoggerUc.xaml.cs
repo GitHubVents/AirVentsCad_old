@@ -224,27 +224,6 @@ namespace AirVentsCadWpf.DataControls.Loggers
 
         private void СобытийТаблицаDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            #region to delete
-
-            /*
-
-            var logStucture = new LogStucture();
-            _logList = LogStucture.LogStuctures();
-            var logStuctures = _logList as IList<LogStucture> ?? _logList.ToList();
-            СобытийТаблицаDataGrid.ItemsSource = logStuctures;
-            ScrollDown();
-            ДатаComboBox.ItemsSource = logStuctures.GroupBy(i => i.DataTime.ToShortDateString()).Where(i => i.Count() > 1).ToList();
-            ДатаComboBox.SelectedValuePath = "DataTime";
-            ДатаComboBox.DisplayMemberPath = "DataTime";
-            ДатаComboBox.ItemStringFormat = "dd-MM-yyyy";
-            ДатаComboBox.SelectedIndex = -1;
-            
-            var sqlLogStucture = new SqlLogStucture();
-
-            */
-
-            #endregion
-
             _sqlLogStuctures = SqlLogStucture.LogStuctures();
 
             var sqlLogStuctures = _sqlLogStuctures as IList<SqlLogStucture> ?? _sqlLogStuctures.ToList();
@@ -585,9 +564,7 @@ namespace AirVentsCadWpf.DataControls.Loggers
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-            }
-
-            
+            }            
         }
     }
 }

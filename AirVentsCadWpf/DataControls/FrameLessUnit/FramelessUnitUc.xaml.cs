@@ -415,9 +415,9 @@ namespace AirVentsCadWpf.DataControls.FrameLessUnit
         void BUILDING_Click(object sender, RoutedEventArgs args)
         {
             PartsPdmTable.ItemsSource = null;
-            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели2, 2)) return;
-            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели3, 3)) return;
-            if (!ModelSw.RemPanWidthCheck(ШиринаСъемнойПанели1, 1)) return;       
+            if (!Totals.RemPanWidthCheck(ШиринаСъемнойПанели2, 2)) return;
+            if (!Totals.RemPanWidthCheck(ШиринаСъемнойПанели3, 3)) return;
+            if (!Totals.RemPanWidthCheck(ШиринаСъемнойПанели1, 1)) return;       
 
             Логгер.Информация("Начато построение бескаркасной установки","",
                 "Сохранение настроек программы",

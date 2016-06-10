@@ -137,7 +137,6 @@ namespace VentsCadLibrary
                 {                    
                     var trys = 1;
                     m1:
-
                     try
                     {
                         IEdmFolder5 oFolder;
@@ -154,7 +153,10 @@ namespace VentsCadLibrary
                         }
 
                         // Разрегистрировать
-                        if (registration == false) { edmFile5.LockFile(oFolder.ID, 0); }
+                        if (registration == false)
+                        {
+                            edmFile5.LockFile(oFolder.ID, 0);
+                        }
 
                         // Зарегистрировать
                         if (registration) { edmFile5.UnlockFile(oFolder.ID, ""); }
@@ -162,14 +164,14 @@ namespace VentsCadLibrary
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                        MessageBox.Show(ex.Message + "\n" + filePath, "1");
                         goto m1;
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    MessageBox.Show(ex.Message + "\n" + filePath, "2");
                     retryCount--;
                     Thread.Sleep(200);
                     if (retryCount == 0)
@@ -234,8 +236,9 @@ namespace VentsCadLibrary
                         //LoggerInfo(string.Format("В базе PDM - {1}, зарегестрирован документ по пути {0}", file.FullName, vaultName), "", "CheckInOutPdm");
                         success = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception exception)
                     {
+                        Логгер.Ошибка($"Message - {exception.Message}\nfile.FullName - {file.FullName}\nStackTrace - {exception.StackTrace}", null, "CheckInOutPdm", "SwEpdm");
                         //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                         retryCount--;
                         Thread.Sleep(200);
@@ -262,7 +265,8 @@ namespace VentsCadLibrary
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message + "\n" + exception.StackTrace, "Не удалось получить последнюю версию файлов из хранилища");
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetAsmFilesAsBuild", "SwEpdm");
+                //MessageBox.Show(exception.Message + "\n" + exception.StackTrace, "Не удалось получить последнюю версию файлов из хранилища");
             }
         }    
 
@@ -275,7 +279,24 @@ namespace VentsCadLibrary
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetLastVersionOfFile", "SwEpdm");
+                //MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+            }
+        }
+
+        public static int GetLocalVersionOfFile(string path)
+        {
+            try
+            {
+                IEdmFolder5 oFolder;
+                var ver = GetEdmFile5(path, out oFolder);
+                return ver.CurrentVersion;
+            }
+            catch (Exception exception)
+            {
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetLastVersionOfFile", "SwEpdm");
+                //MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+                return 0;
             }
         }
 
@@ -292,7 +313,8 @@ namespace VentsCadLibrary
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message + "\n" + exception.StackTrace + "\n" + path);
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetEdmFile5", "SwEpdm");
+                //MessageBox.Show(exception.Message + "\n" + exception.StackTrace + "\n" + path);
                 return null;
             }
         }
@@ -309,7 +331,8 @@ namespace VentsCadLibrary
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetPdmIds", "SwEpdm");
+                //MessageBox.Show(exception.Message + "\n" + exception.StackTrace);
             }
             return Id;            
 
@@ -375,9 +398,10 @@ namespace VentsCadLibrary
                     {
                         edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
                     }
-                    catch (Exception ex)
+                    catch (Exception exception)
                     {
-                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                        Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetIdPdm", "SwEpdm");
+                        //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                     }
                 }
 
@@ -396,9 +420,10 @@ namespace VentsCadLibrary
                     configs.Add(cfgName);
                 }                
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetIdPdm", "SwEpdm");
+                //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
         }
 
@@ -430,34 +455,56 @@ namespace VentsCadLibrary
                 {
                     edmFile5.GetFileCopy(0, 0, oFolder.ID, (int)EdmGetFlag.EdmGet_RefsVerLatest);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                catch (Exception exception)
+                {                    
+                    Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetIdPdm", "SwEpdm");
+                    //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                 }
 
                 fileName = edmFile5.Name;
                 fileIdPdm = edmFile5.ID;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nPath - {path}\nStackTrace - {exception.StackTrace}", null, "GetIdPdm", "SwEpdm");
+                //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
         }
        
         public static void CheckInOutPdmNew(List<VaultSystem.VentsCadFile> filesList, bool registration, out List<VaultSystem.VentsCadFile> newFilesList)
         {                     
 
-            BatchAddFiles(filesList, edmVault5);            
+            BatchAddFiles(filesList, edmVault5);
+            
+            var newFiles = filesList.Where(x => string.IsNullOrEmpty(x.MessageForCheckOut)).ToList();
+            var filesToUpdate = filesList.Where(x => !string.IsNullOrEmpty(x.MessageForCheckOut)).ToList();                      
 
             try
             {
-                BatchUnLock(filesList, edmVault5);
+                if (newFiles?.Count > 0)
+                {
+                    BatchUnLock(newFiles, edmVault5);
+                }                
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "CheckInOutPdmNew", "SwEpdm");
+                //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
-            
+
+            try
+            {
+                if (filesToUpdate?.Count > 0)
+                {
+                    BatchUnLock(filesToUpdate, edmVault5);
+                }
+            }
+            catch (Exception exception)
+            {
+                Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "CheckInOutPdmNew", "SwEpdm");
+                //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+            }
+
             newFilesList = new List<VaultSystem.VentsCadFile>();
 
             foreach (var file in filesList)
@@ -514,7 +561,7 @@ namespace VentsCadLibrary
             batchUnlocker.UnlockFiles(0);
         }
 
-        public static void BatchAdd( List<AddinConvertTo.Classes.FilesData.TaskParam> list)
+        public static void BatchAdd(List<AddinConvertTo.Classes.FilesData.TaskParam> list)
         {           
             var edmVault7 = (IEdmVault7)edmVault5;
             AddinConvertTo.Classes.Batches.BatchAddFiles(edmVault7, list);
@@ -553,10 +600,12 @@ namespace VentsCadLibrary
             List<string> stringList = new List<string>();
 
             #region Show
+
             //    filesList.Select(x => x.LocalPartFileInfo).ToList();
             //MessageBox.Show(stringList.Count.ToString(), "Count before");
             //stringList = stringList.Distinct().ToList();
             //MessageBox.Show(stringList.Count.ToString(), "Count after 2");
+
             #endregion
             
             foreach (var item in filesList.OrderBy(x=>x.LocalPartFileInfo))
@@ -591,18 +640,20 @@ namespace VentsCadLibrary
                     //MessageBox.Show(poAdder.CommitAdd(0, null).ToString());
                     poAdder.CommitAdd(-1, null);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    MessageBox.Show(e.Message + "\n" + e.StackTrace, "2");
+                    Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "BatchAddFiles", "SwEpdm");
+                    //MessageBox.Show(e.Message + "\n" + e.StackTrace, "2");
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                MessageBox.Show(e.StackTrace, "BatchAddFiles");
+                Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "BatchAddFiles", "SwEpdm");
+                //MessageBox.Show(e.StackTrace, "BatchAddFiles");
             }
             finally
             {
-               // MessageBox.Show(files);
+                //MessageBox.Show(files);
             }
 
             #endregion
@@ -617,7 +668,7 @@ namespace VentsCadLibrary
             var ppoSelection = new EdmSelItem[filesList.Count];
             foreach (var file in filesList)
             {
-                var fileInfo = new FileInfo(file.LocalPartFileInfo);               
+                var fileInfo = new FileInfo(file.LocalPartFileInfo);
 
                 if (string.IsNullOrEmpty(fileInfo.Extension)) continue;
               
@@ -627,9 +678,10 @@ namespace VentsCadLibrary
                 {
                     aFile = edmVault5.GetFileFromPath(fileInfo.FullName, out ppoRetParentFolder);
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "BatchUnLock", "SwEpdm");
+                    //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                     continue;
                 }
 
@@ -641,24 +693,24 @@ namespace VentsCadLibrary
                         var aFolder = aFile.GetNextFolder(aPos);
 
                         ppoSelection[i] = new EdmSelItem
-                        {
+                        {                            
                             mlDocID = aFile.ID,
-                            mlProjID = aFolder.ID
+                            mlProjID = aFolder.ID                            
                         };
                         i++;
                     }
-                    catch (Exception ex)
+                    catch (Exception exception)
                     {
-                        MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
-                    }
-                    
+                        Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "BatchUnLock", "SwEpdm");
+                        //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    }                    
                 }
             }
 
             // Add selections to the batch of files to check in
             batchUnlocker.AddSelection(edmVault5, ppoSelection);
-
             batchUnlocker.CreateTree(0, (int)EdmUnlockBuildTreeFlags.Eubtf_ShowCloseAfterCheckinOption + (int)EdmUnlockBuildTreeFlags.Eubtf_MayUnlock);
+            batchUnlocker.Comment = filesList[0].MessageForCheckOut;
             var fileList = (IEdmSelectionList6)batchUnlocker.GetFileList((int)EdmUnlockFileListFlag.Euflf_GetUnlocked + (int)EdmUnlockFileListFlag.Euflf_GetUndoLocked + (int)EdmUnlockFileListFlag.Euflf_GetUnprocessed);
             aPos = fileList.GetHeadPosition();
 
@@ -677,16 +729,8 @@ namespace VentsCadLibrary
         }
 
         internal static void BathGet(IEdmVault7 vault, List<AddinConvertTo.Classes.FilesData.TaskParam> list)
-        {
-            //List<KeyValuePair<Exception, string>> exception;
-            //AddinConvertTo.Classes.Batches.ClearLocalCache(vault, list);
-            //AddinConvertTo.Classes.Batches.BatchGet(vault, list);//, out exception);
+        {            
             BatchGet(vault, list);
-            //foreach (var item in exception)
-            //{
-            //    MessageBox.Show(item.Key.InnerException + "\n" + item.Value);// + "\n" + item.Data + "\n" + item.Message + "\n" + item.StackTrace);
-            //} 
-
         }
 
         public static void BatchGet(IEdmVault7 vault, List<AddinConvertTo.Classes.FilesData.TaskParam> files)
@@ -708,26 +752,24 @@ namespace VentsCadLibrary
                     {
                         //MessageBox.Show(ex.Message + "\n" + taskVar.FullFilePath, " Получение файла из PDM");
                         continue;
-                    }
-                    
+                    }                    
                     
                     aFile = (IEdmFile5)vault.GetObject(EdmObjectType.EdmObject_File, taskVar.IdPDM);
                     var aPos = aFile.GetFirstFolderPosition();
-                    var aFolder = aFile.GetNextFolder(aPos);
-                   // MessageBox.Show($"IdPDM - {taskVar.IdPDM}\n FolderID - {aFolder.ID}\n CurrentVersion - {taskVar.CurrentVersion}");
+                    var aFolder = aFile.GetNextFolder(aPos);                   
                     batchGetter.AddSelectionEx((EdmVault5)vault, taskVar.IdPDM, aFolder.ID, taskVar.CurrentVersion);
                 }
                 if ((batchGetter != null))
                 {
-                    batchGetter.CreateTree(0, (int)EdmGetCmdFlags.Egcf_SkipExisting + (int)EdmGetCmdFlags.Egcf_SkipUnlockedWritable + (int)EdmGetCmdFlags.Egcf_RefreshFileListing);
-                    //batchGetter.CreateTree(0, (int)EdmGetCmdFlags.Egcf_SkipExisting + (int)EdmGetCmdFlags.Egcf_SkipUnlockedWritable);
+                    batchGetter.CreateTree(0, (int)EdmGetCmdFlags.Egcf_SkipUnlockedWritable + (int)EdmGetCmdFlags.Egcf_RefreshFileListing);                    
                     batchGetter.GetFiles(0, null);
                 }
                
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "BatchUnLock", "SwEpdm");
+                //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
         }
 
@@ -762,6 +804,8 @@ namespace VentsCadLibrary
 
             public class FindedDocuments : VaultSystem.VentsCadFile
             {
+                #region Finded Documents
+
                 //public string Path { get; set; }
 
                 //public int FileId { get; set; }
@@ -769,12 +813,13 @@ namespace VentsCadLibrary
                 //public int ProjectId { get; set; }
 
                 //public DateTime Time { get; set; }
+
+                #endregion
             }
 
             public static void SearchDoc(string fileName, SwDocType swDocType, out List<FindedDocuments> fileList, string vaultName)
             {
                 var files = new List<FindedDocuments>();
-
                 try
                 {                  
                     var edmVault7 = (IEdmVault7)edmVault5;
@@ -814,18 +859,15 @@ namespace VentsCadLibrary
 
                     while (edmSearchResult5 != null)
                     {
-                        files.Add(
-                            new FindedDocuments
+                        files.Add(new FindedDocuments
                             {
                                 PartIdPdm = edmSearchResult5.ID,
                                 PartName = edmSearchResult5.Name,
                                 PartSize = edmSearchResult5.FileSize,
-                                //FileId = edmSearchResult5.ID,
                                 ProjectId = edmSearchResult5.ParentFolderID,
                                 Path = edmSearchResult5.Path,
                                 Time = (DateTime)edmSearchResult5.FileDate
                             });
-
                         edmSearchResult5 = edmSearch5.GetNextResult();
                     }
 
@@ -836,9 +878,10 @@ namespace VentsCadLibrary
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    Логгер.Ошибка($"Message - {exception.Message}\nStackTrace - {exception.StackTrace}", null, "SearchDoc", "SwEpdm");
+                    //MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
                 }
                 fileList = files;
             }

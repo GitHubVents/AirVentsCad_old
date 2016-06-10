@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>AirVentsCad</ProductName>
     <PublisherName>Vents</PublisherName>
-    <ApplicationRevision>69</ApplicationRevision>
+    <ApplicationRevision>70</ApplicationRevision>
     <ApplicationVersion>2.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -174,7 +174,6 @@
     <Compile Include="AirVentsClasses\UnitsBuilding\FrameLessUI.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\FrameLessPanel.cs" />
     <Compile Include="AirVentsClasses\UnitsBuilding\GenerateUnit50.cs" />
-    <Compile Include="AirVentsClasses\UnitsBuilding\NotNullAttribute.cs" />
     <Compile Include="DataControls\Specification\01-MonoBlock50.xaml.cs">
       <DependentUpon>01-MonoBlock50.xaml</DependentUpon>
     </Compile>

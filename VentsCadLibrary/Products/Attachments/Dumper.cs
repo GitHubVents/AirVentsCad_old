@@ -1017,8 +1017,7 @@ namespace VentsCadLibrary
                 ComponentToAdd(new[] { newDrw, newAsm });               
 
                 List<VaultSystem.VentsCadFile> outList;
-                VaultSystem.CheckInOutPdmNew(NewComponents, true, //DestVaultName,
-                    out outList);
+                VaultSystem.CheckInOutPdmNew(NewComponents, true, out outList);
 
                 //if (unloadXml)
                 //{

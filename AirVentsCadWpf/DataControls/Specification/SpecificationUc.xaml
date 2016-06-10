@@ -187,15 +187,21 @@
                         <Expander x:Name="expander_Copy" IsExpanded="True" Header="Развертки DXF" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Grid.Row="1" Background="{x:Null}">
                             <Grid>
                                 <Grid HorizontalAlignment="Stretch" Height="Auto" Margin="2" VerticalAlignment="Stretch" Width="Auto">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="15*"/>
+                                        <RowDefinition Height="14*"/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="200"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox x:Name="checkBox" Content="Только конфигурации из сборки" HorizontalAlignment="Center" Margin="2"
-                						Grid.Column="0" VerticalAlignment="Center"  IsChecked="True" IsEnabled="False"/>
-                                    <Button x:Name="DxfParts1" Content="Выгрузить DXF" HorizontalAlignment="Left" Height="25" Margin="2" VerticalAlignment="Center" Width="Auto"
-                						Background="{x:Null}" Click="DxfParts1_Click" Grid.Column="2" />
+                                    <CheckBox x:Name="checkBox" Content="Только конфигурации из сборки" HorizontalAlignment="Center" Margin="2,6,3,7"
+                						Grid.Column="0" VerticalAlignment="Center"  IsChecked="True" IsEnabled="True" Grid.Row="0"/>
+                                    <CheckBox x:Name="checkBox2" Content="Включая нелистовые детали" HorizontalAlignment="Left" Margin="2,6,3,7"
+                						Grid.Column="0" VerticalAlignment="Center"  IsChecked="True" IsEnabled="True" Grid.Row="1"/>
+                                    <Button x:Name="DxfParts1" Content="Выгрузить DXF" HorizontalAlignment="Left" Height="25" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto"
+                						Background="{x:Null}" Click="DxfParts1_Click" Grid.Column="2" Grid.RowSpan="2" />
                                 </Grid>
                             </Grid>
                         </Expander>

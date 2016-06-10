@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Xml;
+using System.Diagnostics;
 using AirVentsCadWpf.Properties;
 using AirVentsCadWpf.Логирование;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using VentsCadLibrary;
 using VentsMaterials;
-using System.Diagnostics;
+
 
 namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 {
@@ -3947,17 +3948,21 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
 
         private void VentsMatdll(IList<string> materialP1, IList<string> покрытие, string newName)
         {
+            ModelDoc2 model = _swApp.ActivateDoc2(newName, true, 0);
+            if (model == null) return;            
+
             try
             {
-                _swApp.ActivateDoc2(newName, true, 0);
+                MessageBox.Show(newName);
+                
                 var setMaterials = new SetMaterials();
                 ToSQL.Conn = Settings.Default.ConnectionToSQL;
                 var toSql = new ToSQL();
+                
+                //MessageBox.Show($"Conn - {ToSQL.Conn} SetMaterials {setMaterials == null} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
 
-   //             MessageBox.Show($"Conn - {ToSQL.Conn} SetMaterials {setMaterials == null} toSql - {toSql == null} _swApp {_swApp == null} levelId - {Convert.ToInt32(materialP1[0])}");
-
-                setMaterials.ApplyMaterial("", "00", Convert.ToInt32(materialP1[0]), _swApp);
-                _swApp.IActiveDoc2.Save();
+                setMaterials?.ApplyMaterial("", "00", Convert.ToInt32(materialP1[0]), _swApp);
+                model?.Save();
 
                 foreach (var confname in setMaterials.GetConfigurationNames(_swApp))
                 {
@@ -3982,22 +3987,22 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
                     setMaterials.CheckSheetMetalProperty("00", _swApp, out message);
                     if (message != null)
                     {
-                        MessageBox.Show(message, newName);
+                       // MessageBox.Show(message, newName + " 858 ");
                     }
                 }
                 catch (Exception e)
                 {
-  //                  MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll");
+                    MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll");
                 }
             }
             catch (Exception e)
             {
-   //             MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}", "VentsMatdll 2");
+                MessageBox.Show($"{newName}\n{e.Message}\n{e.StackTrace}\n{newName}", "VentsMatdll 2");
             }
 
-            GabaritsForPaintingCamera(_swApp.IActiveDoc2);
+            GabaritsForPaintingCamera(model);
 
-            _swApp.IActiveDoc2.Save();
+            model?.Save();
         }
     
         #endregion
@@ -6312,12 +6317,11 @@ namespace AirVentsCadWpf.AirVentsClasses.UnitsBuilding
             }
             catch (Exception ex)
             {
-              //  MessageBox.Show($"{swmodel.GetTitle()}\n{ex.Message}\n{ex.StackTrace}", "GabaritsForPaintingCamera");
+                MessageBox.Show($"{swmodel.GetTitle()}\n{ex.Message}\n{ex.StackTrace}", "GabaritsForPaintingCamera");
             }
         }
 
-        #endregion
-         
+        #endregion         
 
         #region DISPOSE CLASS
 

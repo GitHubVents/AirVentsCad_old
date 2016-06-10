@@ -114,9 +114,11 @@ namespace VentsCadLibrary
             
             public DateTime Time { get; set; }
 
-            public string PartWithoutExtension => LocalPartFileInfo?.Substring((int)LocalPartFileInfo?.LastIndexOf('\\'));            
+            public string PartWithoutExtension => LocalPartFileInfo?.Substring((int)LocalPartFileInfo?.LastIndexOf('\\'));
 
             public string LocalPartFileInfo { get; set; }
+
+            public string MessageForCheckOut { get; set; }
         }
 
         public static void GoToFile(string path)
@@ -174,20 +176,48 @@ namespace VentsCadLibrary
 
         public static void BatchGet(string vaultName, List<BatchParams> list, out List<PdmFilesAfterGet> pdmFilesAfterGets)
         {
-            var taskParams = list.Select(batchGetParamse => new AddinConvertTo.Classes.FilesData.TaskParam
-            {
-                CurrentVersion = batchGetParamse.CurrentVersion,
-                FullFilePath = batchGetParamse.FilePath,
-                IdPDM  = batchGetParamse.IdPdm
-            }).ToList();
+            #region To Delete
 
-            pdmFilesAfterGets = taskParams.Select(batchGetParamse => new PdmFilesAfterGet
+            //string message = "";
+            //foreach (var item in list)
+            //{
+            //    message = message + "\n" + $"{item.FilePath}{item.CurrentVersion}" ;
+            //}
+
+            //MessageBox.Show(message);
+
+            #endregion
+
+            var taskParams = list.Select(batchGetParam => new AddinConvertTo.Classes.FilesData.TaskParam
             {
-                VersionToGet = batchGetParamse.CurrentVersion,
-                FilePath = batchGetParamse.FullFilePath,                
-            }).ToList();
+                CurrentVersion = batchGetParam.CurrentVersion,
+                FullFilePath = batchGetParam.FilePath,
+                IdPDM  = batchGetParam.IdPdm
+            }).ToList();           
 
             SwEpdm.BatchGet(vaultName, taskParams);
+
+            pdmFilesAfterGets = null;
+
+            #region To Delete
+
+            //pdmFilesAfterGets = taskParams.Select(batchGetParamse => new PdmFilesAfterGet
+            //{
+            //    VersionToGet = batchGetParamse.CurrentVersion,
+            //    FilePath = batchGetParamse.FullFilePath,
+            //    FileName = batchGetParamse.FileName,
+            //    VersionAfterGet = SwEpdm.GetLocalVersionOfFile(batchGetParamse.FullFilePath)
+            //}).ToList();
+
+            //message = "";
+            //foreach (var item in pdmFilesAfterGets)
+            //{
+            //    message = message + "\n" + $"FilePath - {item.FilePath} VersionAfterGet - {item.VersionAfterGet}";
+            //}
+
+            //MessageBox.Show(message);
+
+            #endregion
         }
 
         public class PdmFilesAfterGet

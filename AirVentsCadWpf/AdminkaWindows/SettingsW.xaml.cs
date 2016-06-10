@@ -38,7 +38,6 @@ namespace AirVentsCadWpf.AdminkaWindows
             Developer.Content = " Developer - " + Settings.Default.Developer;
 
             VentsServiceAddress.Text = Settings.Default.ServiceAddress;
-
         }
       
         void SaveSettingsClick(object sender, RoutedEventArgs e)
@@ -80,6 +79,7 @@ namespace AirVentsCadWpf.AdminkaWindows
                     break;
             }
 
+            #region To Delete
             //switch (SQLBase.Text)
             //{
             //    case "Тестовая":
@@ -89,6 +89,7 @@ namespace AirVentsCadWpf.AdminkaWindows
             //        Settings.Default.ConnectionToSQL = App.SqlConnectionString;
             //        break;   
             //}
+            #endregion
 
             var selectedItem = (KeyValuePair<string, int>) VaultsComboBox.SelectedItem;
             Settings.Default.VaultSystemType = selectedItem.Value;

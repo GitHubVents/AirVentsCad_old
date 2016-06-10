@@ -441,6 +441,7 @@ namespace AirVentsCadWpf.DataControls.Specification
         {
             OnlyParts = checkBoxOnlyParts.IsChecked == true;
             OnlyInAsmConfigs = checkBox.IsChecked == true;
+            IncludeNonSheetParts = checkBox2.IsChecked == true;
             ListToRun = PartsListXml2sDataGrid.ItemsSource.OfType<PartsListXml2>().ToList();
         }
 
@@ -468,12 +469,10 @@ namespace AirVentsCadWpf.DataControls.Specification
 
             try
             {
-                Busy = $"Выгрузка {CurrentModel}";
-                //НайтиПолучитьСборкуЕеКонфигурацииПоИмени();
+                Busy = $"Выгрузка {CurrentModel}";                
                 if (!OnlyParts)
                 {
-                    if (!ПутьКСборке.ToLower().EndsWith("dprt"))
-                    // ВыгрузкаСборкиВXml();
+                    if (!ПутьКСборке.ToLower().EndsWith("dprt"))                    
                     {
                         List<Exception> excptions;
                         PdmAsmBomToXml.AsmBomToXml.ВыгрузкаСборкиВXml(ПутьКСборке, out excptions);
@@ -482,10 +481,22 @@ namespace AirVentsCadWpf.DataControls.Specification
             }
             catch (Exception)
             {
-                //MessageBox.Show(exception.StackTrace);
+              //  MessageBox.Show(exception.StackTrace);
             }            
 
-            GetFiles(ListToRun, out _pdmFilesAfterGet);           
+            GetFiles(ListToRun.Where(newComponent => !newComponent.Xml), out _pdmFilesAfterGet);
+
+           // var list = _pdmFilesAfterGet.Where(x => !x.Equal).ToList();
+
+            //var sf = "";
+
+            //foreach (var item in list)
+            //{
+            //    sf  = sf + "\nName - " + item.FileName + " Path - " + item.FilePath + " VerBG - " + item.VersionBeforeGet + " VerAG - " + item.VersionBeforeGet;
+            //}
+
+            //MessageBox.Show(sf, list?.Count.ToString());
+
 
             try
             {
@@ -605,7 +616,7 @@ namespace AirVentsCadWpf.DataControls.Specification
                             listToExportLocal.Add(item);
                         }
                     }
-                    catch (Exception exc)
+                    catch (Exception)
                     {
                         listToExportLocal.Add(item);
                     }
@@ -621,8 +632,9 @@ namespace AirVentsCadWpf.DataControls.Specification
                 {
                     Exception exception;
                     List<Dxf.ResultList> resultList;
-                    List<Dxf.DxfFile> dxfFiles;
-                    Dxf.Save(Path.GetFullPath(part.Путь), pathToSave, OnlyInAsmConfigs ? part.Конфигурация : null, out exception, part.IdPmd, part.CurrentVersion, out dxfFiles, true, true);
+                    List<Dxf.DxfFile> dxfFiles;                  
+
+                    Dxf.Save(Path.GetFullPath(part.Путь), pathToSave, OnlyInAsmConfigs ? part.Конфигурация : null, out exception, part.IdPmd, part.CurrentVersion, out dxfFiles, true, true, IncludeNonSheetParts);
                     if (exception != null)
                     {
                         try
@@ -631,14 +643,22 @@ namespace AirVentsCadWpf.DataControls.Specification
                         }
                         catch (Exception) { }
                     }
-                    Dxf.AddToSql(dxfFiles, false, out resultList);
-                    foreach (var item in resultList)
+                    try
                     {
-                        if (item != null)
+                        Dxf.AddToSql(dxfFiles, false, out resultList);
+                        foreach (var item in resultList)
                         {
-                            exeptions.Add($"{item.dxfFile.IdPdm}");
+                            if (item != null)
+                            {
+                                exeptions.Add($"{item.dxfFile.IdPdm}");
+                            }
                         }
                     }
+                    catch (Exception)
+                    {
+
+                    }
+                    
                 }
 
                 if (exeptions?.Count > 0)
@@ -647,11 +667,10 @@ namespace AirVentsCadWpf.DataControls.Specification
                     {
                         foreach (var item in exeptions)
                         {
-                            sw.WriteLine(item);
+                            sw.WriteLine(item + ",");
                         }
                     }
                 }
-
 
                 foreach (var process in Process.GetProcessesByName("SLDWORKS"))
                 {
@@ -668,6 +687,8 @@ namespace AirVentsCadWpf.DataControls.Specification
         }
 
         bool OnlyInAsmConfigs { get; set; }
+
+        bool IncludeNonSheetParts { get; set; }
 
         #endregion
 

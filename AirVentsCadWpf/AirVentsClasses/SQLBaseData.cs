@@ -10,6 +10,7 @@ namespace AirVentsCadWpf.AirVentsClasses
     /// Класс реализующий работу с базой данных
     /// </summary>
     public partial class SqlBaseData
+
     {
         /// <summary>
         /// 
@@ -1657,7 +1658,6 @@ Order BY PanelTypeCode";
                     return list;
                 }
             }
-
         }
 
         /// <summary>

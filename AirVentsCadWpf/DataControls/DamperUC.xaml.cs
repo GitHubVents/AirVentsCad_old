@@ -15,15 +15,13 @@ namespace AirVentsCadWpf.DataControls
     /// Interaction logic for DamperUC.xaml
     /// </summary>
     public partial class DamperUc
-    {
-        
+    {        
         /// <summary>
         /// Initializes a new instance of the <see cref="DamperUc"/> class.
         /// </summary>
         public DamperUc()
         {
-            InitializeComponent();
-            //ToSQL.Conn = Settings.Default.ConnectionToSQL;
+            InitializeComponent();            
             Totals.SetMaterial(MaterialP1);
             ТолщинаВнешней.ItemsSource = Totals.SheetMetalThikness;
             ТолщинаВнешней.SelectedIndex = 2;
@@ -31,6 +29,7 @@ namespace AirVentsCadWpf.DataControls
 
         void BuildDamper_Click(object sender, RoutedEventArgs e)
         {
+
             var mat1Code = "";
             var viewRowMat1 = (DataRowView)MaterialP1.SelectedItem;
             var row1 = viewRowMat1.Row;
@@ -38,7 +37,6 @@ namespace AirVentsCadWpf.DataControls
                 mat1Code = row1.Field<string>("CodeMaterial");
 
             var materialP1 = new[] { MaterialP1.SelectedValue.ToString(), ТолщинаВнешней.Text, MaterialP1.Text, mat1Code };
-            
             //goto m2;
 
             #region ModelSw
@@ -70,7 +68,6 @@ namespace AirVentsCadWpf.DataControls
                 //return;
 
                 #endregion            
-
                 var sw = new ModelSw();
                 sw.Dumper(TypeOfDumper.Text, WidthDamper.Text, HeightDamper.Text, (IsOutDoor.IsChecked == true), materialP1);
             }
@@ -83,7 +80,8 @@ namespace AirVentsCadWpf.DataControls
 
             #endregion
             
-            m1: // VentsCadLibrary
+            m1: 
+            //VentsCadLibrary
 
             try
             {             
@@ -146,7 +144,7 @@ namespace AirVentsCadWpf.DataControls
                 MessageBox.Show(ex.Message);
             }
         }
-
+        
         void WidthDamper_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -183,5 +181,6 @@ namespace AirVentsCadWpf.DataControls
                 ТолщинаВнешней.Visibility = Visibility.Visible;
             }
         }
+
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="SqlData\SqlData.cs" />
     <Compile Include="VaulSystem\SwEpdm.cs" />
     <Compile Include="Functions\UniversalSwMethods.cs" />
+    <Compile Include="VaulSystem\Replaced.cs" />
     <Compile Include="VaulSystem\VaultSystem.cs" />
   </ItemGroup>
   <ItemGroup>

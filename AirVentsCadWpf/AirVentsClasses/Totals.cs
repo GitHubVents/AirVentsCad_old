@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using VentsMaterials;
 
@@ -8,6 +10,32 @@ namespace AirVentsCadWpf.AirVentsClasses
 {
     public class Totals
     {
+        public static bool RemPanWidthCheck(TextBox combo, int panelNumber)
+        {
+            var check = true;
+            if (combo.Visibility == Visibility.Visible)
+            {
+                if (combo.Text == "")
+                {
+                    check = false;
+                    MessageBox.Show($"Введите ширину {panelNumber}-й съемной панели"); return check;
+                }
+                if (combo.Text.Contains("-"))
+                {
+                    check = false;
+                    MessageBox.Show($"Ширина {panelNumber}-й съемной панели не может быть отрицательной!"); return check;
+                }
+                if (Convert.ToInt32(combo.Text) < 100)
+                {
+                    check = false;
+                    MessageBox.Show($"Ширина {panelNumber}-й съемной панели не может быть меньше 100 мм!"); return check;
+                }
+            }
+            return check;
+        }
+
+
+
         public static List<ComboBoxItem> SheetMetalThikness = new List<ComboBoxItem>
             {
                 new ComboBoxItem {Content = "0.5"},
